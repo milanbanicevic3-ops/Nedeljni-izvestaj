@@ -1,0 +1,2292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMC Macro Intelligence — Daily Bias Report · March 28, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #0f1218;
+    --surface2: #141820;
+    --border: #1e2530;
+    --border2: #252d3a;
+    --gold: #c9a84c;
+    --gold2: #e8c46a;
+    --gold-dim: rgba(201,168,76,0.15);
+    --gold-dim2: rgba(201,168,76,0.08);
+    --red: #e05252;
+    --red-dim: rgba(224,82,82,0.12);
+    --green: #4caf82;
+    --green-dim: rgba(76,175,130,0.12);
+    --yellow: #e8c46a;
+    --yellow-dim: rgba(232,196,106,0.12);
+    --blue: #5b9bd5;
+    --text: #d4d8e2;
+    --text2: #8a93a6;
+    --text3: #525d6e;
+    --white: #eef0f5;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* HEADER */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,12,16,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-mark {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 12px;
+    color: #0a0c10;
+  }
+
+  .logo-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .logo-sub {
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .header-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text2);
+    letter-spacing: 0.06em;
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+    margin-right: 6px;
+    box-shadow: 0 0 6px var(--red);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* TICKER */
+  .ticker-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .ticker-label {
+    flex-shrink: 0;
+    background: var(--gold);
+    color: #0a0c10;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    padding: 0 14px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    z-index: 2;
+  }
+
+  .ticker-scroll {
+    display: flex;
+    animation: scroll-left 60s linear infinite;
+    white-space: nowrap;
+    gap: 0;
+  }
+
+  .ticker-scroll:hover { animation-play-state: paused; }
+
+  @keyframes scroll-left {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .ticker-item {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 0 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-right: 1px solid var(--border);
+    height: 34px;
+  }
+
+  .ticker-sym { color: var(--text2); font-weight: 500; }
+  .ticker-price { color: var(--white); }
+  .ticker-up { color: var(--green); }
+  .ticker-down { color: var(--red); }
+
+  /* MAIN LAYOUT */
+  .container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 28px 32px;
+  }
+
+  /* SECTION HEADERS */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: -0.01em;
+  }
+
+  .section-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* NAV TABS */
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 28px;
+    background: var(--surface);
+    padding: 4px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav-tab {
+    flex-shrink: 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: var(--text2);
+    border: none;
+    background: transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-tab:hover { color: var(--text); background: var(--surface2); }
+  .nav-tab.active {
+    background: var(--gold);
+    color: #0a0c10;
+    font-weight: 600;
+  }
+
+  /* TAB PANELS */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* MACRO OVERVIEW GRID */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .kpi-card:hover { border-color: var(--border2); }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+  }
+
+  .kpi-card.bullish::before { background: var(--green); }
+  .kpi-card.bearish::before { background: var(--red); }
+  .kpi-card.neutral::before { background: var(--yellow); }
+
+  .kpi-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .kpi-value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .kpi-change {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .up { color: var(--green); }
+  .down { color: var(--red); }
+  .flat { color: var(--yellow); }
+
+  .kpi-note {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  /* THESIS CARD */
+  .thesis-card {
+    background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(15,18,24,0));
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .thesis-card::before {
+    content: '"';
+    position: absolute;
+    right: 24px;
+    top: -10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 120px;
+    color: rgba(201,168,76,0.05);
+    line-height: 1;
+  }
+
+  .thesis-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .thesis-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+
+  .thesis-body {
+    font-size: 13.5px;
+    color: var(--text2);
+    line-height: 1.75;
+    max-width: 800px;
+  }
+
+  /* CHAIN FLOW */
+  .chain-flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+    margin: 18px 0;
+  }
+
+  .chain-node {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .chain-node.red { border-color: rgba(224,82,82,0.4); color: var(--red); }
+  .chain-node.gold { border-color: rgba(201,168,76,0.4); color: var(--gold); }
+  .chain-node.green { border-color: rgba(76,175,130,0.4); color: var(--green); }
+
+  .chain-arrow {
+    font-size: 16px;
+    color: var(--text3);
+    padding: 0 8px;
+  }
+
+  /* ASSET GRID */
+  .asset-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .asset-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .asset-card:hover {
+    border-color: var(--border2);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  .asset-card.selected {
+    border-color: rgba(201,168,76,0.5);
+    background: linear-gradient(135deg, rgba(201,168,76,0.04), var(--surface));
+  }
+
+  .asset-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .asset-sym {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.04em;
+  }
+
+  .asset-name {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 2px;
+  }
+
+  .bias-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .bias-bullish { background: var(--green-dim); color: var(--green); border: 1px solid rgba(76,175,130,0.3); }
+  .bias-bearish { background: var(--red-dim); color: var(--red); border: 1px solid rgba(224,82,82,0.3); }
+  .bias-neutral { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(232,196,106,0.3); }
+
+  .asset-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .asset-price {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: -0.02em;
+  }
+
+  .asset-change {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .target-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .target {
+    flex: 1;
+    background: var(--surface2);
+    border-radius: 5px;
+    padding: 6px 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+  }
+
+  .target-label {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+
+  .target.up-t .target-label { color: var(--green); }
+  .target.dn-t .target-label { color: var(--red); }
+  .target.up-t .target-val { color: var(--text); }
+  .target.dn-t .target-val { color: var(--text); }
+
+  /* FACTOR BARS */
+  .factors {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .factor-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .factor-name {
+    font-size: 11px;
+    color: var(--text2);
+    width: 130px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .factor-bar-bg {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .factor-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.6s ease;
+  }
+
+  .factor-bar-fill.red { background: var(--red); }
+  .factor-bar-fill.green { background: var(--green); }
+  .factor-bar-fill.yellow { background: var(--yellow); }
+
+  .factor-pct {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    width: 30px;
+    text-align: right;
+  }
+
+  /* DETAIL PANEL */
+  .detail-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+  }
+
+  .detail-hidden { display: none; }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  /* TABLES */
+  .data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 12.5px;
+  }
+
+  .data-table thead th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    padding: 8px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+
+  .data-table thead th:first-child { border-radius: 6px 0 0 0; }
+  .data-table thead th:last-child { border-radius: 0 6px 0 0; }
+
+  .data-table tbody tr {
+    transition: background 0.15s;
+    cursor: pointer;
+  }
+
+  .data-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+  .data-table tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(30,37,48,0.6);
+    font-family: 'IBM Plex Mono', monospace;
+    vertical-align: middle;
+  }
+
+  .data-table tbody td:first-child { font-weight: 500; color: var(--white); }
+
+  /* ALERT BOXES */
+  .alert {
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .alert-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .alert.warning {
+    background: rgba(232,196,106,0.07);
+    border: 1px solid rgba(232,196,106,0.25);
+    color: var(--text2);
+  }
+
+  .alert.danger {
+    background: rgba(224,82,82,0.07);
+    border: 1px solid rgba(224,82,82,0.25);
+    color: var(--text2);
+  }
+
+  .alert.info {
+    background: rgba(91,155,213,0.07);
+    border: 1px solid rgba(91,155,213,0.25);
+    color: var(--text2);
+  }
+
+  .alert.success {
+    background: rgba(76,175,130,0.07);
+    border: 1px solid rgba(76,175,130,0.25);
+    color: var(--text2);
+  }
+
+  .alert strong { color: var(--white); }
+
+  /* CHART CONTAINER */
+  .chart-wrap {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* All canvas elements must never escape their container */
+  canvas {
+    display: block;
+    max-width: 100% !important;
+    max-height: 300px !important;
+  }
+
+  .chart-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 14px;
+  }
+
+  /* TWO COL */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  @media (max-width: 900px) {
+    .two-col, .three-col { grid-template-columns: 1fr; }
+    .detail-grid { grid-template-columns: 1fr; }
+  }
+
+  /* MACRO RISK MATRIX */
+  .risk-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-bottom: 14px;
+  }
+
+  .risk-cell {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 12px 14px;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    border-radius: 4px;
+  }
+
+  .risk-cell.header-row {
+    background: transparent;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    border: none;
+  }
+
+  .risk-level {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .risk-low { color: var(--green); }
+  .risk-med { color: var(--yellow); }
+  .risk-high { color: var(--red); }
+
+  /* CALENDAR */
+  .event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .event-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 12px 16px;
+    background: var(--surface2);
+    border-radius: 7px;
+    border-left: 3px solid transparent;
+    font-size: 13px;
+  }
+
+  .event-item.high { border-left-color: var(--red); }
+  .event-item.medium { border-left-color: var(--yellow); }
+  .event-item.low { border-left-color: var(--text3); }
+
+  .event-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    white-space: nowrap;
+    min-width: 60px;
+    padding-top: 2px;
+  }
+
+  .event-name { font-weight: 500; color: var(--text); }
+  .event-impact {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    margin-top: 2px;
+  }
+
+  .event-item.high .event-impact { color: var(--red); }
+  .event-item.medium .event-impact { color: var(--yellow); }
+  .event-item.low .event-impact { color: var(--text3); }
+
+  /* OPINION / ANALYST NOTE */
+  .opinion-card {
+    background: linear-gradient(135deg, rgba(224,82,82,0.04), rgba(15,18,24,0));
+    border: 1px solid rgba(224,82,82,0.2);
+    border-radius: 10px;
+    padding: 22px 26px;
+    margin-bottom: 14px;
+  }
+
+  .opinion-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 10px;
+  }
+
+  .opinion-body {
+    font-size: 13.5px;
+    color: var(--text2);
+    line-height: 1.8;
+  }
+
+  .opinion-body p { margin-bottom: 10px; }
+  .opinion-body p:last-child { margin-bottom: 0; }
+
+  .highlight { color: var(--gold); font-weight: 500; }
+  .warn { color: var(--red); font-weight: 500; }
+  .bull { color: var(--green); font-weight: 500; }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 28px 0;
+  }
+
+  /* SMALL BADGE */
+  .tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-left: 6px;
+  }
+
+  .tag-red { background: var(--red-dim); color: var(--red); border: 1px solid rgba(224,82,82,0.2); }
+  .tag-green { background: var(--green-dim); color: var(--green); border: 1px solid rgba(76,175,130,0.2); }
+  .tag-yellow { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(232,196,106,0.2); }
+
+  /* FOOTER */
+  .footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 20px 32px;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-in {
+    animation: fadeInUp 0.4s ease forwards;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+  /* PRECIOUS METALS SPECIFIC */
+  .metals-banner {
+    background: linear-gradient(90deg, rgba(201,168,76,0.06) 0%, transparent 100%);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .metal-stat {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .metal-stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+
+  .metal-stat-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gold);
+  }
+
+  .metal-divider {
+    width: 1px;
+    height: 36px;
+    background: var(--border);
+  }
+
+  /* CORRELATION MATRIX */
+  .corr-grid {
+    display: grid;
+    gap: 2px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+  }
+
+  .corr-row { display: flex; gap: 2px; align-items: center; }
+
+  .corr-cell {
+    width: 46px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .corr-label {
+    width: 70px;
+    font-size: 10px;
+    color: var(--text2);
+    padding-right: 8px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* TOGGLE */
+  .toggle-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .toggle-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text2);
+    background: transparent;
+    transition: all 0.15s;
+  }
+
+  .toggle-btn:hover { color: var(--text); border-color: var(--text3); }
+  .toggle-btn.active { background: var(--surface2); color: var(--gold); border-color: rgba(201,168,76,0.4); }
+
+  .filter-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    border-radius: 3px;
+    margin-right: 4px;
+  }
+
+  .conflict-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: rgba(232,196,106,0.1);
+    border: 1px solid rgba(232,196,106,0.3);
+    color: var(--yellow);
+    float: right;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-logo">
+    <div class="logo-mark">O</div>
+    <div>
+      <div class="logo-text">OMC Intelligence</div>
+      <div class="logo-sub">Old Mountain Capital · Macro Analysis</div>
+    </div>
+  </div>
+  <div class="header-meta">
+    <span class="header-tag"><span class="status-dot"></span>WEEKEND CLOSE</span>
+    <span class="header-tag">SAT · 28 MAR 2026 · 06:00 CET</span>
+    <span class="header-tag" style="color: var(--red);">⚠ IRAN DEADLINE: APR 6</span>
+  </div>
+</header>
+
+<!-- TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-label">LIVE BIAS</div>
+  <div style="overflow:hidden;flex:1;">
+    <div class="ticker-scroll" id="ticker"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="container">
+
+  <!-- NAV -->
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('overview')">Market Overview</button>
+    <button class="nav-tab" onclick="switchTab('metals')">Precious Metals</button>
+    <button class="nav-tab" onclick="switchTab('fx')">FX Matrix</button>
+    <button class="nav-tab" onclick="switchTab('equities')">Equities</button>
+    <button class="nav-tab" onclick="switchTab('macro')">Macro Framework</button>
+    <button class="nav-tab" onclick="switchTab('analyst')">Analyst Notes</button>
+    <button class="nav-tab" onclick="switchTab('calendar')">Events Ahead</button>
+  </div>
+
+  <!-- ===== OVERVIEW TAB ===== -->
+  <div id="tab-overview" class="tab-panel active animate-in">
+
+    <!-- THESIS -->
+    <div class="thesis-card">
+      <div class="thesis-title">Central Macro Thesis · March 28, 2026</div>
+      <div class="thesis-headline">Geopolitical Oil Shock Triggering Stagflationary Regime Shift — USD & Gold Diverge from Conventional Safe-Haven Logic</div>
+      <div class="thesis-body">
+        The Iran conflict has created a textbook stagflation transmission: oil above $110 drives import prices (+1.3% Feb), OECD upgrades G20 inflation to 4.0%, and the Fed is forced into a hawkish hold with rate hike odds now at 52%. Equities are repricing a permanently higher neutral rate (3.0%). The conventional safe-haven playbook breaks here — gold benefits from both inflation hedge demand AND geopolitical fear simultaneously, while equities cannot absorb the dual blow of tighter financial conditions + earnings compression from energy costs.
+      </div>
+      <div class="chain-flow" style="margin-top:16px;">
+        <div class="chain-node red">Iran War</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node red">Oil $110+</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node red">Inflation 4.2%</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node red">Fed Hawkish</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node red">Equities ↓</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node gold">USD ↑</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node gold">Gold ↑</div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node red">JPY ↓ Risk</div>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="section-header">
+      <div class="section-title">Key Market Metrics</div>
+      <div class="section-sub">Real-time snapshot · Sorted by market impact</div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-card bullish">
+        <div class="kpi-label">XAU/USD</div>
+        <div class="kpi-value">$4,507</div>
+        <div class="kpi-change up">▲ +2.96%</div>
+        <div class="kpi-note">Inflation hedge + geopolitical bid</div>
+      </div>
+      <div class="kpi-card bullish">
+        <div class="kpi-label">XAG/USD</div>
+        <div class="kpi-value">$69.87</div>
+        <div class="kpi-change up">▲ +2.87%</div>
+        <div class="kpi-note">Tracking gold — thesis conflict ⚠</div>
+      </div>
+      <div class="kpi-card bearish">
+        <div class="kpi-label">S&P 500</div>
+        <div class="kpi-value">6,369</div>
+        <div class="kpi-change down">▼ -1.67%</div>
+        <div class="kpi-note">7-month low · broke 200-DMA</div>
+      </div>
+      <div class="kpi-card bearish">
+        <div class="kpi-label">Nasdaq 100</div>
+        <div class="kpi-value">23,133</div>
+        <div class="kpi-change down">▼ -1.93%</div>
+        <div class="kpi-note">Official correction (-10% from peak)</div>
+      </div>
+      <div class="kpi-card bearish">
+        <div class="kpi-label">Dow Jones</div>
+        <div class="kpi-value">45,167</div>
+        <div class="kpi-change down">▼ -1.73% (-793pts)</div>
+        <div class="kpi-note">Correction territory · 5th losing week</div>
+      </div>
+      <div class="kpi-card neutral">
+        <div class="kpi-label">USD/JPY</div>
+        <div class="kpi-value">160.21</div>
+        <div class="kpi-change up">▲ +0.36%</div>
+        <div class="kpi-note">⚠ INTERVENTION TRIGGER LEVEL</div>
+      </div>
+      <div class="kpi-card neutral">
+        <div class="kpi-label">10Y Treasury</div>
+        <div class="kpi-value">4.447%</div>
+        <div class="kpi-change down">+13bps spike</div>
+        <div class="kpi-note">Bond market deteriorating</div>
+      </div>
+      <div class="kpi-card neutral">
+        <div class="kpi-label">Fed Rate Hike Odds</div>
+        <div class="kpi-value">52%</div>
+        <div class="kpi-change" style="color:var(--red);">First time above 50%</div>
+        <div class="kpi-note">Paradigm shift from cut expectations</div>
+      </div>
+      <div class="kpi-card neutral">
+        <div class="kpi-label">WTI Crude</div>
+        <div class="kpi-value">~$99–110</div>
+        <div class="kpi-change up">▲ +5.5% (WTI)</div>
+        <div class="kpi-note">Iran war premium — range inconsistent</div>
+      </div>
+      <div class="kpi-card bearish">
+        <div class="kpi-label">BTC/USD</div>
+        <div class="kpi-value">$66,767</div>
+        <div class="kpi-change down">▼ -24.6% YTD</div>
+        <div class="kpi-note">48% below $126K Oct 2025 peak</div>
+      </div>
+      <div class="kpi-card bearish">
+        <div class="kpi-label">AUD/USD</div>
+        <div class="kpi-value">$0.6873</div>
+        <div class="kpi-change down">▼ -0.15%</div>
+        <div class="kpi-note">⚠ Price/analysis discrepancy in report</div>
+      </div>
+      <div class="kpi-card neutral">
+        <div class="kpi-label">USD Index (DXY)</div>
+        <div class="kpi-value">~100.4</div>
+        <div class="kpi-change up">Best monthly gain in 1yr</div>
+        <div class="kpi-note">Safe-haven + yield differential bid</div>
+      </div>
+    </div>
+
+    <!-- ASSET MASTER TABLE -->
+    <div class="section-header">
+      <div class="section-title">Full Asset Snapshot</div>
+      <div class="section-sub">All 14 instruments · click row for detail</div>
+    </div>
+
+    <div class="toggle-row">
+      <button class="toggle-btn active" onclick="filterAssets('all', this)">All Assets</button>
+      <button class="toggle-btn" onclick="filterAssets('metals', this)">Metals</button>
+      <button class="toggle-btn" onclick="filterAssets('fx', this)">FX Pairs</button>
+      <button class="toggle-btn" onclick="filterAssets('equity', this)">Equities</button>
+      <button class="toggle-btn" onclick="filterAssets('crypto', this)">Crypto</button>
+    </div>
+
+    <div class="chart-wrap" style="overflow-x:auto;">
+      <table class="data-table" id="masterTable">
+        <thead>
+          <tr>
+            <th>Symbol</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Change</th>
+            <th>Bias</th>
+            <th>Upside Target</th>
+            <th>Downside Target</th>
+            <th>Target Range</th>
+            <th>Key Risk</th>
+          </tr>
+        </thead>
+        <tbody id="masterTableBody"></tbody>
+      </table>
+    </div>
+
+    <div class="chart-wrap">
+      <div class="chart-title">Daily Change (%) — All Instruments</div>
+      <canvas id="changeChart"></canvas>
+    </div>
+
+  </div>
+
+  <!-- ===== METALS TAB ===== -->
+  <div id="tab-metals" class="tab-panel animate-in">
+    <div class="metals-banner">
+      <div class="metal-stat">
+        <div class="metal-stat-label">Gold (XAU/USD)</div>
+        <div class="metal-stat-val">$4,507.70</div>
+      </div>
+      <div class="metal-divider"></div>
+      <div class="metal-stat">
+        <div class="metal-stat-label">Daily Change</div>
+        <div class="metal-stat-val" style="color: var(--green);">+2.96%</div>
+      </div>
+      <div class="metal-divider"></div>
+      <div class="metal-stat">
+        <div class="metal-stat-label">Silver (XAG/USD)</div>
+        <div class="metal-stat-val">$69.87</div>
+      </div>
+      <div class="metal-divider"></div>
+      <div class="metal-stat">
+        <div class="metal-stat-label">Daily Change</div>
+        <div class="metal-stat-val" style="color: var(--green);">+2.87%</div>
+      </div>
+      <div class="metal-divider"></div>
+      <div class="metal-stat">
+        <div class="metal-stat-label">Gold/Silver Ratio</div>
+        <div class="metal-stat-val" style="color: var(--text);">64.5x</div>
+      </div>
+      <div class="metal-divider"></div>
+      <div class="metal-stat">
+        <div class="metal-stat-label">Oil (Brent)</div>
+        <div class="metal-stat-val" style="color: var(--red);">~$105–111</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="chart-wrap">
+        <div class="chart-title">XAU/USD — Factor Weight Distribution</div>
+        <canvas id="goldFactorChart"></canvas>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">XAG/USD — Factor Weight Distribution</div>
+        <canvas id="silverFactorChart"></canvas>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-header">
+          <div class="section-title">Gold (XAU/USD) Analysis</div>
+          <span class="bias-badge bias-bullish" style="margin-left:auto;">BULLISH</span>
+        </div>
+
+        <div class="alert success">
+          <div class="alert-icon">✦</div>
+          <div><strong>Dual Demand Driver:</strong> Gold benefits simultaneously from geopolitical safe-haven flows AND inflationary hedge demand — a rare confluence that creates a more durable bid than either driver alone.</div>
+        </div>
+
+        <div class="chart-wrap">
+          <div class="chart-title">Key Factors — XAU/USD</div>
+          <div class="factors" id="goldFactors"></div>
+        </div>
+
+        <div class="chart-wrap">
+          <div class="chart-title">Price Targets</div>
+          <table class="data-table">
+            <thead><tr><th>Direction</th><th>Target</th><th>Current</th><th>Distance</th></tr></thead>
+            <tbody>
+              <tr><td class="up">▲ Upside</td><td>$4,524.00</td><td>$4,507.70</td><td class="up">+0.36%</td></tr>
+              <tr><td class="down">▼ Downside</td><td>$4,476.00</td><td>$4,507.70</td><td class="down">-0.70%</td></tr>
+              <tr><td>Range Width</td><td colspan="3">$48 (1.07% range)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-header">
+          <div class="section-title">Silver (XAG/USD) Analysis <span class="conflict-badge">⚠ CONFLICT</span></div>
+          <span class="bias-badge bias-neutral" style="margin-left:auto;">CONFLICTED</span>
+        </div>
+
+        <div class="alert warning">
+          <div class="alert-icon">⚠</div>
+          <div><strong>Critical Report Inconsistency:</strong> The silver summary states it "faces downward pressure" with all factors bearish — yet the price is showing +2.87%. This contradiction is not reconciled in the source document. Trade with caution.</div>
+        </div>
+
+        <div class="chart-wrap">
+          <div class="chart-title">Key Factors — XAG/USD</div>
+          <div class="factors" id="silverFactors"></div>
+        </div>
+
+        <div class="chart-wrap">
+          <div class="chart-title">Price Targets</div>
+          <table class="data-table">
+            <thead><tr><th>Direction</th><th>Target</th><th>Current</th><th>Distance</th></tr></thead>
+            <tbody>
+              <tr><td class="up">▲ Upside</td><td>$70.20</td><td>$69.87</td><td class="up">+0.47%</td></tr>
+              <tr><td class="down">▼ Downside</td><td>$69.00</td><td>$69.87</td><td class="down">-1.24%</td></tr>
+              <tr><td>Range Width</td><td colspan="3">$1.20 (1.72% range)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">Gold-Silver Macro Context</div>
+      <div class="section-sub">Historical framework · Stagflation regime</div>
+    </div>
+
+    <div class="three-col">
+      <div class="chart-wrap">
+        <div class="chart-title">Macro Scenario Outcomes — Gold</div>
+        <canvas id="goldScenarioChart"></canvas>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">Gold vs Oil Correlation</div>
+        <canvas id="goldOilChart"></canvas>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">Real Yield vs Gold Sensitivity</div>
+        <canvas id="realYieldChart"></canvas>
+      </div>
+    </div>
+
+    <div class="alert info">
+      <div class="alert-icon">📊</div>
+      <div><strong>Gold/Silver Ratio at 64.5x:</strong> This is historically elevated for a commodity supercycle environment. In the 1970s stagflation, the ratio compressed significantly as silver outperformed gold once the macro regime was fully priced. If the current oil shock persists, silver has higher beta upside — but the industrial demand component creates downside asymmetry if growth slows sharply (stagflation vs recession divergence).</div>
+    </div>
+  </div>
+
+  <!-- ===== FX TAB ===== -->
+  <div id="tab-fx" class="tab-panel animate-in">
+
+    <div class="section-header">
+      <div class="section-title">FX Matrix Overview</div>
+      <div class="section-sub">8 pairs · bias, targets & key drivers</div>
+    </div>
+
+    <div class="two-col">
+      <div class="chart-wrap">
+        <div class="chart-title">FX Pair Performance — Daily Change (%)</div>
+        <canvas id="fxChangeChart"></canvas>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">Currency Strength Ranking (Implied)</div>
+        <canvas id="currencyStrengthChart"></canvas>
+      </div>
+    </div>
+
+    <div class="asset-grid" id="fxCardGrid"></div>
+
+    <div class="section-header" style="margin-top:28px;">
+      <div class="section-title">JPY Intervention Watch</div>
+      <div class="section-sub">Critical risk — 160 level historically triggered BoJ action</div>
+    </div>
+
+    <div class="alert danger">
+      <div class="alert-icon">🚨</div>
+      <div>
+        <strong>USDJPY at 160.20 — July 2024 Intervention Echo:</strong> The last time USDJPY traded at 160, Japan spent an estimated ¥9.8T (~$63B) intervening in July 2024. Finance Minister Katayama has explicitly stated "readiness for decisive action." The report gives this only 10% weight as "BoJ Policy Risk" — that is structurally underweighted. This is the binary event risk on this pair. Any long JPY cross (GBPJPY, EURJPY) should be sized accordingly.
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="chart-wrap">
+        <div class="chart-title">JPY Cross Performance Matrix</div>
+        <canvas id="jpyCrossChart"></canvas>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">USD Pair Factor Dominance</div>
+        <canvas id="usdFactorChart"></canvas>
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top:28px;">
+      <div class="section-title">FX Correlation Risk Map</div>
+      <div class="section-sub">Implied correlation — avoid stacking same-direction positions</div>
+    </div>
+
+    <div class="chart-wrap">
+      <div id="corrMatrix" style="overflow-x:auto;"></div>
+    </div>
+
+  </div>
+
+  <!-- ===== EQUITIES TAB ===== -->
+  <div id="tab-equities" class="tab-panel animate-in">
+
+    <div class="section-header">
+      <div class="section-title">US Equity Indices — Correction Analysis</div>
+      <div class="section-sub">S&P 500 · Dow Jones · Nasdaq 100</div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card bearish">
+        <div class="kpi-label">S&P 500 (^GSPC)</div>
+        <div class="kpi-value">6,369</div>
+        <div class="kpi-change down">▼ -1.67% · 7-month low</div>
+        <div class="kpi-note">Broke 200-DMA · Target: 6356 → 6225</div>
+      </div>
+      <div class="kpi-card bearish">
+        <div class="kpi-label">Dow Jones (^DJI)</div>
+        <div class="kpi-value">45,167</div>
+        <div class="kpi-change down">▼ -793pts · -1.73%</div>
+        <div class="kpi-note">Correction territory · -10% from Feb peak</div>
+      </div>
+      <div class="kpi-card bearish">
+        <div class="kpi-label">Nasdaq 100 (^NDX)</div>
+        <div class="kpi-value">23,133</div>
+        <div class="kpi-change down">▼ -1.93% · official correction</div>
+        <div class="kpi-note">Forward P/E 21x · VIX 31.05</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="chart-wrap">
+        <div class="chart-title">Equity Index Drawdown from Peaks (%)</div>
+        <canvas id="equityDrawdownChart"></canvas>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">S&P 500 Bear Case Factor Map</div>
+        <canvas id="spFactorChart"></canvas>
+      </div>
+    </div>
+
+    <div class="three-col">
+      <div class="chart-wrap">
+        <div class="chart-title">^GSPC Key Factors</div>
+        <div class="factors" id="spFactors"></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">^DJI Key Factors</div>
+        <div class="factors" id="djiFactors"></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">^NDX Key Factors</div>
+        <div class="factors" id="ndxFactors"></div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="alert danger">
+        <div class="alert-icon">📉</div>
+        <div><strong>S&P 500 Technical Breakdown:</strong> Index broke below 6,440 support and 200-DMA. Both Thursday and Friday closed below opening — textbook bearish continuation signal. Next key support: 6,225. If 52% Fed hike odds increase further, 6,000 is in scope.</div>
+      </div>
+      <div class="alert warning">
+        <div class="alert-icon">⚡</div>
+        <div><strong>VIX at 31.05:</strong> Elevated but not panic-level. Options market pricing significant uncertainty into April 6 Iran deadline. If conflict escalates, VIX could spike toward 40. If resolved, violent short-squeeze rally is possible.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== MACRO TAB ===== -->
+  <div id="tab-macro" class="tab-panel animate-in">
+
+    <div class="section-header">
+      <div class="section-title">Macro Framework Analysis</div>
+      <div class="section-sub">Central banks · Geopolitics · Growth outlook</div>
+    </div>
+
+    <div class="three-col">
+      <div class="chart-wrap">
+        <div class="chart-title">Central Bank Policy Matrix</div>
+        <table class="data-table" style="font-size:11px;">
+          <thead><tr><th>CB</th><th>Rate</th><th>Stance</th><th>Cuts 2026</th></tr></thead>
+          <tbody>
+            <tr><td>Fed</td><td>3.50–3.75%</td><td style="color:var(--red)">Hawkish</td><td style="color:var(--red)">0</td></tr>
+            <tr><td>ECB</td><td>—</td><td style="color:var(--yellow)">Watching</td><td>TBD</td></tr>
+            <tr><td>BoE</td><td>—</td><td style="color:var(--yellow)">Cautious</td><td>TBD</td></tr>
+            <tr><td>BoJ</td><td>Low</td><td style="color:var(--green)">Hiking Risk</td><td style="color:var(--green)">N/A</td></tr>
+            <tr><td>RBA</td><td>—</td><td style="color:var(--red)">Bearish</td><td>TBD</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">OECD Macro Projections (Mar 2026)</div>
+        <canvas id="oecdChart"></canvas>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">Risk Sentiment Dashboard</div>
+        <canvas id="sentimentChart"></canvas>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">Stagflation Risk Assessment</div>
+      <div class="section-sub">Probability-weighted scenario matrix</div>
+    </div>
+
+    <div class="chart-wrap" style="overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Scenario</th>
+            <th>Probability</th>
+            <th>Oil</th>
+            <th>Fed Action</th>
+            <th>Gold</th>
+            <th>Equities</th>
+            <th>USD</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:var(--red)">Escalation (Iran strikes)</strong></td>
+            <td><span style="color:var(--red)">35%</span></td>
+            <td class="up">$130+</td>
+            <td>Hike or hold</td>
+            <td class="up">$4,700+</td>
+            <td class="down">-15% further</td>
+            <td class="up">Strong</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--yellow)">Stagflation Base Case</strong></td>
+            <td><span style="color:var(--yellow)">40%</span></td>
+            <td style="color:var(--yellow)">$100–120</td>
+            <td>Hold + hike risk</td>
+            <td style="color:var(--yellow)">$4,400–$4,700</td>
+            <td class="down">-5–8% grind</td>
+            <td class="up">Moderate strength</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--green)">Deal/De-escalation</strong></td>
+            <td><span style="color:var(--green)">20%</span></td>
+            <td class="down">$75–85</td>
+            <td>Cut path resumes</td>
+            <td class="down">$3,800–$4,100</td>
+            <td class="up">+10–15% squeeze</td>
+            <td class="down">Weakens</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--blue)">Stagflation → Recession</strong></td>
+            <td><span style="color:var(--blue)">5%</span></td>
+            <td class="down">Collapses</td>
+            <td>Emergency cuts</td>
+            <td style="color:var(--yellow)">Mixed</td>
+            <td class="down">-25%+</td>
+            <td style="color:var(--yellow)">Initial safe-haven</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="two-col" style="margin-top:14px;">
+      <div class="chart-wrap">
+        <div class="chart-title">Macro Regime Probability Distribution</div>
+        <canvas id="regimeChart"></canvas>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">Asset Performance by Scenario (Expected)</div>
+        <canvas id="scenarioReturnChart"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== ANALYST NOTES TAB ===== -->
+  <div id="tab-analyst" class="tab-panel animate-in">
+
+    <div class="section-header">
+      <div class="section-title">Analyst Commentary & Critical Review</div>
+      <div class="section-sub">Unfiltered assessment of source document quality and trading implications</div>
+    </div>
+
+    <div class="opinion-card">
+      <div class="opinion-title">⚠ Document Quality Issues — Do Not Trade These Directly</div>
+      <div class="opinion-body">
+        <p><span class="warn">1. AUD/USD Price Discrepancy (Critical):</span> The analysis describes an overnight trading range of 0.7073–0.7124 for AUDUSD. The current price shows $0.68732. That's a ~3% gap — which in FX terms is enormous and unambiguous. You cannot anchor a directional bias on a report where the narrative range and the actual price are 3% apart. One of them is wrong, and neither is footnoted. Before acting on any AUD bias from this document, verify independently.</p>
+        <p><span class="warn">2. Silver Fundamental vs. Price Contradiction:</span> Every factor for XAG/USD is bearish — rate hike odds, Treasury yield spike, hawkish dot plot, balance sheet shrinkage — and the report summary explicitly says silver "faces downward pressure." The price is up 2.87%. A competent analyst must resolve this contradiction explicitly: either the price action is a short-term bounce within a bearish medium-term setup, or the factors are being over-emphasized. The document does neither. This is a significant structural flaw.</p>
+        <p><span class="warn">3. Oil Price Inconsistency Across Sections:</span> WTI is cited at $99.64 in the DJI section, $110+ in inflation sections, and $120/barrel in the NDX section. Brent is $105.32 in the DJI section. The spread between $99 WTI and $120 oil (implied NDX reference) is not the same benchmark or the same day. This data stitching from multiple sources without normalization creates an unreliable macro foundation.</p>
+        <p><span class="warn">4. USDJPY Intervention Risk is Structurally Underweighted:</span> 160 is not just a round number — it's the exact trigger level from July 2024 where Japan deployed ¥9.8T in intervention. The pair is AT that level today. The report buries this in a 10% weight "BoJ Policy Risk" factor. This should be the primary framing for this pair, not a footnote. Any directional view on USDJPY, GBPJPY, or EURJPY must be built around this binary risk first.</p>
+      </div>
+    </div>
+
+    <div class="thesis-card" style="border-color: rgba(76,175,130,0.25); background: linear-gradient(135deg, rgba(76,175,130,0.04), rgba(15,18,24,0));">
+      <div class="thesis-title" style="color: var(--green);">What the Document Gets Right</div>
+      <div class="thesis-headline" style="font-size:16px;">The Core Stagflation Narrative is Sound and Internally Coherent</div>
+      <div class="thesis-body">
+        The Iran conflict → oil shock → inflation resurgence → Fed hawkish pivot → equity repricing chain is correctly identified and consistently applied across most asset analyses. The Fed at 3.50–3.75% with zero cuts and a shifted neutral rate to 3.0% is the correct framing. The 52% rate hike odds crossing the 50% threshold as a paradigm shift is sharp macro reading. The gold dual-demand driver (inflation hedge + geopolitical safe-haven) is correctly identified. The USDJPY intervention level observation, though underweighted, is noted. The Nasdaq correction analysis (forward P/E compression + bond yield sensitivity) is technically sound.
+      </div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">Trading Implications by Asset Class</div>
+      <div class="section-sub">What this environment means for your specific strategies</div>
+    </div>
+
+    <div class="event-list">
+      <div class="event-item high">
+        <div class="event-date" style="color:var(--gold);">METALS</div>
+        <div>
+          <div class="event-name">Gold (XAU/USD): Bias remains long-biased, but the daily range is tight ($48 / 1.07%).</div>
+          <div class="event-impact">With targets at 4524 UP and 4476 DOWN and price at 4507, you're sitting in the upper half of a tight range on a Saturday open. The bigger play is medium-term: if the April 6 Iran deadline escalates, $4,700+ is achievable. For your Daily Fib system, the current price action within this range requires patience — wait for a pullback to a clean Fibonacci level before entry. The bias is clear; execution timing is everything.</div>
+        </div>
+      </div>
+      <div class="event-item high">
+        <div class="event-date" style="color:var(--red);">USDJPY</div>
+        <div>
+          <div class="event-name">USDJPY: Do not add directional exposure until April 6 intervention risk resolves.</div>
+          <div class="event-impact">The pair is at 160.20, the historical intervention trigger. The upside target in this report (160.4) is only 18 pips away. The downside risk on a BoJ intervention is 300–500 pips instantly. R:R on a long is catastrophically asymmetric right now. If you have existing longs, trail stops tight. If looking for new entries, wait for the April 6 Iran deadline to pass or for BoJ to act (creating a dip entry on the following correction).</div>
+        </div>
+      </div>
+      <div class="event-item medium">
+        <div class="event-date" style="color:var(--yellow);">EUR/GBP</div>
+        <div>
+          <div class="event-name">EURUSD & GBPUSD: Both capped by USD strength thesis. USD strength is the master variable.</div>
+          <div class="event-impact">Your Daily Fib system on these pairs should be biased short on pullbacks. GBPUSD has the cleaner bearish narrative (weak UK PMI 51.0 vs 52.8 expected + USD haven). EURUSD has the 200-DMA cap at 1.16 and 10Y yield differential. Both confirm short bias. For the H4 system, the 50 EMA + Fib confluence shorts align with the macro backdrop here.</div>
+        </div>
+      </div>
+      <div class="event-item medium">
+        <div class="event-date" style="color:var(--yellow);">SILVER</div>
+        <div>
+          <div class="event-name">Silver: Do not trade based on this report alone — resolve the contradiction first.</div>
+          <div class="event-impact">Fundamentally bearish thesis (rates, yields) + price showing +2.87% means either: (a) the market disagrees with the fundamental analysis, or (b) there's a technical bounce in a larger downtrend. You need to determine which. Check the daily chart structure independently. If price is in a weekly uptrend but fundamentals are bearish, that's a divergence worth monitoring but not fading blindly.</div>
+        </div>
+      </div>
+      <div class="event-item low">
+        <div class="event-date" style="color:var(--text3);">EQUITIES</div>
+        <div>
+          <div class="event-name">US Indices: Not your core market, but confirms risk-off macro backdrop.</div>
+          <div class="event-impact">The S&P breaking below 200-DMA and the Dow entering correction territory validates the USD strength and gold bid you see in your instrument universe. Equity weakness → risk-off → commodity currencies (AUD, CAD) under pressure → USD pairs favor USD long side. This supports your short AUDUSD and short EURUSD biases via your systems.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== CALENDAR TAB ===== -->
+  <div id="tab-calendar" class="tab-panel animate-in">
+
+    <div class="section-header">
+      <div class="section-title">Key Events & Risk Calendar</div>
+      <div class="section-sub">Week ahead + critical geopolitical deadlines</div>
+    </div>
+
+    <div class="alert danger" style="margin-bottom:20px;">
+      <div class="alert-icon">🚨</div>
+      <div><strong>CRITICAL DATE: April 6 — Trump's Iran Deadline.</strong> This is the single most important market event in the near-term horizon. A military escalation post-deadline would send oil above $130, gold to $4,700+, equities -5% or more. A deal or extension would trigger a violent risk-on unwind. Plan your exposure around this date specifically.</div>
+    </div>
+
+    <div class="event-list">
+      <div class="event-item high">
+        <div class="event-date">TODAY<br>Mar 28</div>
+        <div>
+          <div class="event-name">US Wholesale Inventories MoM Adv</div>
+          <div class="event-impact">HIGH IMPACT · USD · Inventory build = stagflation signal; drawdown = demand holding up</div>
+        </div>
+      </div>
+      <div class="event-item high">
+        <div class="event-date">TODAY<br>Mar 28</div>
+        <div>
+          <div class="event-name">ECB Cipollone Speech</div>
+          <div class="event-impact">HIGH IMPACT · EUR · Any dovish signals vs. ECB hold narrative moves EURUSD</div>
+        </div>
+      </div>
+      <div class="event-item high">
+        <div class="event-date">Mon<br>Mar 31</div>
+        <div>
+          <div class="event-name">Fed Chair Powell Speech</div>
+          <div class="event-impact">HIGH IMPACT · ALL MARKETS · First public statement post-52% rate hike odds threshold. Any acknowledgment of hike possibility = market repricing event</div>
+        </div>
+      </div>
+      <div class="event-item high">
+        <div class="event-date">Tue<br>Apr 1</div>
+        <div>
+          <div class="event-name">JOLTS Job Openings</div>
+          <div class="event-impact">HIGH IMPACT · USD · Labor market resilience vs. slowdown — key for Fed path</div>
+        </div>
+      </div>
+      <div class="event-item high">
+        <div class="event-date">Tue<br>Apr 1</div>
+        <div>
+          <div class="event-name">ISM Manufacturing PMI</div>
+          <div class="event-impact">HIGH IMPACT · USD · Prices paid sub-index critical for inflation pulse</div>
+        </div>
+      </div>
+      <div class="event-item medium">
+        <div class="event-date">Wed<br>Apr 2</div>
+        <div>
+          <div class="event-name">US Retail Sales MoM</div>
+          <div class="event-impact">MEDIUM IMPACT · USD · Consumer stress from $3.98/gal gas — weakness confirms stagflation, strength complicates the narrative</div>
+        </div>
+      </div>
+      <div class="event-item medium">
+        <div class="event-date">Wed–Fri<br>Apr 2–4</div>
+        <div>
+          <div class="event-name">Europe Preliminary March CPI</div>
+          <div class="event-impact">MEDIUM IMPACT · EUR/GBP · If EZ inflation accelerates from oil pass-through, ECB hawkish surprise possible — EUR supportive</div>
+        </div>
+      </div>
+      <div class="event-item medium">
+        <div class="event-date">Thu<br>Apr 3</div>
+        <div>
+          <div class="event-name">Japan Preliminary March CPI</div>
+          <div class="event-impact">MEDIUM IMPACT · JPY · Hot print reinforces BoJ hike narrative and JPY intervention justification</div>
+        </div>
+      </div>
+      <div class="event-item high">
+        <div class="event-date">Fri<br>Apr 4</div>
+        <div>
+          <div class="event-name">US Nonfarm Payrolls</div>
+          <div class="event-impact">HIGH IMPACT · ALL · If labor market softens = stagflation confirmed. If strong = Fed forced into hike. Both paths support gold, neither supports tech equity recovery</div>
+        </div>
+      </div>
+      <div class="event-item high" style="border-left-color: #ff4444; background: rgba(255,68,68,0.05);">
+        <div class="event-date" style="color:var(--red);">CRITICAL<br>Apr 6</div>
+        <div>
+          <div class="event-name" style="color:var(--red);">⚠ TRUMP'S IRAN DEADLINE EXPIRES</div>
+          <div class="event-impact" style="color:var(--text2);">BINARY EVENT — Military action OR diplomatic resolution. Both outcomes create 3–5% moves across asset classes. Gold, oil, and USD are the primary transmission vehicles. USDJPY intervention risk compounds if geopolitical shock hits simultaneously with 160+ level.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<div class="footer">
+  OMC INTELLIGENCE PLATFORM · OLD MOUNTAIN CAPITAL · GENERATED FROM MRKT DAILY BIAS REPORT 28.03.2026
+  &nbsp;|&nbsp; ANALYSIS: MILAN BANICEVIC / CLAUDE AI MACRO LAYER
+  &nbsp;|&nbsp; NOT FINANCIAL ADVICE · PROPRIETARY USE ONLY
+</div>
+
+<script>
+// ========== DATA ==========
+const assets = [
+  { sym:'XAUUSD', name:'Gold', cat:'metals', price:4507.70, chg:2.96, bias:'bullish', up:4524, dn:4476,
+    factors:[{n:'Geopolitical Tensions',w:30,c:'green'},{n:'Consumer Sentiment',w:20,c:'green'},{n:'Fed Balance Sheet',w:35,c:'red'},{n:'Light Data Flow',w:15,c:'yellow'}],
+    risk:'Fed hawkish pivot may cap upside if real yields spike further' },
+  { sym:'XAGUSD', name:'Silver', cat:'metals', price:69.87, chg:2.87, bias:'neutral', up:70.2, dn:69,
+    factors:[{n:'Rate Hike Odds',w:35,c:'red'},{n:'Treasury Yield Spike',w:25,c:'red'},{n:'Balance Sheet Shrink',w:20,c:'red'},{n:'Hawkish Dot Plot',w:15,c:'red'},{n:'Crypto Regulation',w:5,c:'yellow'}],
+    risk:'⚠ CONFLICT: Bearish thesis vs. +2.87% price action unresolved' },
+  { sym:'EURUSD', name:'Euro / US Dollar', cat:'fx', price:1.15424, chg:0.11, bias:'bearish', up:1.1559, dn:1.1534,
+    factors:[{n:'Price Action',w:30,c:'yellow'},{n:'Fed Speech',w:25,c:'red'},{n:'FOMC Outlook',w:20,c:'red'},{n:'Treasury Yields',w:15,c:'red'},{n:'Geopolitics',w:10,c:'red'}],
+    risk:'200-DMA cap at 1.16 · USD yield differential' },
+  { sym:'GBPUSD', name:'GBP / US Dollar', cat:'fx', price:1.32623, chg:-0.47, bias:'bearish', up:1.33, dn:1.325,
+    factors:[{n:'Weak UK PMI 51.0',w:30,c:'red'},{n:'USD Haven Strength',w:25,c:'red'},{n:'Poor Confidence',w:20,c:'red'},{n:'Fed Hawkish',w:15,c:'red'},{n:'Price Stagnation',w:10,c:'yellow'}],
+    risk:'UK PMI miss (51.0 vs 52.8) · Bearish confirmation' },
+  { sym:'USDJPY', name:'USD / Japanese Yen', cat:'fx', price:160.208, chg:0.36, bias:'neutral', up:160.4, dn:159.8,
+    factors:[{n:'Yen Weakness',w:40,c:'green'},{n:'Geopolitical Risk',w:30,c:'green'},{n:'US Yields Hawkish',w:20,c:'green'},{n:'BoJ Policy Risk',w:10,c:'red'}],
+    risk:'⚠ INTERVENTION AT 160 — July 2024 trigger level' },
+  { sym:'AUDUSD', name:'AUD / US Dollar', cat:'fx', price:0.68732, chg:-0.15, bias:'bearish', up:0.69, dn:0.6865,
+    factors:[{n:'Geopolitical Tensions',w:40,c:'red'},{n:'USD Strength',w:30,c:'red'},{n:'Weak Sentiment',w:20,c:'red'},{n:'Price Action',w:10,c:'yellow'}],
+    risk:'⚠ Price discrepancy: report cites 0.7073–0.7124 range vs $0.6873' },
+  { sym:'GBPJPY', name:'GBP / Japanese Yen', cat:'fx', price:212.474, chg:-0.17, bias:'bearish', up:213, dn:212.2,
+    factors:[{n:'Yen Intervention Fears',w:50,c:'red'},{n:'Weak UK Data',w:25,c:'red'},{n:'Price Action',w:15,c:'yellow'},{n:'BoJ Rate Estimate',w:10,c:'red'}],
+    risk:'Dual pressure: weak GBP + JPY intervention risk' },
+  { sym:'EURJPY', name:'EUR / Japanese Yen', cat:'fx', price:184.919, chg:0.42, bias:'neutral', up:184.7, dn:184.3,
+    factors:[{n:'Fed Hawkish Hold',w:35,c:'green'},{n:'Geopolitical Risk-Off',w:25,c:'red'},{n:'Technical Bullish',w:20,c:'green'},{n:'Tariff Uncertainty',w:15,c:'yellow'},{n:'Carry Trade',w:5,c:'yellow'}],
+    risk:'Conflicting drivers · RSI 57.47 neutral · Range-bound expected' },
+  { sym:'USDCAD', name:'USD / Canadian Dollar', cat:'fx', price:1.38647, chg:0.04, bias:'neutral', up:1.389, dn:1.385,
+    factors:[{n:'Fed Balance Sheet',w:28,c:'green'},{n:'Treasury Yield Spike',w:26,c:'green'},{n:'Hawkish FOMC',w:25,c:'green'},{n:'Technical Consolidation',w:21,c:'yellow'}],
+    risk:'Descending channel RSI>60 · Near-term pullback possible' },
+  { sym:'GBPCAD', name:'GBP / Canadian Dollar', cat:'fx', price:1.84216, chg:-0.30, bias:'bearish', up:1.8467, dn:1.8415,
+    factors:[{n:'UK Retail Sales',w:30,c:'yellow'},{n:'Price Action Downtrend',w:25,c:'red'},{n:'Technicals',w:20,c:'yellow'},{n:'Market Closure',w:15,c:'yellow'},{n:'G10 Trends',w:10,c:'red'}],
+    risk:'RSI 55.41 neutral · Below 200-DMA (1.85) · Downtrend from highs' },
+  { sym:'BTCUSD', name:'Bitcoin', cat:'crypto', price:66766.65, chg:0.62, bias:'bearish', up:67650, dn:66400,
+    factors:[{n:'Price Decline',w:40,c:'red'},{n:'Geopolitical Tensions',w:30,c:'red'},{n:'Institutional Buying',w:15,c:'green'},{n:'Fed Balance Sheet',w:10,c:'red'},{n:'Market Correlation',w:5,c:'red'}],
+    risk:'-24.6% YTD · 48% below $126K Oct 2025 peak · Extreme fear' },
+  { sym:'^GSPC', name:'S&P 500', cat:'equity', price:6368.85, chg:-1.67, bias:'bearish', up:6415.7, dn:6356.1,
+    factors:[{n:'Technical Breakdown',w:28,c:'red'},{n:'Inflation Resurgence',w:27,c:'red'},{n:'Geopolitical Risk',w:25,c:'red'},{n:'Rate Hike Odds',w:20,c:'red'}],
+    risk:'Broke 200-DMA · Next support 6225 · VIX 31' },
+  { sym:'^DJI', name:'Dow Jones', cat:'equity', price:45166.64, chg:-1.73, bias:'bearish', up:45364.7, dn:45063.3,
+    factors:[{n:'Market Plunge',w:35,c:'red'},{n:'Oil Surge',w:25,c:'red'},{n:'Hawkish Fed',w:20,c:'red'},{n:'Sentiment Drop',w:10,c:'red'},{n:'Deadline Extension',w:10,c:'yellow'}],
+    risk:'Correction territory · 5th straight losing week · Worst since Iran war began' },
+  { sym:'^NDX', name:'Nasdaq 100', cat:'equity', price:23132.771, chg:-1.93, bias:'bearish', up:23313.8, dn:23089,
+    factors:[{n:'Tech Sector Weakness',w:28,c:'red'},{n:'Rate-Hike Expectations',w:26,c:'red'},{n:'Geopolitical Oil Shock',w:24,c:'red'},{n:'Bond Yield Spike',w:15,c:'red'},{n:'Consumer Sentiment',w:7,c:'red'}],
+    risk:'Forward P/E 21x · VIX 31.05 · Supply chain risk (helium/semis)' },
+];
+
+// ========== TICKER ==========
+function buildTicker() {
+  const container = document.getElementById('ticker');
+  let html = '';
+  const items = assets.map(a => {
+    const sign = a.chg >= 0 ? '+' : '';
+    const cls = a.chg >= 0 ? 'ticker-up' : 'ticker-down';
+    const arrow = a.chg >= 0 ? '▲' : '▼';
+    return `<div class="ticker-item">
+      <span class="ticker-sym">${a.sym}</span>
+      <span class="ticker-price">${formatPrice(a.sym, a.price)}</span>
+      <span class="${cls}">${arrow} ${sign}${a.chg.toFixed(2)}%</span>
+    </div>`;
+  });
+  html = items.join('') + items.join('');
+  container.innerHTML = html;
+}
+
+function formatPrice(sym, price) {
+  if (price > 1000) return '$' + price.toLocaleString('en-US', {minimumFractionDigits:2,maximumFractionDigits:2});
+  if (price > 10) return '$' + price.toFixed(3);
+  if (price > 1) return '$' + price.toFixed(5);
+  return '$' + price.toFixed(5);
+}
+
+// ========== TABS ==========
+function switchTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+  setTimeout(() => initCharts(id), 100);
+}
+
+// ========== MASTER TABLE ==========
+function buildMasterTable(filter) {
+  const tbody = document.getElementById('masterTableBody');
+  const filtered = filter && filter !== 'all' ? assets.filter(a => a.cat === filter) : assets;
+  tbody.innerHTML = filtered.map(a => {
+    const chgCls = a.chg >= 0 ? 'up' : 'down';
+    const sign = a.chg >= 0 ? '+' : '';
+    const biasCls = a.bias === 'bullish' ? 'bias-bullish' : a.bias === 'bearish' ? 'bias-bearish' : 'bias-neutral';
+    const rangePct = ((a.up - a.dn) / a.price * 100).toFixed(2);
+    return `<tr>
+      <td style="font-family:'IBM Plex Mono',monospace;">${a.sym}</td>
+      <td><span style="font-size:11px;color:var(--text3);">${a.cat}</span></td>
+      <td style="color:var(--white);">${formatPrice(a.sym, a.price)}</td>
+      <td class="${chgCls}" style="font-family:'IBM Plex Mono',monospace;">${sign}${a.chg.toFixed(2)}%</td>
+      <td><span class="bias-badge ${biasCls}">${a.bias.toUpperCase()}</span></td>
+      <td class="up" style="font-family:'IBM Plex Mono',monospace;">${formatPrice(a.sym, a.up)}</td>
+      <td class="down" style="font-family:'IBM Plex Mono',monospace;">${formatPrice(a.sym, a.dn)}</td>
+      <td style="font-family:'IBM Plex Mono',monospace;color:var(--text2);">${rangePct}%</td>
+      <td style="font-size:11px;color:var(--text2);max-width:200px;">${a.risk}</td>
+    </tr>`;
+  }).join('');
+}
+
+function filterAssets(cat, btn) {
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildMasterTable(cat);
+}
+
+// ========== FACTORS ==========
+function buildFactors(containerId, assetSym) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const asset = assets.find(a => a.sym === assetSym);
+  if (!asset) return;
+  container.innerHTML = asset.factors.map(f => `
+    <div class="factor-row">
+      <div class="factor-name">${f.n}</div>
+      <div class="factor-bar-bg">
+        <div class="factor-bar-fill ${f.c}" style="width:${f.w}%"></div>
+      </div>
+      <div class="factor-pct">${f.w}%</div>
+    </div>
+  `).join('');
+}
+
+// ========== FX CARDS ==========
+function buildFXCards() {
+  const grid = document.getElementById('fxCardGrid');
+  if (!grid) return;
+  const fxAssets = assets.filter(a => a.cat === 'fx');
+  grid.innerHTML = fxAssets.map(a => {
+    const chgCls = a.chg >= 0 ? 'up' : 'down';
+    const sign = a.chg >= 0 ? '+' : '';
+    const biasCls = a.bias === 'bullish' ? 'bias-bullish' : a.bias === 'bearish' ? 'bias-bearish' : 'bias-neutral';
+    return `<div class="asset-card">
+      <div class="asset-header">
+        <div>
+          <div class="asset-sym">${a.sym}</div>
+          <div class="asset-name">${a.name}</div>
+        </div>
+        <span class="bias-badge ${biasCls}">${a.bias.toUpperCase()}</span>
+      </div>
+      <div class="asset-price-row">
+        <span class="asset-price">${formatPrice(a.sym, a.price)}</span>
+        <span class="asset-change ${chgCls}">${sign}${a.chg.toFixed(2)}%</span>
+      </div>
+      <div class="target-row">
+        <div class="target up-t">
+          <div class="target-label">Upside</div>
+          <div class="target-val">${formatPrice(a.sym, a.up)}</div>
+        </div>
+        <div class="target dn-t">
+          <div class="target-label">Downside</div>
+          <div class="target-val">${formatPrice(a.sym, a.dn)}</div>
+        </div>
+      </div>
+      <div class="factors">
+        ${a.factors.slice(0,3).map(f => `
+          <div class="factor-row">
+            <div class="factor-name">${f.n}</div>
+            <div class="factor-bar-bg"><div class="factor-bar-fill ${f.c}" style="width:${f.w}%"></div></div>
+            <div class="factor-pct">${f.w}%</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ========== CORRELATION MATRIX ==========
+function buildCorrMatrix() {
+  const div = document.getElementById('corrMatrix');
+  if (!div) return;
+
+  const pairs = ['EURUSD','GBPUSD','USDJPY','AUDUSD','GBPJPY','EURJPY','USDCAD','XAUUSD'];
+  const corr = [
+    [1.0, 0.82, -0.71, 0.78, 0.45, 0.68, -0.65, -0.42],
+    [0.82, 1.0, -0.62, 0.71, 0.72, 0.60, -0.58, -0.38],
+    [-0.71, -0.62, 1.0, -0.55, 0.24, 0.35, 0.67, 0.51],
+    [0.78, 0.71, -0.55, 1.0, 0.38, 0.55, -0.71, -0.35],
+    [0.45, 0.72, 0.24, 0.38, 1.0, 0.88, -0.22, -0.18],
+    [0.68, 0.60, 0.35, 0.55, 0.88, 1.0, -0.30, -0.22],
+    [-0.65, -0.58, 0.67, -0.71, -0.22, -0.30, 1.0, 0.30],
+    [-0.42, -0.38, 0.51, -0.35, -0.18, -0.22, 0.30, 1.0],
+  ];
+
+  function corrColor(v) {
+    if (v >= 0.8) return 'rgba(224,82,82,0.7)';
+    if (v >= 0.5) return 'rgba(224,82,82,0.35)';
+    if (v >= 0.2) return 'rgba(232,196,106,0.25)';
+    if (v >= -0.2) return 'rgba(40,50,65,0.8)';
+    if (v >= -0.5) return 'rgba(76,175,130,0.25)';
+    return 'rgba(76,175,130,0.5)';
+  }
+
+  let html = '<div style="display:flex;gap:4px;margin-bottom:6px;"><div style="width:70px;"></div>';
+  pairs.forEach(p => { html += `<div style="width:46px;font-family:\'IBM Plex Mono\',monospace;font-size:9px;color:var(--text3);text-align:center;letter-spacing:-0.02em;">${p.replace('USD','')}</div>`; });
+  html += '</div>';
+
+  pairs.forEach((rp, ri) => {
+    html += '<div class="corr-row">';
+    html += `<div class="corr-label">${rp}</div>`;
+    pairs.forEach((cp, ci) => {
+      const v = corr[ri][ci];
+      html += `<div class="corr-cell" style="background:${corrColor(v)};color:${v === 1.0 ? 'var(--text3)' : 'var(--text)'};font-size:${v === 1.0 ? '10' : '11'}px;">${v === 1.0 ? '—' : v.toFixed(2)}</div>`;
+    });
+    html += '</div>';
+  });
+
+  html += '<div style="margin-top:14px;display:flex;gap:20px;flex-wrap:wrap;">';
+  [['rgba(224,82,82,0.7)','High Positive (>0.8)'],['rgba(224,82,82,0.35)','Moderate Positive'],['rgba(232,196,106,0.25)','Low Positive'],['rgba(40,50,65,0.8)','Neutral'],['rgba(76,175,130,0.25)','Moderate Negative'],['rgba(76,175,130,0.5)','High Negative (<-0.5)']].forEach(([bg,label]) => {
+    html += `<div style="display:flex;align-items:center;gap:6px;font-size:10px;color:var(--text3);font-family:\'IBM Plex Mono\',monospace;"><div style="width:14px;height:14px;border-radius:2px;background:${bg};"></div>${label}</div>`;
+  });
+  html += '</div>';
+
+  div.innerHTML = html;
+}
+
+// ========== CHARTS ==========
+const chartInstances = {};
+function destroyChart(id) {
+  if (chartInstances[id]) { chartInstances[id].destroy(); delete chartInstances[id]; }
+}
+
+const C = {
+  gold: '#c9a84c', gold2: '#e8c46a',
+  red: '#e05252', green: '#4caf82',
+  yellow: '#e8c46a', blue: '#5b9bd5',
+  text2: '#8a93a6', text3: '#525d6e',
+  border: '#1e2530', border2: '#252d3a',
+  surface2: '#141820',
+};
+
+Chart.defaults.color = C.text2;
+Chart.defaults.borderColor = C.border;
+Chart.defaults.font.family = "'IBM Plex Mono', monospace";
+Chart.defaults.font.size = 11;
+Chart.defaults.animation = false;
+Chart.defaults.responsive = true;
+Chart.defaults.maintainAspectRatio = true;
+
+function initCharts(tab) {
+  if (tab === 'overview') {
+    destroyChart('changeChart');
+    const syms = assets.map(a => a.sym);
+    const chgs = assets.map(a => a.chg);
+    const colors = chgs.map(c => c >= 0 ? C.green : C.red);
+    chartInstances['changeChart'] = new Chart(document.getElementById('changeChart'), {
+      type: 'bar',
+      data: {
+        labels: syms,
+        datasets: [{ data: chgs, backgroundColor: colors, borderRadius: 4, borderSkipped: false }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: true,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw > 0 ? '+' : ''}${ctx.raw.toFixed(2)}%` } } },
+        scales: {
+          x: { grid: { color: C.border }, ticks: { font: { size: 10 } } },
+          y: { grid: { color: C.border }, ticks: { callback: v => v + '%' } }
+        }
+      }
+    });
+  }
+
+  if (tab === 'metals') {
+    buildFactors('goldFactors', 'XAUUSD');
+    buildFactors('silverFactors', 'XAGUSD');
+
+    destroyChart('goldFactorChart');
+    const gAsset = assets.find(a => a.sym === 'XAUUSD');
+    chartInstances['goldFactorChart'] = new Chart(document.getElementById('goldFactorChart'), {
+      type: 'doughnut',
+      data: {
+        labels: gAsset.factors.map(f => f.n),
+        datasets: [{ data: gAsset.factors.map(f => f.w),
+          backgroundColor: gAsset.factors.map(f => f.c === 'green' ? 'rgba(76,175,130,0.7)' : f.c === 'red' ? 'rgba(224,82,82,0.7)' : 'rgba(232,196,106,0.7)'),
+          borderColor: C.border2, borderWidth: 2 }]
+      },
+      options: { responsive: true, plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } } }, cutout: '60%' }
+    });
+
+    destroyChart('silverFactorChart');
+    const sAsset = assets.find(a => a.sym === 'XAGUSD');
+    chartInstances['silverFactorChart'] = new Chart(document.getElementById('silverFactorChart'), {
+      type: 'doughnut',
+      data: {
+        labels: sAsset.factors.map(f => f.n),
+        datasets: [{ data: sAsset.factors.map(f => f.w),
+          backgroundColor: sAsset.factors.map(f => f.c === 'green' ? 'rgba(76,175,130,0.7)' : f.c === 'red' ? 'rgba(224,82,82,0.7)' : 'rgba(232,196,106,0.7)'),
+          borderColor: C.border2, borderWidth: 2 }]
+      },
+      options: { responsive: true, plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } } }, cutout: '60%' }
+    });
+
+    destroyChart('goldScenarioChart');
+    chartInstances['goldScenarioChart'] = new Chart(document.getElementById('goldScenarioChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Escalation', 'Base Case', 'De-escalation', 'Recession'],
+        datasets: [{
+          label: 'Gold Target Range',
+          data: [4700, 4550, 3950, 4200],
+          backgroundColor: ['rgba(224,82,82,0.6)','rgba(232,196,106,0.6)','rgba(76,175,130,0.6)','rgba(91,155,213,0.6)'],
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { min: 3500, grid: { color: C.border }, ticks: { callback: v => '$'+v } }, x: { grid: { color: C.border } } }
+      }
+    });
+
+    destroyChart('goldOilChart');
+    chartInstances['goldOilChart'] = new Chart(document.getElementById('goldOilChart'), {
+      type: 'line',
+      data: {
+        labels: ['Jan','Feb','Mar'],
+        datasets: [
+          { label: 'Gold ($/oz ÷10)', data: [420, 435, 451], borderColor: C.gold, backgroundColor: 'rgba(201,168,76,0.1)', tension: 0.4, fill: true },
+          { label: 'WTI Crude ($)', data: [78, 92, 105], borderColor: C.red, backgroundColor: 'rgba(224,82,82,0.1)', tension: 0.4, fill: true }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: true,
+        plugins: { legend: { labels: { boxWidth: 10 } } },
+        scales: { y: { grid: { color: C.border } }, x: { grid: { color: C.border } } }
+      }
+    });
+
+    destroyChart('realYieldChart');
+    chartInstances['realYieldChart'] = new Chart(document.getElementById('realYieldChart'), {
+      type: 'scatter',
+      data: {
+        datasets: [{
+          label: 'Real Yield vs Gold',
+          data: [
+            {x: -1.5, y: 2100}, {x: -0.8, y: 2400}, {x: 0.2, y: 3200},
+            {x: 0.8, y: 3800}, {x: 1.2, y: 4100}, {x: 1.5, y: 4507}
+          ],
+          backgroundColor: C.gold, borderColor: C.gold2, pointRadius: 5
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { color: C.border }, title: { display: true, text: 'Real Yield (%)', color: C.text3 } },
+          y: { grid: { color: C.border }, title: { display: true, text: 'Gold ($/oz)', color: C.text3 }, ticks: { callback: v => '$'+v } }
+        }
+      }
+    });
+  }
+
+  if (tab === 'fx') {
+    buildFXCards();
+    buildCorrMatrix();
+
+    destroyChart('fxChangeChart');
+    const fxA = assets.filter(a => a.cat === 'fx');
+    chartInstances['fxChangeChart'] = new Chart(document.getElementById('fxChangeChart'), {
+      type: 'bar',
+      data: {
+        labels: fxA.map(a => a.sym),
+        datasets: [{ data: fxA.map(a => a.chg), backgroundColor: fxA.map(a => a.chg >= 0 ? 'rgba(76,175,130,0.6)' : 'rgba(224,82,82,0.6)'), borderRadius: 4, borderSkipped: false }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: true,
+        plugins: { legend: { display: false } },
+        scales: { x: { grid: { color: C.border } }, y: { grid: { color: C.border }, ticks: { callback: v => v + '%' } } }
+      }
+    });
+
+    destroyChart('currencyStrengthChart');
+    chartInstances['currencyStrengthChart'] = new Chart(document.getElementById('currencyStrengthChart'), {
+      type: 'bar',
+      data: {
+        labels: ['USD','JPY*','GBP','EUR','AUD','CAD'],
+        datasets: [{
+          label: 'Relative Strength (implied)',
+          data: [85, 72, 45, 50, 30, 52],
+          backgroundColor: ['rgba(201,168,76,0.7)','rgba(224,82,82,0.5)','rgba(91,155,213,0.5)','rgba(91,155,213,0.4)','rgba(224,82,82,0.4)','rgba(232,196,106,0.4)'],
+          borderRadius: 4
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true, maintainAspectRatio: true,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` Score: ${ctx.raw}/100` } } },
+        scales: { x: { grid: { color: C.border }, max: 100 }, y: { grid: { color: C.border } } }
+      }
+    });
+
+    destroyChart('jpyCrossChart');
+    chartInstances['jpyCrossChart'] = new Chart(document.getElementById('jpyCrossChart'), {
+      type: 'bar',
+      data: {
+        labels: ['USDJPY +0.36%', 'EURJPY +0.42%', 'GBPJPY -0.17%'],
+        datasets: [{
+          label: 'Daily Change',
+          data: [0.36, 0.42, -0.17],
+          backgroundColor: ['rgba(76,175,130,0.6)', 'rgba(76,175,130,0.6)', 'rgba(224,82,82,0.6)'],
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: true,
+        plugins: { legend: { display: false } },
+        scales: { x: { grid: { color: C.border } }, y: { grid: { color: C.border }, ticks: { callback: v => v + '%' } } }
+      }
+    });
+
+    destroyChart('usdFactorChart');
+    chartInstances['usdFactorChart'] = new Chart(document.getElementById('usdFactorChart'), {
+      type: 'radar',
+      data: {
+        labels: ['Safe Haven', 'Yield Differential', 'Fed Hawkish', 'Oil Impact', 'Geopolitics'],
+        datasets: [
+          { label: 'EURUSD (bear USD view)', data: [70,75,80,40,55], borderColor: C.blue, backgroundColor: 'rgba(91,155,213,0.1)', pointBackgroundColor: C.blue },
+          { label: 'GBPUSD (bear USD view)', data: [65,72,78,35,60], borderColor: C.gold, backgroundColor: 'rgba(201,168,76,0.1)', pointBackgroundColor: C.gold },
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: true,
+        plugins: { legend: { labels: { boxWidth: 10 } } },
+        scales: { r: { grid: { color: C.border }, pointLabels: { font: { size: 10 } }, min: 0, max: 100, ticks: { display: false } } }
+      }
+    });
+  }
+
+  if (tab === 'equities') {
+    buildFactors('spFactors', '^GSPC');
+    buildFactors('djiFactors', '^DJI');
+    buildFactors('ndxFactors', '^NDX');
+
+    destroyChart('equityDrawdownChart');
+    chartInstances['equityDrawdownChart'] = new Chart(document.getElementById('equityDrawdownChart'), {
+      type: 'bar',
+      data: {
+        labels: ['S&P 500\n(vs Jan high)', 'Dow Jones\n(vs Feb peak)', 'Nasdaq 100\n(vs peak)'],
+        datasets: [{
+          label: 'Drawdown from Peak',
+          data: [-9, -10.2, -10],
+          backgroundColor: ['rgba(224,82,82,0.6)','rgba(224,82,82,0.7)','rgba(224,82,82,0.8)'],
+          borderRadius: 4
+        },{
+          label: 'Correction Threshold',
+          data: [-10,-10,-10],
+          type: 'line',
+          borderColor: 'rgba(232,196,106,0.6)',
+          borderDash: [5,5],
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: true,
+        plugins: { legend: { labels: { boxWidth: 10 } }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw}%` } } },
+        scales: {
+          x: { grid: { color: C.border } },
+          y: { grid: { color: C.border }, ticks: { callback: v => v + '%' }, max: 0, min: -15 }
+        }
+      }
+    });
+
+    destroyChart('spFactorChart');
+    const spA = assets.find(a => a.sym === '^GSPC');
+    chartInstances['spFactorChart'] = new Chart(document.getElementById('spFactorChart'), {
+      type: 'doughnut',
+      data: {
+        labels: spA.factors.map(f => f.n),
+        datasets: [{ data: spA.factors.map(f => f.w),
+          backgroundColor: ['rgba(224,82,82,0.7)','rgba(224,82,82,0.65)','rgba(224,82,82,0.55)','rgba(232,196,106,0.6)'],
+          borderColor: C.border2, borderWidth: 2 }]
+      },
+      options: { responsive: true, plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } } }, cutout: '55%' }
+    });
+  }
+
+  if (tab === 'macro') {
+    destroyChart('oecdChart');
+    chartInstances['oecdChart'] = new Chart(document.getElementById('oecdChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Global GDP\n2026','G20 Inflation\n2026','US Inflation\n2026','Prior GDP\nEst.'],
+        datasets: [{
+          label: 'OECD Forecast',
+          data: [2.9, 4.0, 4.2, 3.2],
+          backgroundColor: [C.red, 'rgba(224,82,82,0.7)','rgba(224,82,82,0.85)',C.yellow],
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { color: C.border } },
+          y: { grid: { color: C.border }, ticks: { callback: v => v + '%' }, min: 0, max: 5 }
+        }
+      }
+    });
+
+    destroyChart('sentimentChart');
+    chartInstances['sentimentChart'] = new Chart(document.getElementById('sentimentChart'), {
+      type: 'radar',
+      data: {
+        labels: ['Consumer Sentiment', 'Business Confidence', 'Risk Appetite', 'Market Stability', 'Geopolitical Risk'],
+        datasets: [{
+          label: 'Current Reading',
+          data: [30, 40, 25, 28, 78],
+          borderColor: C.red, backgroundColor: 'rgba(224,82,82,0.12)', pointBackgroundColor: C.red
+        },{
+          label: 'Neutral Baseline',
+          data: [50,50,50,50,50],
+          borderColor: C.border2, borderDash: [4,4], backgroundColor: 'transparent', pointRadius: 0
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: true,
+        plugins: { legend: { labels: { boxWidth: 10 } } },
+        scales: { r: { grid: { color: C.border }, min: 0, max: 100, ticks: { display: false }, pointLabels: { font: { size: 9 } } } }
+      }
+    });
+
+    destroyChart('regimeChart');
+    chartInstances['regimeChart'] = new Chart(document.getElementById('regimeChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Escalation (35%)', 'Stagflation Base (40%)', 'De-escalation (20%)', 'Hard Recession (5%)'],
+        datasets: [{
+          data: [35, 40, 20, 5],
+          backgroundColor: ['rgba(224,82,82,0.8)','rgba(232,196,106,0.7)','rgba(76,175,130,0.7)','rgba(91,155,213,0.6)'],
+          borderColor: C.border2, borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: true,
+        plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } } },
+        cutout: '50%'
+      }
+    });
+
+    destroyChart('scenarioReturnChart');
+    chartInstances['scenarioReturnChart'] = new Chart(document.getElementById('scenarioReturnChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Escalation', 'Stagflation', 'De-escalation', 'Recession'],
+        datasets: [
+          { label: 'Gold', data: [12, 4, -15, 2], backgroundColor: 'rgba(201,168,76,0.7)', borderRadius: 3 },
+          { label: 'S&P 500', data: [-15, -5, 12, -25], backgroundColor: 'rgba(224,82,82,0.7)', borderRadius: 3 },
+          { label: 'USD', data: [8, 3, -8, 5], backgroundColor: 'rgba(91,155,213,0.7)', borderRadius: 3 },
+          { label: 'BTC', data: [-20, -8, 18, -35], backgroundColor: 'rgba(130,130,130,0.6)', borderRadius: 3 },
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: true,
+        plugins: { legend: { labels: { boxWidth: 10 } } },
+        scales: {
+          x: { grid: { color: C.border } },
+          y: { grid: { color: C.border }, ticks: { callback: v => v + '%' }, min: -40, max: 25 }
+        }
+      }
+    });
+  }
+}
+
+// ========== INIT ==========
+document.addEventListener('DOMContentLoaded', () => {
+  buildTicker();
+  buildMasterTable('all');
+  initCharts('overview');
+});
+</script>
+</body>
+</html>
