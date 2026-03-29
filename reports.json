@@ -1,20 +1,21 @@
-{
-  "date": "2026-03-29",
-  "title": "MRKT Sistem Nedostupan · USDJPY 160,25 · Zlato +2,96%",
-  "thesis": "Stagflacioni šok iz Irana pritiska Fed na hawkish hold. Kraj Q1 rebalans danas. 42 instrumenta analizirana. USDJPY na interventnom nivou.",
-  "bias": {
-    "XAUUSD": "bullish",
-    "XAGUSD": "neutral",
-    "EURUSD": "bearish",
-    "GBPUSD": "bearish",
-    "USDJPY": "neutral",
-    "AUDUSD": "bearish",
-    "NZDUSD": "bearish",
-    "SPX": "bearish"
+[
+  {
+    "date": "2026-03-29",
+    "title": "MRKT Sistem Nedostupan · USDJPY 160,25 · Zlato +2,96%",
+    "thesis": "Stagflacioni sok iz Irana pritiska Fed na hawkish hold. Kraj Q1 rebalans danas. 42 instrumenta analizirana. USDJPY na interventnom nivou.",
+    "bias": {
+      "XAUUSD": "bullish",
+      "XAGUSD": "neutral",
+      "EURUSD": "bearish",
+      "GBPUSD": "bearish",
+      "USDJPY": "neutral",
+      "AUDUSD": "bearish",
+      "NZDUSD": "bearish",
+      "SPX": "bearish"
+    },
+    "highlights": ["USDJPY 160,25", "Fed Hike 52%", "AUD CPI 3,7%", "VIX 31"],
+    "file": "2026-03-29.html"
   },
-  "highlights": ["USDJPY 160,25 ⚠", "Fed Hike 52%", "AUD CPI 3,7%", "VIX 31"],
-  "file": "2026-03-29.html"
-},[
   {
     "date": "2026-03-28",
     "title": "Iran Deadline Extension · Gold $4,507 · Equities Correction",
@@ -28,7 +29,7 @@
       "AUDUSD": "bearish",
       "SPX": "bearish"
     },
-    "highlights": ["Oil $110+", "Fed 3.50–3.75%", "10Y yield 4.447%", "VIX 31.05"],
+    "highlights": ["Oil $110+", "Fed 3.50-3.75%", "10Y yield 4.447%", "VIX 31.05"],
     "file": "2026-03-28.html"
   }
 ]
