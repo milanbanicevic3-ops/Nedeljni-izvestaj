@@ -1,4 +1,20 @@
 [
+  {
+  "date": "2026-04-01",
+  "title": "Iran De-Escalation Signal · S&P +2.91% · Gold $4,720",
+  "thesis": "Trump confirms US operations end in 2-3 weeks. Biggest equity day since May. Gold at 8-day high on USD weakness. Hormuz still closed — relief rally not regime change.",
+  "bias": {
+    "XAUUSD": "bullish",
+    "XAGUSD": "bullish",
+    "EURUSD": "neutral",
+    "GBPUSD": "neutral",
+    "USDJPY": "bearish",
+    "AUDNZD": "bullish",
+    "SPX": "bullish"
+  },
+  "highlights": ["S&P +2.91%", "Gold $4,720", "USDJPY 158.8", "Hormuz closed"],
+  "file": "2026-04-01.html"
+},
 {
   "date": "2026-03-29",
   "title": "MRKT System Down · USDJPY 160.25 · Gold +2.96%",
