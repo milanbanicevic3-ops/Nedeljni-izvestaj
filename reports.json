@@ -1,5 +1,21 @@
 [
   {
+  "date": "2026-04-05",
+  "title": "Weekly Debrief. Trump Reversed Apr 2. Silver -6.75%. NFP +178k. DXY Below 100.",
+  "thesis": "De-escalation lasted 24 hours. Trump vowed intensified strikes Apr 2. Silver crashed -6.75%. Strong NFP but DXY broke below 100 - markets pricing stagflation not Fed hikes. Iran struck South Pars Saturday.",
+  "bias": {
+    "XAUUSD": "neutral",
+    "XAGUSD": "neutral",
+    "AUDNZD": "bullish",
+    "EURGBP": "bullish",
+    "NZDUSD": "bearish",
+    "USDJPY": "neutral",
+    "SPX": "neutral"
+  },
+  "highlights": ["Silver -6.75%", "NFP +178k", "DXY below 100", "South Pars struck"],
+  "file": "2026-04-05.html"
+},
+  {
     "date": "2026-04-01",
     "title": "Iran De-Escalation Signal. S&P +2.91%. Gold $4,720",
     "thesis": "Trump confirms US operations end in 2-3 weeks. Biggest equity day since May. Gold at 8-day high on USD weakness. Hormuz still closed - relief rally not regime change.",
