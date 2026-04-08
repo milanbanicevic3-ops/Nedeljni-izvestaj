@@ -1,5 +1,22 @@
 [
  {
+  "date": "2026-04-08",
+  "title": "Ceasefire 2.0 + RBNZ Pivot. Oil -16%. Gold $4,813. NZD Thesis Revised.",
+  "thesis": "Trump 2-week conditional ceasefire triggers risk-on. Oil -16%. Gold +2.3%. RBNZ hawkish hold with 4.2% inflation forecast - NZD short thesis suspended. COT AUD/CAD and EUR/GBP both confirmed. FOMC minutes 2pm EST today.",
+  "bias": {
+    "XAUUSD": "bullish",
+    "XAGUSD": "bullish",
+    "EURUSD": "bullish",
+    "AUDUSD": "bullish",
+    "AUDCAD": "bullish",
+    "NZDUSD": "neutral",
+    "EURGBP": "bearish",
+    "SPX": "bullish"
+  },
+  "highlights": ["Gold $4,813", "Oil -16%", "EUR/USD 1.17", "RBNZ hawkish"],
+  "file": "2026-04-08.html"
+},
+ {
   "date": "2026-04-05",
   "title": "Weekly Debrief. Trump Reversed Apr 2. Silver -6.75%. DXY Below 100.",
   "thesis": "De-escalation lasted 24 hours. Trump vowed intensified strikes Apr 2. Silver crashed -6.75%. Strong NFP 178k but DXY broke below 100 - markets pricing stagflation not Fed hikes. Iran struck South Pars Saturday.",
