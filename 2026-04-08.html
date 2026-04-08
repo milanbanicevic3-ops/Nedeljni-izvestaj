@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMC Midweek Brief - April 8, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700&family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0a0c10;--surface:#0f1218;--surface2:#141820;--border:#1e2530;--border2:#252d3a;--gold:#c9a84c;--gold2:#e8c46a;--red:#e05252;--red-dim:rgba(224,82,82,0.12);--green:#4caf82;--green-dim:rgba(76,175,130,0.12);--yellow:#e8c46a;--yellow-dim:rgba(232,196,106,0.12);--blue:#5b9bd5;--text:#d4d8e2;--text2:#8a93a6;--text3:#525d6e;--white:#eef0f5;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:14px;line-height:1.6;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.4;}
+.header{position:sticky;top:0;z-index:200;background:rgba(10,12,16,0.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:60px;}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-hex{width:34px;height:34px;background:linear-gradient(135deg,var(--gold),var(--gold2));clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:13px;color:#0a0c10;}
+.logo-text{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:0.14em;color:var(--gold);text-transform:uppercase;}
+.logo-sub{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:0.06em;}
+.hright{display:flex;align-items:center;gap:20px;}
+.htag{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3);letter-spacing:0.06em;}
+.htag.warn{color:var(--red);}
+.htag.ok{color:var(--green);}
+.pulse{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:5px;box-shadow:0 0 6px var(--green);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.pivot-bar{border-bottom:1px solid rgba(76,175,130,0.2);padding:10px 32px;display:flex;align-items:center;gap:14px;font-family:'IBM Plex Mono',monospace;font-size:11px;background:linear-gradient(90deg,rgba(76,175,130,0.07),transparent);}
+.pivot-bar .lbl{color:var(--green);font-weight:600;letter-spacing:0.06em;flex-shrink:0;}
+.pivot-bar .txt{color:var(--text2);}
+.pivot-bar .txt strong{color:var(--white);}
+.warn-bar{border-bottom:1px solid rgba(224,82,82,0.2);padding:9px 32px;display:flex;align-items:center;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--red);background:rgba(224,82,82,0.05);}
+.warn-bar strong{color:var(--white);}
+.ticker{background:var(--surface);border-bottom:1px solid var(--border);height:32px;display:flex;align-items:center;overflow:hidden;}
+.ticker-lbl{flex-shrink:0;background:var(--gold);color:#0a0c10;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.1em;padding:0 12px;height:100%;display:flex;align-items:center;}
+.ticker-wrap{overflow:hidden;flex:1;}
+.ticker-track{display:flex;animation:scroll 70s linear infinite;white-space:nowrap;}
+.ticker-track:hover{animation-play-state:paused;}
+@keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.ti{font-family:'IBM Plex Mono',monospace;font-size:10px;padding:0 16px;display:inline-flex;align-items:center;gap:7px;border-right:1px solid var(--border);height:32px;}
+.ti-s{color:var(--text2);}
+.up{color:var(--green);}.dn{color:var(--red);}.fl{color:var(--yellow);}
+.wrap{max-width:1440px;margin:0 auto;padding:24px 32px;}
+.tabs{display:flex;gap:3px;margin-bottom:24px;background:var(--surface);padding:4px;border-radius:8px;border:1px solid var(--border);overflow-x:auto;scrollbar-width:none;}
+.tab-btn{flex-shrink:0;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.07em;text-transform:uppercase;padding:7px 15px;border-radius:5px;cursor:pointer;color:var(--text2);border:none;background:transparent;transition:all 0.18s;white-space:nowrap;}
+.tab-btn:hover{color:var(--text);background:var(--surface2);}
+.tab-btn.active{background:var(--gold);color:#0a0c10;font-weight:600;}
+.panel{display:none;}.panel.active{display:block;animation:fadeUp 0.3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.sh{display:flex;align-items:baseline;gap:14px;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.sh-t{font-family:'Playfair Display',serif;font-size:19px;font-weight:600;color:var(--white);letter-spacing:-0.01em;}
+.sh-s{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;}
+.thesis{background:linear-gradient(135deg,rgba(76,175,130,0.06),rgba(15,18,24,0));border:1px solid rgba(76,175,130,0.22);border-radius:10px;padding:22px 26px;margin-bottom:22px;}
+.th-eye{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--green);margin-bottom:10px;}
+.th-head{font-family:'Playfair Display',serif;font-size:17px;font-weight:600;color:var(--white);margin-bottom:12px;line-height:1.4;}
+.th-body{font-size:13px;color:var(--text2);line-height:1.75;max-width:820px;}
+.chain{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin-top:14px;}
+.cn{background:var(--surface2);border:1px solid var(--border2);border-radius:5px;padding:6px 12px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;color:var(--text);white-space:nowrap;}
+.cn.r{border-color:rgba(224,82,82,0.35);color:var(--red);}.cn.g{border-color:rgba(76,175,130,0.35);color:var(--green);}.cn.y{border-color:rgba(232,196,106,0.35);color:var(--gold);}
+.ca{font-size:14px;color:var(--text3);padding:0 6px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-bottom:24px;}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;position:relative;overflow:hidden;transition:border-color 0.18s;}
+.kpi:hover{border-color:var(--border2);}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.kpi.bull::before{background:var(--green);}.kpi.bear::before{background:var(--red);}.kpi.neut::before{background:var(--yellow);}
+.kpi-l{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;}
+.kpi-v{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;color:var(--white);letter-spacing:-0.02em;line-height:1;margin-bottom:3px;}
+.kpi-c{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;}
+.kpi-n{font-size:11px;color:var(--text3);margin-top:3px;}
+.alert{border-radius:8px;padding:12px 16px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start;font-size:12.5px;line-height:1.65;}
+.alert-i{font-size:15px;flex-shrink:0;margin-top:1px;}
+.alert.warn{background:rgba(232,196,106,0.07);border:1px solid rgba(232,196,106,0.22);color:var(--text2);}
+.alert.danger{background:rgba(224,82,82,0.07);border:1px solid rgba(224,82,82,0.22);color:var(--text2);}
+.alert.ok{background:rgba(76,175,130,0.07);border:1px solid rgba(76,175,130,0.22);color:var(--text2);}
+.alert.info{background:rgba(91,155,213,0.07);border:1px solid rgba(91,155,213,0.22);color:var(--text2);}
+.alert strong{color:var(--white);}
+.bias{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;padding:3px 7px;border-radius:3px;}
+.bias.bull{background:var(--green-dim);color:var(--green);border:1px solid rgba(76,175,130,0.28);}
+.bias.bear{background:var(--red-dim);color:var(--red);border:1px solid rgba(224,82,82,0.28);}
+.bias.neut{background:var(--yellow-dim);color:var(--yellow);border:1px solid rgba(232,196,106,0.28);}
+.cw{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:18px;margin-bottom:12px;overflow:hidden;}
+.cw-t{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;}
+canvas{display:block;max-width:100%!important;max-height:280px!important;}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;}
+.tbl thead th{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);padding:7px 12px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface2);}
+.tbl tbody tr:hover{background:rgba(255,255,255,0.018);}
+.tbl tbody td{padding:9px 12px;border-bottom:1px solid rgba(30,37,48,0.5);font-family:'IBM Plex Mono',monospace;vertical-align:middle;}
+.tbl tbody td:first-child{font-weight:600;color:var(--white);}
+.tbl-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:border-color 0.18s;}
+.tbl-toggle:hover{border-color:var(--border2);}
+.tbl-toggle-lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--text2);letter-spacing:0.06em;text-transform:uppercase;}
+.tbl-toggle-ico{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3);transition:transform 0.2s;}
+.tbl-toggle.open{border-radius:8px 8px 0 0;border-bottom-color:transparent;}
+.tbl-toggle.open .tbl-toggle-ico{transform:rotate(180deg);}
+.tbl-body{display:none;border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;margin-bottom:24px;overflow:hidden;overflow-x:auto;}
+.tbl-body.open{display:block;}
+.tog-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.tog{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;padding:5px 11px;border:1px solid var(--border2);border-radius:4px;cursor:pointer;color:var(--text2);background:transparent;transition:all 0.15s;}
+.tog:hover{color:var(--text);border-color:var(--text3);}
+.tog.active{background:var(--surface2);color:var(--gold);border-color:rgba(201,168,76,0.4);}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+@media(max-width:900px){.two,.three{grid-template-columns:1fr;}}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-bottom:20px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:16px 18px;cursor:pointer;transition:all 0.18s;}
+.card:hover{border-color:var(--border2);transform:translateX(2px);box-shadow:0 6px 20px rgba(0,0,0,0.3);}
+.card.sel{border-color:rgba(201,168,76,0.4);background:linear-gradient(135deg,rgba(201,168,76,0.04),var(--surface));}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.card-sym{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;color:var(--white);}
+.card-name{font-size:10px;color:var(--text3);margin-top:2px;}
+.card-pr{display:flex;align-items:baseline;gap:8px;margin-bottom:8px;}
+.card-pv{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;color:var(--white);letter-spacing:-0.02em;}
+.card-chg{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;}
+.tgt-row{display:flex;gap:6px;margin-bottom:10px;}
+.tgt{flex:1;background:var(--surface2);border-radius:4px;padding:5px 9px;font-family:'IBM Plex Mono',monospace;font-size:10px;}
+.tgt-l{font-size:9px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:2px;}
+.tgt.up-t .tgt-l{color:var(--green);}.tgt.dn-t .tgt-l{color:var(--red);}
+.factors{display:flex;flex-direction:column;gap:4px;}
+.frow{display:flex;align-items:center;gap:7px;}
+.fn{font-size:11px;color:var(--text2);width:130px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.fbg{flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
+.ff{height:100%;border-radius:2px;}
+.ff.r{background:var(--red);}.ff.g{background:var(--green);}.ff.y{background:var(--yellow);}
+.fpct{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);width:28px;text-align:right;}
+.mbanner{background:linear-gradient(90deg,rgba(76,175,130,0.07),transparent);border:1px solid rgba(76,175,130,0.15);border-radius:8px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+.ms{display:flex;flex-direction:column;gap:3px;}
+.ms-l{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;}
+.ms-v{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;}
+.mdiv{width:1px;height:36px;background:var(--border);align-self:center;}
+/* WEEK TRACKER */
+.week-track{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:22px;}
+@media(max-width:900px){.week-track{grid-template-columns:1fr;}}
+.day-card{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:16px 18px;position:relative;overflow:hidden;}
+.day-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.day-card.red::before{background:var(--red);}
+.day-card.green::before{background:var(--green);}
+.day-card.yellow::before{background:var(--yellow);}
+.day-card.today{border-color:rgba(201,168,76,0.35);background:linear-gradient(135deg,rgba(201,168,76,0.04),var(--surface));}
+.day-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
+.day-today-badge{background:rgba(201,168,76,0.15);color:var(--gold);border:1px solid rgba(201,168,76,0.3);font-size:9px;padding:1px 6px;border-radius:3px;font-family:'IBM Plex Mono',monospace;}
+.day-headline{font-size:12.5px;font-weight:500;color:var(--text);margin-bottom:10px;line-height:1.5;}
+.day-metrics{display:flex;flex-direction:column;gap:4px;}
+.dm{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:11px;}
+.dm-l{color:var(--text3);}
+/* GEO */
+#geomap{height:460px;border-radius:8px;z-index:1;}
+.leaflet-container{background:#0a0c10!important;}
+.geo-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+@media(max-width:900px){.geo-grid{grid-template-columns:1fr;}}
+.conf-item{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);}
+.conf-item:last-child{border-bottom:none;}
+.cdot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.cdot.r{background:var(--red);box-shadow:0 0 6px var(--red);}
+.cdot.o{background:#e08452;box-shadow:0 0 5px #e08452;}
+.cdot.g{background:var(--green);box-shadow:0 0 5px var(--green);}
+.cdot.y{background:var(--yellow);}
+.cname{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.cdesc{font-size:11.5px;color:var(--text2);line-height:1.55;}
+.cfx{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap;}
+.chip{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 7px;border-radius:3px;}
+.chip.neg{background:var(--red-dim);color:var(--red);}
+.chip.pos{background:var(--green-dim);color:var(--green);}
+.chip.watch{background:var(--yellow-dim);color:var(--yellow);}
+.grp{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin:20px 0 10px;display:flex;align-items:center;gap:10px;}
+.grp::after{content:'';flex:1;height:1px;background:rgba(201,168,76,0.14);}
+.ev-list{display:flex;flex-direction:column;gap:7px;}
+.ev{display:flex;gap:12px;align-items:flex-start;padding:11px 14px;background:var(--surface2);border-radius:7px;border-left:3px solid transparent;}
+.ev.high{border-left-color:var(--red);}.ev.med{border-left-color:var(--yellow);}.ev.ok{border-left-color:var(--green);}
+.ev-date{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);white-space:nowrap;min-width:55px;padding-top:1px;}
+.ev-name{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px;}
+.ev-desc{font-size:12px;color:var(--text2);line-height:1.6;}
+.sc-tbl{width:100%;border-collapse:separate;border-spacing:0;}
+.sc-tbl th{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:0.09em;text-transform:uppercase;color:var(--text3);padding:8px 12px;background:var(--surface2);border-bottom:1px solid var(--border);text-align:left;}
+.sc-tbl td{padding:10px 12px;border-bottom:1px solid rgba(30,37,48,0.5);font-family:'IBM Plex Mono',monospace;vertical-align:middle;font-size:11px;}
+.opinion{border-radius:10px;padding:22px 26px;margin-bottom:14px;}
+.opinion.neg{background:linear-gradient(135deg,rgba(224,82,82,0.04),rgba(15,18,24,0));border:1px solid rgba(224,82,82,0.18);}
+.opinion.pos{background:linear-gradient(135deg,rgba(76,175,130,0.04),rgba(15,18,24,0));border:1px solid rgba(76,175,130,0.18);}
+.opinion.warn{background:linear-gradient(135deg,rgba(232,196,106,0.04),rgba(15,18,24,0));border:1px solid rgba(232,196,106,0.18);}
+.op-title{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:10px;}
+.opinion.neg .op-title{color:var(--red);}.opinion.pos .op-title{color:var(--green);}.opinion.warn .op-title{color:var(--yellow);}
+.op-body{font-size:13px;color:var(--text2);line-height:1.8;}
+.op-body p{margin-bottom:10px;}.op-body p:last-child{margin-bottom:0;}
+.op-body strong{color:var(--white);}
+/* TV */
+.tv-viewer{background:var(--surface2);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:16px;margin-bottom:16px;display:none;}
+.tv-viewer.open{display:block;}
+.tv-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.tv-lbl{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:var(--gold);letter-spacing:0.06em;}
+.tv-x{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);cursor:pointer;background:none;border:none;transition:color 0.15s;}
+.tv-x:hover{color:var(--text);}
+::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+.footer{background:var(--surface);border-top:1px solid var(--border);padding:16px 32px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:0.07em;}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-hex">O</div>
+    <div><div class="logo-text">OMC Midweek Brief</div><div class="logo-sub">Old Mountain Capital &middot; Wednesday April 8, 2026</div></div>
+  </div>
+  <div class="hright">
+    <span class="htag"><span class="pulse"></span>LIVE SESSION</span>
+    <span class="htag">WED &middot; 08 APR 2026 &middot; 07:00 CET</span>
+    <span class="htag ok">&#10003; 2-WEEK CEASEFIRE ANNOUNCED</span>
+    <span class="htag warn">&#9888; CONDITIONAL ON HORMUZ</span>
+  </div>
+</header>
+
+<div class="pivot-bar">
+  <span class="lbl">&#9650; DE-ESCALATION 2.0:</span>
+  <span class="txt"><strong>Trump announces 2-week US-Iran ceasefire conditional on Hormuz reopening.</strong> Oil -16% (Brent $93.92). Gold +2.30% to $4,813. Silver +5.08% to $76.53. EUR/USD breaks 1.1700. AUD/USD +1.2% to 0.7060. FOMC minutes at 2pm EST today.</span>
+</div>
+<div class="warn-bar">
+  <span>&#9888;</span>
+  <span><strong>SAME PATTERN AS APRIL 1:</strong> Ceasefire is CONDITIONAL. Hormuz has not reopened. Formal agreement not signed. April 1 de-escalation lasted 24 hours before Trump reversed. Manage position sizes accordingly until Hormuz physically reopens.</span>
+</div>
+<div class="warn-bar" style="background:rgba(76,175,130,0.05);border-color:rgba(76,175,130,0.2);color:var(--green);">
+  <span>&#9650;</span>
+  <span><strong>RBNZ PIVOT:</strong> RBNZ held OCR at 2.25% with HAWKISH commentary &mdash; inflation forecast raised to 4.2% Q2 2026, rate hikes discussed for May/July. NZD +1.68%. Our NZD bearish thesis requires a full review.</span>
+</div>
+
+<div class="ticker">
+  <div class="ticker-lbl">WED BIAS</div>
+  <div class="ticker-wrap"><div class="ticker-track" id="ticker"></div></div>
+</div>
+
+<div class="wrap">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="go('overview',this)">Market Overview</button>
+    <button class="tab-btn" onclick="go('week',this)">Week Tracker</button>
+    <button class="tab-btn" onclick="go('metals',this)">Precious Metals</button>
+    <button class="tab-btn" onclick="go('fx',this)">FX Matrix</button>
+    <button class="tab-btn" onclick="go('equities',this)">Equities</button>
+    <button class="tab-btn" onclick="go('geo',this)">Geopolitical Intel</button>
+    <button class="tab-btn" onclick="go('macro',this)">Macro Framework</button>
+    <button class="tab-btn" onclick="go('analyst',this)">Analyst Notes</button>
+    <button class="tab-btn" onclick="go('calendar',this)">Events Ahead</button>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div id="p-overview" class="panel active">
+    <div class="thesis">
+      <div class="th-eye">Midweek Macro Thesis &middot; April 8, 2026</div>
+      <div class="th-head">Ceasefire 2.0 Triggers Risk-On Surge &mdash; RBNZ Hawkish Pivot Rewrites NZD Thesis</div>
+      <div class="th-body">Trump's two-week conditional ceasefire triggered the same violent risk-on reaction as April 1. Oil -16%. Gold +2.3%. Silver +5%. EUR/USD breaks 1.17. This time two additional catalysts compound the move: RBNZ delivered a hawkish hold (OCR 2.25%, inflation to 4.2%, hikes discussed for May/July), and UK Services PMI 55.0 demolished EZ's 52.2, sending EUR/GBP toward 0.87. COT's EUR/GBP SELL call from Sunday proved correct. AUD/CAD COT #1 BUY was also confirmed as AUD surged. FOMC minutes at 2pm EST remain the session's key wildcard.</div>
+      <div class="chain">
+        <div class="cn g">Ceasefire Signal</div><div class="ca">&rarr;</div>
+        <div class="cn g">Oil -16%</div><div class="ca">&rarr;</div>
+        <div class="cn g">USD weakens</div><div class="ca">&rarr;</div>
+        <div class="cn g">EUR/USD 1.1700</div><div class="ca">&rarr;</div>
+        <div class="cn g">Gold $4,813</div><div class="ca">&rarr;</div>
+        <div class="cn g">RBNZ Hawkish</div><div class="ca">&rarr;</div>
+        <div class="cn y">NZD thesis reversed</div><div class="ca">&rarr;</div>
+        <div class="cn y">FOMC mins pending</div>
+      </div>
+    </div>
+
+    <div class="sh"><div class="sh-t">Key Market Metrics &mdash; Today</div><div class="sh-s">April 8, 2026 &middot; 27 instruments</div></div>
+    <div class="kpi-grid" id="kpiGrid"></div>
+
+    <div class="sh" style="margin-top:8px;"><div class="sh-t">Daily Change (%) &mdash; April 8</div><div class="sh-s">Wednesday session</div></div>
+    <div class="cw"><canvas id="changeChart"></canvas></div>
+
+    <div class="sh" style="margin-top:8px;"><div class="sh-t">Full Instrument Table</div><div class="sh-s">Click to expand &middot; Filter by group</div></div>
+    <div class="tog-row" id="filterRow"></div>
+    <div class="tbl-toggle" id="tblToggle" onclick="toggleTable()">
+      <span class="tbl-toggle-lbl">All 27 Instruments &mdash; Targets, Bias &amp; Risk</span>
+      <span class="tbl-toggle-ico">&#9660;</span>
+    </div>
+    <div class="tbl-body" id="tblBody">
+      <table class="tbl"><thead><tr><th>Symbol</th><th>Cat.</th><th>Price</th><th>Change</th><th>Bias</th><th>Upside</th><th>Downside</th><th>Range %</th><th>Key Risk</th></tr></thead>
+      <tbody id="tblRows"></tbody></table>
+    </div>
+  </div>
+
+  <!-- WEEK TRACKER -->
+  <div id="p-week" class="panel">
+    <div class="sh"><div class="sh-t">Week Tracker</div><div class="sh-s">Mon Apr 6 &rarr; Tue Apr 7 &rarr; Wed Apr 8 &middot; Three-day narrative</div></div>
+    <div class="week-track">
+      <div class="day-card yellow">
+        <div class="day-label">Monday &middot; Apr 6</div>
+        <div class="day-headline">Easter Reopen &mdash; Iran Deadline Looming, Thin Volumes, Cautious Recovery</div>
+        <div class="day-metrics">
+          <div class="dm"><span class="dm-l">S&P 500</span><span class="up">+0.06-0.44% (slim ceasefire hope)</span></div>
+          <div class="dm"><span class="dm-l">Dow Jones</span><span class="up">+0.36% / +165pts to 46,669</span></div>
+          <div class="dm"><span class="dm-l">Nasdaq</span><span class="up">+0.36% MACD up signal</span></div>
+          <div class="dm"><span class="dm-l">Oil</span><span class="dn">~$111 still elevated</span></div>
+          <div class="dm"><span class="dm-l">Gold</span><span class="dn">$4,640 falling</span></div>
+          <div class="dm"><span class="dm-l">Mood</span><span class="fl">Cautious Recovery</span></div>
+        </div>
+      </div>
+      <div class="day-card red">
+        <div class="day-label">Tuesday &middot; Apr 7</div>
+        <div class="day-headline">Iran Rejects Ceasefire, Deadline Expires &mdash; Maximum Tension. Silver $69.94 low.</div>
+        <div class="day-metrics">
+          <div class="dm"><span class="dm-l">EURUSD</span><span class="dn">$1.1543 (-0.01%)</span></div>
+          <div class="dm"><span class="dm-l">Gold</span><span class="dn">$4,640 -0.21%</span></div>
+          <div class="dm"><span class="dm-l">Silver</span><span class="dn">$71.97 -0.89% (low $69.94)</span></div>
+          <div class="dm"><span class="dm-l">Oil WTI</span><span class="dn">$115+ on Iran fears</span></div>
+          <div class="dm"><span class="dm-l">USDJPY</span><span class="dn">Target 159.7-160.2</span></div>
+          <div class="dm"><span class="dm-l">ISM Services</span><span class="dn">54.0 vs 54.9 exp (miss)</span></div>
+        </div>
+      </div>
+      <div class="day-card green today">
+        <div class="day-label">Wednesday &middot; Apr 8<span class="day-today-badge">TODAY</span></div>
+        <div class="day-headline" style="color:var(--green)">Trump Ceasefire + RBNZ Hawkish = Double Risk-On Signal</div>
+        <div class="day-metrics">
+          <div class="dm"><span class="dm-l">EURUSD</span><span class="up">$1.1683 +0.74% (5-wk high)</span></div>
+          <div class="dm"><span class="dm-l">Gold</span><span class="up">$4,813 +2.30%</span></div>
+          <div class="dm"><span class="dm-l">Silver</span><span class="up">$76.53 +5.08%</span></div>
+          <div class="dm"><span class="dm-l">AUD/USD</span><span class="up">0.7060 +1.2%</span></div>
+          <div class="dm"><span class="dm-l">Oil Brent</span><span class="up">$93.92 -16%</span></div>
+          <div class="dm"><span class="dm-l">RBNZ</span><span class="up">Hawkish hold 2.25%</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="two">
+      <div class="cw"><div class="cw-t">3-Day Price Chart &mdash; Gold and Silver</div><canvas id="metalWeekChart"></canvas></div>
+      <div class="cw"><div class="cw-t">3-Day Chart &mdash; EUR/USD and AUD/USD</div><canvas id="fxWeekChart"></canvas></div>
+    </div>
+    <div class="alert ok">
+      <div class="alert-i">&#9733;</div>
+      <div><strong>COT Validation This Week:</strong> Sunday's COT report called AUD/CAD as #1 BUY and EUR/GBP as #6 SELL. Both confirmed. AUD surged +1.2% vs USD on ceasefire. EUR/GBP fell toward 0.87 as UK Services PMI (55.0) demolished EZ Services PMI (52.2). The COT was reading institutional positioning correctly &mdash; this is why the Sunday COT layer matters.</div>
+    </div>
+  </div>
+
+  <!-- METALS -->
+  <div id="p-metals" class="panel">
+    <div class="sh"><div class="sh-t">Precious Metals</div><div class="sh-s">Gold $4,813 &middot; Silver $76.53 &middot; Week context</div></div>
+    <div class="mbanner">
+      <div class="ms"><div class="ms-l">XAU/USD Today</div><div class="ms-v up">$4,813.24</div></div><div class="mdiv"></div>
+      <div class="ms"><div class="ms-l">Change</div><div class="ms-v up">+2.30%</div></div><div class="mdiv"></div>
+      <div class="ms"><div class="ms-l">Target Upside</div><div class="ms-v up">$4,823.40</div></div><div class="mdiv"></div>
+      <div class="ms"><div class="ms-l">XAG/USD Today</div><div class="ms-v up">$76.53</div></div><div class="mdiv"></div>
+      <div class="ms"><div class="ms-l">Change</div><div class="ms-v up">+5.08%</div></div><div class="mdiv"></div>
+      <div class="ms"><div class="ms-l">Silver YTD</div><div class="ms-v up">+128% vs Apr 2025</div></div><div class="mdiv"></div>
+      <div class="ms"><div class="ms-l">Gold/Silver Ratio</div><div class="ms-v" style="color:var(--text)">62.9x</div></div>
+    </div>
+    <div class="alert warn">
+      <div class="alert-i">&#9888;</div>
+      <div><strong>Gold Still Below 200-SMA on 4H:</strong> Despite today's +2.3% surge to $4,813, the report notes gold is still below the 200-period SMA at $4,704 on the 4H chart. A mild intraday pullback risk to $4,625 exists ahead of FOMC minutes at 2pm EST. If minutes are hawkish (reflecting the March 18 meeting's oil-shock concerns), gold could retrace quickly. Wait for FOMC minutes before adding to gold longs.</div>
+    </div>
+    <div class="two">
+      <div>
+        <div class="sh"><div class="sh-t">Gold &mdash; XAUUSD</div><span class="bias bull" style="margin-left:auto">BULLISH</span></div>
+        <div class="alert info"><div class="alert-i">&#9432;</div><div><strong>Silver YTD Context:</strong> The April 8 report mentions silver is up 128% year-over-year vs April 2025. January 29 saw an all-time high of $121.67. Current $76.53 represents a deep pullback from that high &mdash; and the structural bull case (6th consecutive annual supply deficit, green energy demand) is intact. Today's +5% recovery from Tuesday's $69.94 low is meaningful.</div></div>
+        <div class="cw"><div class="cw-t">Price Targets &mdash; April 8</div>
+          <table class="tbl"><thead><tr><th>Direction</th><th>Target</th><th>Current</th><th>Distance</th></tr></thead>
+          <tbody>
+            <tr><td class="up">&#9650; Upside</td><td>$4,823.40</td><td>$4,813.24</td><td class="up">+0.21%</td></tr>
+            <tr><td class="dn">&#9660; Downside</td><td>$4,718.90</td><td>$4,813.24</td><td class="dn">-1.96%</td></tr>
+            <tr><td style="color:var(--text3)">Key Resistance</td><td colspan="3">$4,900 &middot; Then $5,035</td></tr>
+            <tr><td style="color:var(--text3)">Key Support</td><td colspan="3">$4,745 (intraday pivot) &middot; $4,625</td></tr>
+          </tbody></table>
+        </div>
+        <div class="cw"><div class="cw-t">Key Factors Today</div><div class="factors">
+          <div class="frow"><div class="fn">Ceasefire Announcement</div><div class="fbg"><div class="ff g" style="width:50%"></div></div><div class="fpct">50%</div></div>
+          <div class="frow"><div class="fn">USD Weakness</div><div class="fbg"><div class="ff g" style="width:20%"></div></div><div class="fpct">20%</div></div>
+          <div class="frow"><div class="fn">Bullish Breakout</div><div class="fbg"><div class="ff g" style="width:15%"></div></div><div class="fpct">15%</div></div>
+          <div class="frow"><div class="fn">Intraday Pullback Risk</div><div class="fbg"><div class="ff r" style="width:10%"></div></div><div class="fpct">10%</div></div>
+          <div class="frow"><div class="fn">CB Buying (China)</div><div class="fbg"><div class="ff g" style="width:5%"></div></div><div class="fpct">5%</div></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="sh"><div class="sh-t">Silver &mdash; XAGUSD</div><span class="bias bull" style="margin-left:auto">STRONGLY BULLISH</span></div>
+        <div class="cw"><div class="cw-t">Price Targets &mdash; April 8</div>
+          <table class="tbl"><thead><tr><th>Direction</th><th>Target</th><th>Current</th><th>Distance</th></tr></thead>
+          <tbody>
+            <tr><td class="up">&#9650; Upside</td><td>$76.90</td><td>$76.53</td><td class="up">+0.48%</td></tr>
+            <tr><td class="dn">&#9660; Downside</td><td>$76.00</td><td>$76.53</td><td class="dn">-0.69%</td></tr>
+            <tr><td style="color:var(--text3)">Key Resistance</td><td colspan="3">200-EMA $76.85 &middot; Then 0.618 Fib $78.85</td></tr>
+            <tr><td style="color:var(--text3)">Key Support</td><td colspan="3">$75.49 (0.5 Fib) &middot; $72.86 (wedge breakout)</td></tr>
+          </tbody></table>
+        </div>
+        <div class="cw"><div class="cw-t">Silver Week: Tuesday Capitulation &rarr; Wednesday Reversal</div>
+          <div class="factors" style="margin-top:4px">
+            <div class="frow"><div class="fn">Iran Ceasefire</div><div class="fbg"><div class="ff g" style="width:45%"></div></div><div class="fpct">45%</div></div>
+            <div class="frow"><div class="fn">USD Weakness</div><div class="fbg"><div class="ff g" style="width:30%"></div></div><div class="fpct">30%</div></div>
+            <div class="frow"><div class="fn">Technical Recovery</div><div class="fbg"><div class="ff g" style="width:15%"></div></div><div class="fpct">15%</div></div>
+            <div class="frow"><div class="fn">Structural Bull (deficit)</div><div class="fbg"><div class="ff g" style="width:10%"></div></div><div class="fpct">10%</div></div>
+          </div>
+          <div style="margin-top:10px;font-size:11px;color:var(--text3);font-family:'IBM Plex Mono',monospace;">Tue low: $69.94 &rarr; Wed now $76.53 (+9.4%). 200-EMA at $76.85 is key. Break above = bull continuation toward $78.85. Hold below = consolidation.</div>
+        </div>
+      </div>
+    </div>
+    <div class="cw"><div class="cw-t">Gold &amp; Silver &mdash; 3-Day Reversal Chart (Mon-Tue-Wed)</div><canvas id="metalsReversalChart"></canvas></div>
+  </div>
+
+  <!-- FX MATRIX -->
+  <div id="p-fx" class="panel">
+    <div class="sh"><div class="sh-t">FX Matrix</div><div class="sh-s">22 pairs &middot; RBNZ rewrites NZD &middot; TV chart viewer</div></div>
+    <div class="alert danger">
+      <div class="alert-i">&#9888;</div>
+      <div><strong>RBNZ Hawkish Pivot &mdash; NZD Thesis Must Be Revised:</strong> Our NZD bearish thesis has been a cornerstone since March 29. Today's RBNZ hold with hawkish commentary changes the picture. OCR held at 2.25% but inflation forecast raised to 4.2% Q2 2026. Rate hikes discussed for May/July. NZD/USD now at 0.5825 (+1.68%). NZD/CAD, NZDUSD, and NZD/JPY short setups need review. The fuel crisis headwinds remain, but the rate hike catalyst is now a NZD positive.</div>
+    </div>
+    <div class="alert ok">
+      <div class="alert-i">&#10003;</div>
+      <div><strong>EUR/GBP: COT #6 SELL Validated by PMI Divergence:</strong> Sunday's COT flagged EUR/GBP as a SELL despite our macro thesis saying BUY. The market agreed with COT this week. UK Services PMI 55.0 vs EZ 52.2 &mdash; a stark divergence. EUR/GBP fell to 0.8700, the lowest since mid-March. For EUR/GBP long thesis to work, it needs the ECB April 30 hike to be the catalyst, not current PMI data. Be patient on this one.</div>
+    </div>
+    <div id="tv-viewer" class="tv-viewer">
+      <div class="tv-hdr">
+        <span class="tv-lbl" id="tv-label">Click any pair card below to load daily chart</span>
+        <button class="tv-x" onclick="document.getElementById('tv-viewer').classList.remove('open')">close &times;</button>
+      </div>
+      <div id="tv-chart-container"></div>
+    </div>
+    <div id="fxGroups"></div>
+  </div>
+
+  <!-- EQUITIES -->
+  <div id="p-equities" class="panel">
+    <div class="sh"><div class="sh-t">US Equities</div><div class="sh-s">5-day winning streak &middot; Ceasefire boost &middot; FOMC minutes pending</div></div>
+    <div class="kpi-grid">
+      <div class="kpi bull"><div class="kpi-l">S&P 500 (^GSPC)</div><div class="kpi-v">6,616</div><div class="kpi-c up">&#9650; +0.08% &middot; 5-day win streak +4.31%</div><div class="kpi-n">-3.34% YTD &middot; Futures soaring on ceasefire</div></div>
+      <div class="kpi neut"><div class="kpi-l">Dow Jones (^DJI)</div><div class="kpi-v">46,584</div><div class="kpi-c dn">&#9660; -0.18% prior &middot; Futures up</div><div class="kpi-n">-7.18% from Feb record &middot; -3.08% YTD</div></div>
+      <div class="kpi bull"><div class="kpi-l">Nasdaq 100 (^NDX)</div><div class="kpi-v">24,202</div><div class="kpi-c up">&#9650; +0.04% &middot; Futures +3.15%</div><div class="kpi-n">Record 91% short interest &mdash; squeeze potential</div></div>
+      <div class="kpi bear"><div class="kpi-l">Oil WTI</div><div class="kpi-v">$101</div><div class="kpi-c up">&#9660; -12.8% on ceasefire</div><div class="kpi-n">From $115 Tue &rarr; $101 now</div></div>
+      <div class="kpi bull"><div class="kpi-l">Nasdaq Shorts</div><div class="kpi-v">91%</div><div class="kpi-c dn">Record net short</div><div class="kpi-n">Squeeze potential if ceasefire holds</div></div>
+      <div class="kpi neut"><div class="kpi-l">FOMC Minutes</div><div class="kpi-v">2pm EST</div><div class="kpi-c fl">TODAY</div><div class="kpi-n">Key wildcard &mdash; hawkish = risk-off, dovish = rally continues</div></div>
+    </div>
+    <div class="two">
+      <div class="cw"><div class="cw-t">3-Day Equity Track</div><canvas id="equityChart"></canvas></div>
+      <div class="cw"><div class="cw-t">S&P 500 FOMC Minutes Scenarios</div>
+        <div class="factors" style="margin-top:6px">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:10px">FOMC minutes at 2pm EST &mdash; three possible readings:</div>
+          <div style="padding:8px 12px;background:rgba(76,175,130,0.07);border-radius:6px;margin-bottom:6px;border-left:3px solid var(--green)"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:var(--green);margin-bottom:4px">DOVISH (wait-and-see)</div><div style="font-size:12px;color:var(--text2)">Fed concerned about growth + inflation dual risk. Market reaction: Rally continues, gold holds $4,800+, DXY stays below 100.</div></div>
+          <div style="padding:8px 12px;background:rgba(232,196,106,0.07);border-radius:6px;margin-bottom:6px;border-left:3px solid var(--yellow)"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:var(--yellow);margin-bottom:4px">NEUTRAL (balanced)</div><div style="font-size:12px;color:var(--text2)">Data dependent, oil-shock transient. Market digests and moves on. Ceasefire remains dominant narrative.</div></div>
+          <div style="padding:8px 12px;background:rgba(224,82,82,0.07);border-radius:6px;border-left:3px solid var(--red)"><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:var(--red);margin-bottom:4px">HAWKISH (rate hike lean)</div><div style="font-size:12px;color:var(--text2)">Inflation concerns dominate (oil, PCE 3.71%). DXY recovers above 100. Gold retraces toward $4,625. Risk-off partially reverses ceasefire rally.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="alert warn">
+      <div class="alert-i">&#9889;</div>
+      <div><strong>Nasdaq 91% Short Interest is a Double-Edged Sword:</strong> Record net short positioning means a sustained ceasefire rally triggers a violent short squeeze. Nasdaq futures +3.15% premarket. But if ceasefire collapses (as it did April 2), those shorts reverse and the move down is just as violent. This is not a normal directional market &mdash; it's a geopolitical binary event dressed up as a trend.</div>
+    </div>
+  </div>
+
+  <!-- GEO -->
+  <div id="p-geo" class="panel">
+    <div class="sh"><div class="sh-t">Geopolitical Intelligence</div><div class="sh-s">Ceasefire 2.0 &middot; Updated conflict status &middot; FX impact</div></div>
+    <div class="alert ok">
+      <div class="alert-i">&#128308;&rarr;&#128993;</div>
+      <div><strong>Iran Downgraded to HIGH (again):</strong> Two-week conditional ceasefire announced. Negotiations scheduled April 10 in Islamabad. Key conditions: Hormuz must reopen, 10-point Iranian plan discussed. BUT: Same as April 1 &mdash; no signed agreement, no physical Hormuz reopening confirmed. Status HIGH not MEDIUM until Hormuz vessels increase from 6/day back toward normal.</div>
+    </div>
+    <div class="cw"><div class="cw-t">Interactive Geopolitical Map &mdash; Updated April 8 Status</div><div id="geomap"></div></div>
+    <div class="geo-grid">
+      <div class="cw"><div class="cw-t">Conflict Status Update &mdash; April 8</div>
+        <div class="conf-item"><div class="cdot o"></div><div>
+          <div class="cname">Iran / Middle East &#128992; HIGH (conditional ceasefire)</div>
+          <div class="cdesc">Two-week ceasefire conditional on Hormuz reopening. Negotiations April 10 in Islamabad. Based on 10-point Iranian plan. South Pars gas field struck Saturday &mdash; Iran IRGC Guard chief killed. Status volatile.</div>
+          <div class="cfx"><span class="chip pos">Oil -16%</span><span class="chip pos">Risk-on</span><span class="chip watch">Hormuz still closed</span><span class="chip watch">April 22 expiry</span></div>
+        </div></div>
+        <div class="conf-item"><div class="cdot r"></div><div>
+          <div class="cname">Strait of Hormuz &#128308; STILL CLOSED</div>
+          <div class="cdesc">Ceasefire does NOT mean Hormuz is open. Still at 6 vessels/day (was 40+). Physical reopening is the key trigger for full de-escalation. Until confirmed, treat oil price drop as anticipation not reality.</div>
+          <div class="cfx"><span class="chip neg">Oil still $93+ (elevated)</span><span class="chip watch">Watch Apr 10 talks</span></div>
+        </div></div>
+        <div class="conf-item"><div class="cdot o"></div><div>
+          <div class="cname">Russia / Ukraine &#128992; HIGH</div>
+          <div class="cdesc">Ongoing. Tuesday's JPY move partly attributed to "Eastern Europe tensions" per CADJPY analysis. CHF and JPY safe-haven bid partially driven by this.</div>
+          <div class="cfx"><span class="chip neg">EUR structural pressure</span><span class="chip pos">CHF &#8593;</span><span class="chip pos">JPY bid</span></div>
+        </div></div>
+        <div class="conf-item"><div class="cdot y"></div><div>
+          <div class="cname">New Zealand Fuel Crisis &#127864; MONITORING</div>
+          <div class="cdesc">RBNZ now acknowledges inflation hitting 4.2% Q2 partly from fuel. Despite hawkish pivot, the underlying fuel cost pressure remains. Petrol +35%, diesel +87% not reversing on a 2-week ceasefire signal.</div>
+          <div class="cfx"><span class="chip watch">RBNZ hawkish offset</span><span class="chip neg">Fuel costs persist</span></div>
+        </div></div>
+      </div>
+      <div>
+        <div class="cw"><div class="cw-t">Geopolitical Risk &mdash; Updated FX Radar</div><canvas id="geoRadar"></canvas></div>
+        <div class="cw"><div class="cw-t">Hormuz Reopening Scenarios</div>
+          <div class="factors" style="margin-top:4px">
+            <div class="frow"><div class="fn">Oil (current)</div><div class="fbg"><div class="ff y" style="width:65%"></div></div><div class="fpct">$93.92</div></div>
+            <div class="frow"><div class="fn">Oil (full reopen)</div><div class="fbg"><div class="ff g" style="width:40%"></div></div><div class="fpct">$70-80</div></div>
+            <div class="frow"><div class="fn">Vessels/Day now</div><div class="fbg"><div class="ff r" style="width:15%"></div></div><div class="fpct">6</div></div>
+            <div class="frow"><div class="fn">Vessels/Day target</div><div class="fbg"><div class="ff g" style="width:100%"></div></div><div class="fpct">40+</div></div>
+            <div class="frow"><div class="fn">Ceasefire odds hold</div><div class="fbg"><div class="ff y" style="width:45%"></div></div><div class="fpct">~45%</div></div>
+          </div>
+          <div style="font-size:11px;color:var(--text3);margin-top:10px;font-family:'IBM Plex Mono',monospace">April 10 Islamabad negotiations are the key event this week &mdash; more important than FOMC minutes for oil direction.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MACRO -->
+  <div id="p-macro" class="panel">
+    <div class="sh"><div class="sh-t">Macro Framework</div><div class="sh-s">RBNZ pivot &middot; Updated CB matrix &middot; Revised scenario probabilities</div></div>
+    <div class="opinion warn">
+      <div class="op-title">&#9888; RBNZ Hawkish Pivot &mdash; NZD Thesis Revised</div>
+      <div class="op-body">
+        <p><strong>What changed:</strong> RBNZ held OCR at 2.25% but delivered the most hawkish statement since the fuel crisis began. Inflation forecast raised to 4.2% Q2 2026. Governor Breman explicitly discussed early rate hikes (May/July). Market now pricing 60bp of hikes for remainder of 2026. First hike pulled forward to September with risks of May/July.</p>
+        <p><strong>What this means for our NZD short thesis:</strong> The structural headwinds (fuel crisis, weak business confidence, slow growth) haven't disappeared. But a central bank that is actively discussing rate hikes in 2-3 months is not a bearish currency catalyst &mdash; it's a bullish one. NZD/USD at 0.5825 today. NZDUSD short thesis is now SUSPENDED until we see whether RBNZ follows through with actual hikes.</p>
+        <p><strong>Best NZD expression going forward:</strong> Rather than NZD/USD short, consider NZD/CAD short (CAD still massively short in COT at -31,082, NZD at -1,582 = both bearish but CAD more so) or wait for clarity on first RBNZ hike date before re-entering NZD positions.</p>
+      </div>
+    </div>
+    <div class="two">
+      <div class="cw"><div class="cw-t">Central Bank Matrix &mdash; Updated April 8</div>
+        <table class="tbl" style="font-size:11px">
+          <thead><tr><th>Bank</th><th>Rate</th><th>Next</th><th>Stance</th><th>Today's Update</th></tr></thead>
+          <tbody>
+            <tr><td>Fed (US)</td><td>3.50-3.75%</td><td>Apr 29</td><td style="color:var(--yellow)">Trapped</td><td style="color:var(--text2)">FOMC minutes 2pm EST. Ceasefire eases oil pressure. Watch hawkish vs dovish lean.</td></tr>
+            <tr><td>ECB (EU)</td><td>2.0%</td><td>Apr 30</td><td style="color:var(--red)">Hiking</td><td style="color:var(--green)">Lagarde reiterated restrictive stance. 2-3 hikes priced 2026. EUR/USD +0.74% today.</td></tr>
+            <tr><td>BoE (UK)</td><td>3.75%</td><td>TBD</td><td style="color:var(--yellow)">Wait &amp; See</td><td style="color:var(--green)">UK Services PMI 55.0 (vs EZ 52.2). GBP outperforms EUR today.</td></tr>
+            <tr><td>BoJ (Japan)</td><td>0.75%</td><td>TBD</td><td style="color:var(--green)">Hawkish</td><td style="color:var(--green)">Oil -16% eases Japan import inflation. Wage growth fastest in 5 years. BoJ hike case strengthening.</td></tr>
+            <tr><td>RBNZ (NZ)</td><td>2.25%</td><td>May/Jul?</td><td style="color:var(--red)">HAWKISH PIVOT</td><td style="color:var(--red)">Inflation to 4.2% Q2. Discussing May/Jul hikes. NZD +1.68% today. Thesis revised.</td></tr>
+            <tr><td>RBA (Australia)</td><td>4.10%</td><td>TBD</td><td style="color:var(--red)">Restrictive</td><td style="color:var(--green)">AUD/USD +1.2% to 0.7060. RBA restrictive + ceasefire risk-on = AUD strong.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cw"><div class="cw-t">Updated Scenario Probabilities &mdash; Post Ceasefire 2.0</div><canvas id="regimeChart"></canvas></div>
+    </div>
+    <div class="sh"><div class="sh-t">Revised Scenario Matrix</div><div class="sh-s">Incorporating conditional ceasefire</div></div>
+    <div class="cw" style="overflow-x:auto">
+      <table class="sc-tbl">
+        <thead><tr><th>Scenario</th><th>Prob.</th><th>Change</th><th>Oil</th><th>Gold</th><th>AUD</th><th>NZD</th></tr></thead>
+        <tbody>
+          <tr><td><strong style="color:var(--green)">Ceasefire Holds + Hormuz Reopens</strong></td><td style="color:var(--green)">25%</td><td class="up">&#8593; from 20%</td><td class="up">$70-80</td><td class="dn">$4,200-4,500</td><td class="up">0.72+</td><td class="up">0.60+</td></tr>
+          <tr><td><strong style="color:var(--yellow)">Conditional Limbo (Current)</strong></td><td style="color:var(--yellow)">40%</td><td class="up">New</td><td style="color:var(--yellow)">$88-100</td><td style="color:var(--yellow)">$4,600-4,900</td><td class="up">0.69-0.71</td><td class="up">0.58-0.60</td></tr>
+          <tr><td><strong style="color:var(--yellow)">Stagflation Base</strong></td><td style="color:var(--yellow)">25%</td><td class="dn">&#8595; from 45%</td><td style="color:var(--yellow)">$95-110</td><td style="color:var(--yellow)">$4,500-4,700</td><td class="dn">0.68-0.70</td><td class="dn">0.57-0.59</td></tr>
+          <tr><td><strong style="color:var(--red)">Ceasefire Collapses / Escalation</strong></td><td style="color:var(--red)">10%</td><td class="dn">&#8595; from 30%</td><td class="dn">$120+</td><td class="up">$4,900+</td><td class="dn">0.64-0.67</td><td class="dn">0.55-0.57</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ANALYST NOTES -->
+  <div id="p-analyst" class="panel">
+    <div class="sh"><div class="sh-t">Analyst Notes</div><div class="sh-s">Critical review &middot; COT validation &middot; Updated trading calls</div></div>
+    <div class="opinion pos">
+      <div class="op-title">&#10003; COT Report Validated This Week &mdash; Two for Two</div>
+      <div class="op-body">
+        <p><strong>AUD/CAD #1 BUY (confirmed):</strong> COT had AUD at +10,634 vs CAD at -31,082 = +41,716 strength score. Today AUD surged +1.2% on ceasefire, CAD weakened on oil -16%. AUD/CAD moved exactly as COT predicted. For your Daily Fib system, this was the first pair to scan Monday morning &mdash; and it would have been the right call.</p>
+        <p><strong>EUR/GBP #6 SELL (confirmed):</strong> Our macro thesis said EUR/GBP BUY (ECB hiking). COT said SELL. UK Services PMI 55.0 vs EZ 52.2 &mdash; the market agreed with COT. EUR/GBP fell to 0.87. The lesson: COT reads current institutional positioning, not future central bank action. Both inputs are right, just on different timescales. The ECB hike catalyst (April 30) may eventually flip EUR/GBP higher &mdash; but COT correctly identified that it wasn't happening yet.</p>
+      </div>
+    </div>
+    <div class="opinion neg">
+      <div class="op-title">&#9888; What Requires Caution</div>
+      <div class="op-body">
+        <p><strong>1. Ceasefire Pattern Risk (Critical):</strong> This is the third time in two weeks we've seen a de-escalation signal. April 1 lasted 24 hours. April 7 ceasefire talks were rejected by Iran within hours. Today's ceasefire is conditional on Hormuz reopening &mdash; which hasn't happened. The market is pricing the good outcome. If Islamabad negotiations fail on April 10, we get a violent reversal. Position sizing must reflect this.</p>
+        <p><strong>2. NZD Thesis Suspension:</strong> Our NZD bearish framework has been the most consistent call since March 29. RBNZ's hawkish pivot today partially invalidates it. NZD/USD is now at 0.5825, up from 0.5700 low. The fuel crisis and business confidence collapse haven't reversed, but a central bank discussing rate hikes 2-3 months out is a stronger NZD signal than those structural headwinds. Reassess NZD positions before the next Sunday report.</p>
+        <p><strong>3. Gold vs FOMC Minutes:</strong> Gold at $4,813 is pricing a dovish Fed (ceasefire reduces oil = lower inflation = cuts sooner). If FOMC minutes show hawkish tone (reflecting March 18 meeting where oil was already surging), today's gold move could partially reverse. Watch 2pm EST carefully.</p>
+      </div>
+    </div>
+    <div class="sh" style="margin-top:4px"><div class="sh-t">Updated Trading Implications</div><div class="sh-s">Post-ceasefire + post-RBNZ &middot; Daily Fib Pullback &middot; H4 50 EMA</div></div>
+    <div class="ev-list">
+      <div class="ev ok"><div class="ev-date" style="color:var(--gold)">PRIORITY 1</div><div><div class="ev-name">AUD/CAD: COT #1 confirmed. Pull back on Daily Fib is the setup.</div><div class="ev-desc">AUD +1.2% today on ceasefire. CAD weakened on oil -16%. COT structural support (+41,716). RBA restrictive vs BoC under pressure. After today's initial surge, wait for a Daily Fib pullback to 0.975-0.980 area. Don't chase the initial move &mdash; wait for the setup.</div></div></div>
+      <div class="ev ok"><div class="ev-date" style="color:var(--gold)">PRIORITY 2</div><div><div class="ev-name">AUD/USD: Risk-on surge + RBA restrictive = sustained move higher.</div><div class="ev-desc">AUD/USD at 0.7060 today, up from 0.6880 last week. Upside target 0.708. If ceasefire holds and FOMC minutes are dovish, AUD/USD toward 0.72+ is in scope this week. This is cleaner than AUD/CAD given the direct DXY correlation. Wait for pullback to 0.700 Fibonacci level for entry.</div></div></div>
+      <div class="ev med"><div class="ev-date" style="color:var(--yellow)">WATCH</div><div><div class="ev-name">EUR/GBP: ECB April 30 is the catalyst. COT says SELL now, macro says BUY later.</div><div class="ev-desc">UK PMI 55.0 vs EZ 52.2 confirms GBP strength today. EUR/GBP at 0.87, the lowest since mid-March. COT says SELL and the market agrees today. However, ECB hike April 30 is a genuine upcoming EUR positive. Strategy: do not enter EUR/GBP long until closer to April 28-29 when market positions for the ECB event. For now, neutral on this pair.</div></div></div>
+      <div class="ev med"><div class="ev-date" style="color:var(--yellow)">REVISED</div><div><div class="ev-name">NZD: RBNZ pivot suspends the short thesis. Reassess on Sunday.</div><div class="ev-desc">NZD/USD at 0.5825, RBNZ hawkish, hikes possibly May/July. Our bearish NZD structural call (fuel crisis, low confidence) is now offset by a central bank that's turning hawkish. Don't add to NZD short positions until Sunday's debrief with updated COT shows whether institutional positioning has shifted toward net long NZD.</div></div></div>
+      <div class="ev high"><div class="ev-date" style="color:var(--red)">RISK</div><div><div class="ev-name">FOMC Minutes at 2pm EST &mdash; Session's key binary event.</div><div class="ev-desc">Everything above is conditional on FOMC minutes not being hawkish. If minutes reflect a March 18 meeting that was already pricing oil-shock inflation into rate hike expectations, today's entire risk-on move is at risk of partial reversal. Reduce exposure to new positions until after 2pm EST. The ceasefire is the dominant narrative, but FOMC minutes can override for 2-4 hours.</div></div></div>
+    </div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div id="p-calendar" class="panel">
+    <div class="sh"><div class="sh-t">Events Ahead</div><div class="sh-s">Remaining today &middot; Rest of week &middot; April 10 Islamabad</div></div>
+    <div class="alert danger">
+      <div class="alert-i">&#128680;</div>
+      <div><strong>APRIL 10 &mdash; ISLAMABAD NEGOTIATIONS:</strong> This is the new critical date. Trump and Iran representatives scheduled to meet. The outcome of these talks determines whether the 2-week ceasefire becomes a real agreement or collapses like April 1. Hormuz physical reopening is the only metric that counts. Watch oil market reaction Friday morning as the first signal.</div>
+    </div>
+    <div class="ev-list">
+      <div class="ev high"><div class="ev-date">TODAY<br>2pm EST</div><div><div class="ev-name">FOMC Minutes Release</div><div class="ev-desc">HIGH &middot; ALL MARKETS &middot; Most important event today. Reflects March 18 meeting. Hawkish = DXY recovers, gold pulls back. Dovish = rally extends. Watch inflation language and any discussion of rate hike probability vs hold bias.</div></div></div>
+      <div class="ev med"><div class="ev-date">Wed Apr 8<br>Now</div><div><div class="ev-name">RBNZ Already Released &mdash; OCR 2.25% Hawkish Hold</div><div class="ev-desc">Delivered. Inflation forecast 4.2% Q2. May/July hike possible. NZD +1.68%. Thesis revised as per Analyst Notes.</div></div></div>
+      <div class="ev med"><div class="ev-date">Thu Apr 9</div><div><div class="ev-name">US Initial Jobless Claims &middot; PPI Data</div><div class="ev-desc">MEDIUM &middot; USD &middot; After Tuesday's ISM Services miss, labor data is the key remaining US data point. If claims rise above 230k, stagflation narrative re-enters. PPI is the first inflation read of the week &mdash; sets expectations for CPI.</div></div></div>
+      <div class="ev high"><div class="ev-date">Thu Apr 10</div><div><div class="ev-name">US-Iran Negotiations &mdash; Islamabad</div><div class="ev-desc">HIGH &middot; ALL &middot; The most important event of the week. Success = oil drops further, DXY stays below 100, risk-on extends, gold consolidates at $4,700+. Failure = oil back to $110+, risk-off, gold spikes on safe-haven, DXY recovers. Position around this event, not after it.</div></div></div>
+      <div class="ev high"><div class="ev-date">Week of<br>Apr 6-11</div><div><div class="ev-name">US CPI and PCE Inflation Data</div><div class="ev-desc">HIGH &middot; USD &middot; Current nowcast 3.71%. Oil pass-through from March will show up here. If CPI comes in hot, Fed rate hike odds recover. If tame (ceasefire lowering oil expectations), DXY stays depressed and gold benefits.</div></div></div>
+      <div class="ev ok"><div class="ev-date">Apr 30</div><div><div class="ev-name">ECB Meeting &mdash; Rate Hike 81% Probability</div><div class="ev-desc">CONFIRMED CATALYST &middot; EUR &middot; Lagarde reiterated hawkish stance today. 81% odds intact. This is the EUR/GBP long trigger we identified since March 29 &mdash; it hasn't changed, it's just not the right timing until late April.</div></div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">OMC INTELLIGENCE PLATFORM &middot; OLD MOUNTAIN CAPITAL &middot; MIDWEEK 08.04.2026 &middot; SOURCE: MRKT REPORTS APR 7-8 &nbsp;|&nbsp; OMC MACRO TEAM + CLAUDE AI LAYER &nbsp;|&nbsp; PROPRIETARY &middot; INTERNAL USE ONLY</div>
+
+<script>
+const D=[
+  {s:"EURUSD",n:"Euro/Dollar",g:"eur",p:1.16831,c:0.74,b:"bull",u:1.1708,d:1.1669,f:[{n:"Geopolitical De-escal.",w:45,c:"g"},{n:"Technical Breakout",w:35,c:"g"},{n:"Oil Price Collapse",w:15,c:"g"},{n:"Residual Uncertainty",w:5,c:"r"}],risk:"5-week high. Next resistance 1.1795. FOMC minutes could reverse."},
+  {s:"EURGBP",n:"Euro/GBP",g:"eur",p:0.87,c:-0.22,b:"bear",u:0.8731,d:0.8694,f:[{n:"UK PMI 55.0 vs EZ 52.2",w:35,c:"r"},{n:"Geopolitical de-escal.",w:30,c:"r"},{n:"ECB Hawkish Bias",w:20,c:"g"},{n:"Technical Breakdown",w:15,c:"r"}],risk:"COT #6 SELL confirmed. ECB Apr 30 is long trigger later. Not now."},
+  {s:"EURAUD",n:"Euro/AUD",g:"eur",p:1.65784,c:-0.25,b:"bear",u:1.661,d:1.655,f:[{n:"Iran Ceasefire",w:40,c:"r"},{n:"RBNZ Hawkish",w:25,c:"r"},{n:"EUR/USD Gain",w:20,c:"g"},{n:"Bearish Technicals",w:15,c:"r"}],risk:"AUD +1.2% outpacing EUR. RSI 41.69. Bearish setup confirmed."},
+  {s:"EURJPY",n:"Euro/JPY",g:"eur",p:184.96,c:-0.01,b:"neut",u:185.06,d:184.58,f:[{n:"Oil Drop (JPY boost)",w:40,c:"r"},{n:"Geopolitical Risk-On",w:35,c:"g"},{n:"Technical Breakout",w:15,c:"g"},{n:"BoJ Rate Hike Case",w:10,c:"r"}],risk:"BoJ oil deflation support vs ECB hawkish. Range 184.58-185.06."},
+  {s:"EURCAD",n:"Euro/CAD",g:"eur",p:1.61987,c:0.62,b:"bull",u:1.6203,d:1.6185,f:[{n:"ECB Hawkish Policy",w:35,c:"g"},{n:"Oil Price Weakness",w:30,c:"r"},{n:"Technical Resistance",w:20,c:"r"},{n:"EZ PMI Weakness",w:15,c:"r"}],risk:"Weekly resistance zone 1.60598-1.60935. Target 1.600 on rejection."},
+  {s:"EURNZD",n:"Euro/NZD",g:"eur",p:2.00758,c:-0.75,b:"bear",u:2.011,d:2.001,f:[{n:"RBNZ Hawkish Hold",w:50,c:"r"},{n:"Ceasefire Relief",w:25,c:"r"},{n:"NZD Strength",w:15,c:"r"},{n:"ECB Offset",w:10,c:"g"}],risk:"RBNZ hawkish pivot strongest NZD driver in months. EUR/NZD falling."},
+  {s:"USDCAD",n:"Dollar/CAD",g:"usd",p:1.387,c:-0.2,b:"bear",u:1.389,d:1.3856,f:[{n:"Oil -16% (CAD neg)",w:40,c:"g"},{n:"USD weakness",w:30,c:"g"},{n:"Ceasefire risk-on",w:20,c:"g"},{n:"BoC under pressure",w:10,c:"g"}],risk:"Oil crash hurts CAD. USD weak on ceasefire. Both sides bearish USD/CAD."},
+  {s:"USDJPY",n:"Dollar/JPY",g:"usd",p:158.5,c:-0.5,b:"bear",u:159.3,d:158.1,f:[{n:"Oil Drop Japan benefit",w:40,c:"r"},{n:"BoJ Rate Hike Case",w:35,c:"r"},{n:"USD Weakness",w:15,c:"r"},{n:"Geopolitical Ease",w:10,c:"g"}],risk:"JPY strengthening on oil crash + BoJ case. Wages fastest in 5 years."},
+  {s:"USDCHF",n:"Dollar/CHF",g:"usd",p:0.79,c:-0.6,b:"bear",u:0.7929,d:0.7872,f:[{n:"USD Weak Ceasefire",w:40,c:"r"},{n:"CHF Safe Haven Fades",w:30,c:"g"},{n:"DXY Below 100",w:20,c:"r"},{n:"Risk-On",w:10,c:"g"}],risk:"Range 0.7872-0.7929. USD weakness dominant."},
+  {s:"GBPUSD",n:"GBP/Dollar",g:"gbp",p:1.339,c:0.6,b:"bull",u:1.34,d:1.337,f:[{n:"USD Weakness",w:40,c:"g"},{n:"UK PMI 55.0 Strong",w:30,c:"g"},{n:"Ceasefire Risk-On",w:20,c:"g"},{n:"BoE Wait-See",w:10,c:"y"}],risk:"UK Services PMI 55.0 beats. GBP outperforming EUR today. Bullish."},
+  {s:"GBPAUD",n:"GBP/AUD",g:"gbp",p:1.905,c:-0.3,b:"bear",u:1.907,d:1.904,f:[{n:"AUD Risk-On Surge",w:40,c:"r"},{n:"RBA Restrictive",w:30,c:"r"},{n:"UK PMI Strong",w:20,c:"g"},{n:"Oil Easing",w:10,c:"y"}],risk:"AUD outperforming GBP on risk-on. GBPAUD bearish setup confirmed."},
+  {s:"GBPJPY",n:"GBP/JPY",g:"gbp",p:212.7,c:0.2,b:"neut",u:213.0,d:212.5,f:[{n:"GBP Strong PMI",w:40,c:"g"},{n:"JPY Oil Benefit",w:35,c:"r"},{n:"Ceasefire Risk",w:15,c:"y"},{n:"Rate Differential",w:10,c:"g"}],risk:"Balanced forces. GBP PMI bullish vs JPY oil benefit bearish."},
+  {s:"GBPCAD",n:"GBP/CAD",g:"gbp",p:1.860,c:0.5,b:"bull",u:1.862,d:1.858,f:[{n:"GBP PMI 55.0",w:40,c:"g"},{n:"CAD Oil Weakness",w:35,c:"g"},{n:"USD Dynamics",w:15,c:"g"},{n:"BoE vs BoC",w:10,c:"g"}],risk:"COT #2 BUY from Sunday. GBP strong + CAD weak = confirmed."},
+  {s:"GBPNZD",n:"GBP/NZD",g:"gbp",p:2.317,c:-0.1,b:"neut",u:2.319,d:2.315,f:[{n:"RBNZ Hawkish",w:40,c:"r"},{n:"UK PMI Strong",w:35,c:"g"},{n:"Ceasefire NZD",w:15,c:"r"},{n:"Range-Bound",w:10,c:"y"}],risk:"RBNZ hawkish partly offsetting GBP strength. Neutral."},
+  {s:"AUDUSD",n:"AUD/Dollar",g:"aud",p:0.7060,c:1.2,b:"bull",u:0.708,d:0.703,f:[{n:"Iran Ceasefire",w:40,c:"g"},{n:"RBA Restrictive",w:30,c:"g"},{n:"USD Weakness",w:20,c:"g"},{n:"Risk-On",w:10,c:"g"}],risk:"SURGING. From 0.6880 last week to 0.7060 today. COT supported."},
+  {s:"AUDJPY",n:"AUD/JPY",g:"aud",p:111.85,c:0.7,b:"bull",u:112.0,d:111.7,f:[{n:"AUD Ceasefire Surge",w:40,c:"g"},{n:"Risk-On",w:30,c:"g"},{n:"JPY Oil Benefit",w:20,c:"r"},{n:"RBA vs BoJ",w:10,c:"y"}],risk:"AUD surge partly offsetting JPY strength. Net bullish today."},
+  {s:"AUDCAD",n:"AUD/CAD",g:"aud",p:0.978,c:0.8,b:"bull",u:0.979,d:0.977,f:[{n:"AUD Risk-On",w:35,c:"g"},{n:"CAD Oil Weakness",w:35,c:"g"},{n:"RBA vs BoC",w:20,c:"g"},{n:"COT #1 BUY",w:10,c:"g"}],risk:"COT #1 BUY CONFIRMED. Best setup this week. Wait for Fib pullback."},
+  {s:"AUDNZD",n:"AUD/NZD",g:"aud",p:1.2118,c:-0.2,b:"neut",u:1.2146,d:1.2091,f:[{n:"RBNZ Hawkish NZD",w:40,c:"r"},{n:"AUD Risk-On",w:30,c:"g"},{n:"RBA vs RBNZ",w:20,c:"y"},{n:"Risk Sentiment",w:10,c:"g"}],risk:"RBNZ hawkish pivot narrows AUD/NZD edge. Was cleanest setup, now neutral."},
+  {s:"CADJPY",n:"CAD/JPY",g:"cad",p:114.4,c:-0.3,b:"bear",u:114.75,d:114.15,f:[{n:"JPY Oil Benefit",w:40,c:"r"},{n:"CAD Oil Weakness",w:35,c:"r"},{n:"BoJ Hawkish",w:15,c:"r"},{n:"Ceasefire Effect",w:10,c:"y"}],risk:"Both sides weak vs JPY. CAD hurt by oil -16%."},
+  {s:"NZDJPY",n:"NZD/JPY",g:"nzd",p:92.124,c:0.83,b:"neut",u:92.4,d:92.0,f:[{n:"RBNZ Hawkish NZD",w:40,c:"g"},{n:"JPY Strength Oil",w:35,c:"r"},{n:"Technical Breakdown",w:15,c:"r"},{n:"USD Weakness",w:10,c:"g"}],risk:"RBNZ hawkish vs JPY oil benefit. NZD +1.62% vs USD but JPY outperforms."},
+  {s:"NZDCAD",n:"NZD/CAD",g:"nzd",p:0.80673,c:1.47,b:"neut",u:0.807,d:0.805,f:[{n:"Bearish Technicals",w:35,c:"r"},{n:"Geopolitical Oil",w:30,c:"r"},{n:"RBNZ Hawkish",w:20,c:"g"},{n:"Cross Divergence",w:15,c:"r"}],risk:"22 bearish vs 4 bullish signals. RBNZ partially offsets. Monitor."},
+  {s:"NZDUSD",n:"NZD/Dollar",g:"nzd",p:0.58252,c:1.68,b:"bull",u:0.5848,d:0.5817,f:[{n:"RBNZ Hawkish Hold",w:40,c:"g"},{n:"Ceasefire Relief",w:30,c:"g"},{n:"Price Recovery",w:20,c:"g"},{n:"Oil Inflation Risks",w:10,c:"r"}],risk:"THESIS REVISED. RBNZ hawkish pivot. NZD at 0.5825. Suspend NZD shorts."},
+  {s:"XAUUSD",n:"Gold/Dollar",g:"metals",p:4813.24,c:2.30,b:"bull",u:4823.4,d:4718.9,f:[{n:"Ceasefire Announcement",w:50,c:"g"},{n:"Weaker USD",w:20,c:"g"},{n:"Bullish Breakout",w:15,c:"g"},{n:"Intraday Pullback",w:10,c:"r"},{n:"CB Buying",w:5,c:"g"}],risk:"3-week high. FOMC minutes at 2pm EST key risk. Below 200-SMA on 4H still."},
+  {s:"XAGUSD",n:"Silver/Dollar",g:"metals",p:76.529,c:5.08,b:"bull",u:76.9,d:76.0,f:[{n:"Iran Ceasefire",w:45,c:"g"},{n:"USD Weakness",w:30,c:"g"},{n:"Technical Recovery",w:15,c:"g"},{n:"Supply Deficit",w:10,c:"g"}],risk:"From $69.94 Tue low to $76.53 today (+9.4%). 200-EMA $76.85 key resistance."},
+  {s:"^GSPC",n:"S&P 500",g:"equity",p:6616.85,c:0.08,b:"bull",u:6618.3,d:6582.7,f:[{n:"Geopolitical Ceasefire",w:35,c:"g"},{n:"Price Momentum",w:30,c:"g"},{n:"Technical Signals",w:20,c:"g"},{n:"Economic Data Weak",w:15,c:"r"}],risk:"5-day winning streak. Futures soaring pre-market. FOMC mins key."},
+  {s:"^DJI",n:"Dow Jones",g:"equity",p:46584.46,c:-0.18,b:"neut",u:46650,d:46560,f:[{n:"Ceasefire Announcement",w:45,c:"g"},{n:"Geopolitical Tensions",w:30,c:"r"},{n:"FOMC Minutes",w:15,c:"y"},{n:"Broader Weakness",w:10,c:"r"}],risk:"-7.18% from Feb record. Futures up strongly on ceasefire."},
+  {s:"^NDX",n:"Nasdaq 100",g:"equity",p:24202.371,c:0.04,b:"bull",u:24208.7,d:24194.1,f:[{n:"Geopolitical Ceasefire",w:50,c:"g"},{n:"Oil Price Drop",w:20,c:"g"},{n:"High Valuations",w:15,c:"r"},{n:"Short Positioning",w:10,c:"r"},{n:"Stock Rotation",w:5,c:"y"}],risk:"91% net short = squeeze fuel. Futures +3.15% pre-market. Dangerous if ceasefire fails."},
+];
+const Cl={gold:'#c9a84c',red:'#e05252',green:'#4caf82',yellow:'#e8c46a',blue:'#5b9bd5',border:'#1e2530',text2:'#8a93a6'};
+function fmt(s,p){if(p>100000)return'\xA5'+p.toLocaleString('en-US',{maximumFractionDigits:0});if(p>1000)return'$'+p.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});if(p>10)return'$'+p.toFixed(3);return'$'+p.toFixed(5);}
+function pct(n){return(n>=0?'+':'')+n.toFixed(2)+'%';}
+function rng(a){return((a.u-a.d)/a.p*100).toFixed(2);}
+function bcls(b){return b==='bull'?'bull':b==='bear'?'bear':'neut';}
+function blbl(b){return b==='bull'?'BULLISH':b==='bear'?'BEARISH':'NEUTRAL';}
+function cc(c){return c>0?'up':c<0?'dn':'fl';}
+function buildTicker(){const t=document.getElementById('ticker');const items=D.map(a=>{const cl=cc(a.c);const ar=a.c>0?'\u25B2':a.c<0?'\u25BC':'\u25AC';return`<div class="ti"><span class="ti-s">${a.s}</span><span>${fmt(a.s,a.p)}</span><span class="${cl}">${ar} ${pct(a.c)}</span></div>`;}).join('');t.innerHTML=items+items;}
+function buildKPIs(){const featured=[{l:'XAU/USD',v:'$4,813.24',c:'+2.30%',cl:'bull up',n:'3-week high - ceasefire + USD weak'},{l:'XAG/USD',v:'$76.53',c:'+5.08%',cl:'bull up',n:'From $69.94 Tue low - structural bull intact'},{l:'EUR/USD',v:'$1.1683',c:'+0.74%',cl:'bull up',n:'5-week high - broke 1.1700'},{l:'AUD/USD',v:'$0.7060',c:'+1.2%',cl:'bull up',n:'COT #1 buy confirmed - risk-on surge'},{l:'RBNZ Decision',v:'2.25%',cl:'bull up',c:'Hawkish Hold',n:'Inflation 4.2% Q2 - hikes May/Jul possible'},{l:'NZD/USD',v:'$0.5825',c:'+1.68%',cl:'bull up',n:'RBNZ pivot - NZD short thesis suspended'},{l:'Oil WTI',v:'~$101',cl:'neut dn',c:'-12.8% today',n:'Ceasefire signal - Brent $93.92'},{l:'USDJPY',v:'158.50',cl:'bear dn',c:'-0.50%',n:'JPY benefits from oil crash + BoJ case'},{l:'EUR/GBP',v:'$0.870',c:'-0.22%',cl:'bear dn',n:'COT SELL confirmed - UK PMI 55.0 vs EZ 52.2'},{l:'Nasdaq Shorts',v:'91%',cl:'bear',c:'Record net short',n:'Squeeze risk if ceasefire holds'},{l:'FOMC Minutes',v:'2pm EST',cl:'neut',c:'Today - KEY EVENT',n:'Hawkish = risk-off. Dovish = rally extends.'},{l:'Islamabad Talks',v:'Apr 10',cl:'neut',c:'CRITICAL',n:'Ceasefire durability test'},];document.getElementById('kpiGrid').innerHTML=featured.map(k=>`<div class="kpi ${k.cl.split(' ')[0]}"><div class="kpi-l">${k.l}</div><div class="kpi-v">${k.v}</div><div class="kpi-c ${k.cl.split(' ')[1]||''}">${k.c}</div><div class="kpi-n">${k.n}</div></div>`).join('');}
+let tblFilter='all';
+function buildTable(f){tblFilter=f||tblFilter;const list=tblFilter==='all'?D:D.filter(a=>{if(tblFilter==='jpy')return a.s.includes('JPY');if(tblFilter==='metals')return a.g==='metals';if(tblFilter==='equity')return a.g==='equity';return a.g===tblFilter;});document.getElementById('tblRows').innerHTML=list.map(a=>`<tr><td>${a.s}</td><td style="font-size:10px;color:var(--text3)">${a.g}</td><td>${fmt(a.s,a.p)}</td><td class="${cc(a.c)}">${pct(a.c)}</td><td><span class="bias ${bcls(a.b)}">${blbl(a.b)}</span></td><td class="up">${fmt(a.s,a.u)}</td><td class="dn">${fmt(a.s,a.d)}</td><td style="color:var(--text2)">${rng(a)}%</td><td style="font-size:11px;color:var(--text2);max-width:200px">${a.risk}</td></tr>`).join('');}
+function filterTable(cat,btn){document.querySelectorAll('#filterRow .tog').forEach(b=>b.classList.remove('active'));btn.classList.add('active');buildTable(cat);if(!document.getElementById('tblBody').classList.contains('open'))toggleTable();}
+function toggleTable(){document.getElementById('tblToggle').classList.toggle('open');document.getElementById('tblBody').classList.toggle('open');}
+function buildFilterRow(){const f=[['all','All'],['eur','EUR'],['gbp','GBP'],['usd','USD'],['aud','AUD'],['nzd','NZD'],['cad','CAD'],['jpy','JPY'],['metals','Metals'],['equity','Equities']];document.getElementById('filterRow').innerHTML=f.map(([v,l],i)=>`<button class="tog${i===0?' active':''}" onclick="filterTable('${v}',this)">${l}</button>`).join('');}
+const fxGroups=[{label:'EUR Pairs',keys:['EURUSD','EURGBP','EURAUD','EURJPY','EURCAD','EURNZD']},{label:'GBP Pairs',keys:['GBPUSD','GBPAUD','GBPJPY','GBPCAD','GBPNZD']},{label:'USD Pairs',keys:['USDCAD','USDJPY','USDCHF']},{label:'AUD Pairs',keys:['AUDUSD','AUDJPY','AUDCAD','AUDNZD']},{label:'NZD & CAD Pairs',keys:['NZDJPY','NZDCAD','NZDUSD','CADJPY']},];
+const tvMap={EURUSD:'FX:EURUSD',EURGBP:'FX:EURGBP',EURAUD:'FX:EURAUD',EURJPY:'FX:EURJPY',EURCAD:'FX:EURCAD',EURNZD:'FX:EURNZD',USDCAD:'FX:USDCAD',USDJPY:'FX:USDJPY',USDCHF:'FX:USDCHF',GBPUSD:'FX:GBPUSD',GBPAUD:'FX:GBPAUD',GBPJPY:'FX:GBPJPY',GBPCAD:'FX:GBPCAD',GBPNZD:'FX:GBPNZD',AUDUSD:'FX:AUDUSD',AUDJPY:'FX:AUDJPY',AUDCAD:'FX:AUDCAD',AUDNZD:'FX:AUDNZD',CADJPY:'FX:CADJPY',NZDJPY:'FX:NZDJPY',NZDCAD:'FX:NZDCAD',NZDUSD:'FX:NZDUSD',XAUUSD:'FOREXCOM:XAUUSD',XAGUSD:'FOREXCOM:XAGUSD','^GSPC':'SP:SPX','^DJI':'DJ:DJI','^NDX':'NASDAQ:NDX'};
+function buildFXGroups(){if(document.getElementById('fxGroups').innerHTML!=='')return;document.getElementById('fxGroups').innerHTML=fxGroups.map(g=>{const cards=g.keys.map(k=>{const a=D.find(x=>x.s===k);if(!a)return'';return`<div class="card" onclick="loadTV('${tvMap[k]||'FX:EURUSD'}','${a.s}',this)"><div class="card-top"><div><div class="card-sym">${a.s}</div><div class="card-name">${a.n}</div></div><span class="bias ${bcls(a.b)}">${blbl(a.b)}</span></div><div class="card-pr"><span class="card-pv">${fmt(a.s,a.p)}</span><span class="card-chg ${cc(a.c)}">${pct(a.c)}</span></div><div class="tgt-row"><div class="tgt up-t"><div class="tgt-l">Upside</div><div>${fmt(a.s,a.u)}</div></div><div class="tgt dn-t"><div class="tgt-l">Downside</div><div>${fmt(a.s,a.d)}</div></div></div><div class="factors">${a.f.slice(0,3).map(f=>`<div class="frow"><div class="fn">${f.n}</div><div class="fbg"><div class="ff ${f.c}" style="width:${f.w}%"></div></div><div class="fpct">${f.w}%</div></div>`).join('')}</div><div style="font-size:10px;color:var(--text3);margin-top:6px">${a.risk}</div></div>`;}).join('');return`<div class="grp">${g.label}</div><div class="card-grid">${cards}</div>`;}).join('');}
+const tvW={};
+function loadTV(sym,label,el){document.querySelectorAll('.card').forEach(c=>c.classList.remove('sel'));if(el)el.classList.add('sel');const v=document.getElementById('tv-viewer');v.classList.add('open');document.getElementById('tv-label').textContent=label+' \u2014 Daily Chart';const cont=document.getElementById('tv-chart-container');cont.innerHTML='';if(tvW[sym]){try{tvW[sym].remove();}catch(e){}}const s=document.createElement('script');s.src='https://s3.tradingview.com/tv.js';s.onload=function(){try{tvW[sym]=new TradingView.widget({width:'100%',height:300,symbol:sym,interval:'D',timezone:'Europe/Belgrade',theme:'dark',style:'1',locale:'en',toolbar_bg:'#141820',enable_publishing:false,backgroundColor:'#0a0c10',gridColor:'#1e2530',container_id:'tv-chart-container',save_image:false});}catch(e){cont.innerHTML='<div style="padding:20px;color:var(--text3);font-family:IBM Plex Mono,monospace;font-size:11px;">Chart requires internet connection.</div>';}};s.onerror=function(){cont.innerHTML='<div style="padding:20px;color:var(--text3);font-family:IBM Plex Mono,monospace;font-size:11px;">\u26A0 TradingView unavailable.</div>';};document.head.appendChild(s);v.scrollIntoView({behavior:'smooth',block:'start'});}
+function go(id,btn){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));document.getElementById('p-'+id).classList.add('active');btn.classList.add('active');setTimeout(()=>initCharts(id),80);if(id==='geo')initGeoMap();if(id==='fx')buildFXGroups();}
+Chart.defaults.color='#8a93a6';Chart.defaults.borderColor='#1e2530';Chart.defaults.font.family="'IBM Plex Mono',monospace";Chart.defaults.font.size=10;Chart.defaults.animation=false;Chart.defaults.responsive=true;Chart.defaults.maintainAspectRatio=true;
+const charts={};function kill(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+function initCharts(tab){
+if(tab==='overview'){kill('changeChart');charts.changeChart=new Chart(document.getElementById('changeChart'),{type:'bar',data:{labels:D.map(a=>a.s),datasets:[{data:D.map(a=>a.c),backgroundColor:D.map(a=>a.c>=0?'rgba(76,175,130,0.65)':'rgba(224,82,82,0.65)'),borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+(ctx.raw>=0?'+':'')+ctx.raw.toFixed(2)+'%'}}},scales:{x:{grid:{color:Cl.border},ticks:{font:{size:8}}},y:{grid:{color:Cl.border},ticks:{callback:v=>v+'%'}}}}});}
+if(tab==='week'){
+kill('metalWeekChart');charts.metalWeekChart=new Chart(document.getElementById('metalWeekChart'),{type:'line',data:{labels:['Mon Apr6','Tue Apr7','Wed Apr8'],datasets:[{label:'Gold (/10)',data:[464.03,464.03,481.32],borderColor:Cl.gold,backgroundColor:'rgba(201,168,76,0.1)',tension:0.4,fill:true,pointBackgroundColor:Cl.gold,pointRadius:5},{label:'Silver',data:[71.97,71.97,76.53],borderColor:'#aaa',backgroundColor:'rgba(150,150,150,0.08)',tension:0.4,fill:false,pointBackgroundColor:'#aaa',pointRadius:5}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{boxWidth:9,font:{size:10}}}},scales:{y:{grid:{color:Cl.border},ticks:{callback:v=>v.toFixed(1)}},x:{grid:{color:Cl.border}}}}});
+kill('fxWeekChart');charts.fxWeekChart=new Chart(document.getElementById('fxWeekChart'),{type:'line',data:{labels:['Mon Apr6','Tue Apr7','Wed Apr8'],datasets:[{label:'EUR/USD',data:[1.154,1.1543,1.16831],borderColor:Cl.green,backgroundColor:'rgba(76,175,130,0.08)',tension:0.4,fill:true,pointBackgroundColor:Cl.green,pointRadius:5},{label:'AUD/USD',data:[0.691,0.690,0.7060],borderColor:Cl.blue,backgroundColor:'rgba(91,155,213,0.06)',tension:0.4,fill:false,pointBackgroundColor:Cl.blue,pointRadius:5}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{boxWidth:9,font:{size:10}}}},scales:{y:{grid:{color:Cl.border},min:0.680,ticks:{callback:v=>v.toFixed(4)}},x:{grid:{color:Cl.border}}}}});
+}
+if(tab==='metals'){
+kill('metalsReversalChart');charts.metalsReversalChart=new Chart(document.getElementById('metalsReversalChart'),{type:'line',data:{labels:['Sun','Mon','Tue High','Tue Low','Wed Open','Wed Now'],datasets:[{label:'XAU/USD (/10)',data:[467.64,464.03,472.0,462.2,473.0,481.32],borderColor:Cl.gold,backgroundColor:'rgba(201,168,76,0.08)',tension:0.3,fill:true,pointBackgroundColor:[Cl.gold,Cl.text2,Cl.green,Cl.red,Cl.yellow,Cl.gold],pointRadius:[4,4,6,8,4,8]},{label:'XAG/USD',data:[73.01,71.97,72.5,69.94,74.0,76.53],borderColor:'#aaa',backgroundColor:'rgba(150,150,150,0.06)',tension:0.3,fill:false,pointBackgroundColor:[Cl.text2,Cl.text2,Cl.yellow,Cl.red,Cl.yellow,'#fff'],pointRadius:[4,4,4,8,4,8]}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{boxWidth:9,font:{size:10}}}},scales:{y:{grid:{color:Cl.border},ticks:{callback:v=>v.toFixed(1)}},x:{grid:{color:Cl.border}}}}});}
+if(tab==='equities'){kill('equityChart');charts.equityChart=new Chart(document.getElementById('equityChart'),{type:'line',data:{labels:['Mon Apr6','Tue Apr7','Wed Apr8'],datasets:[{label:'S&P 500',data:[6611.83,6611.83,6616.85],borderColor:Cl.green,backgroundColor:'rgba(76,175,130,0.08)',tension:0.4,fill:true,pointBackgroundColor:Cl.green,pointRadius:5},{label:'Nasdaq 100 (/4)',data:[6048,6048,6050.5],borderColor:Cl.blue,backgroundColor:'rgba(91,155,213,0.05)',tension:0.4,fill:false,pointBackgroundColor:Cl.blue,pointRadius:5}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{boxWidth:9,font:{size:9}}}},scales:{y:{grid:{color:Cl.border},ticks:{callback:v=>v.toLocaleString()}},x:{grid:{color:Cl.border}}}}});}
+if(tab==='macro'){kill('regimeChart');charts.regimeChart=new Chart(document.getElementById('regimeChart'),{type:'doughnut',data:{labels:['Ceasefire Holds + Hormuz (25%)','Conditional Limbo (40%)','Stagflation Base (25%)','Escalation Collapses (10%)'],datasets:[{data:[25,40,25,10],backgroundColor:['rgba(76,175,130,0.8)','rgba(232,196,106,0.7)','rgba(232,196,106,0.5)','rgba(224,82,82,0.7)'],borderColor:'#1e2530',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'right',labels:{boxWidth:9,font:{size:9}}}},cutout:'50%'}});}
+if(tab==='geo'){kill('geoRadar');charts.geoRadar=new Chart(document.getElementById('geoRadar'),{type:'radar',data:{labels:['USD','XAU/Gold','Oil','AUD/NZD','JPY','EUR'],datasets:[{label:'Current Risk (Apr 8)',data:[40,65,55,40,50,40],borderColor:Cl.yellow,backgroundColor:'rgba(232,196,106,0.1)',pointBackgroundColor:Cl.yellow},{label:'Sunday Apr 5 Risk',data:[55,70,65,55,55,45],borderColor:Cl.red,backgroundColor:'transparent',borderDash:[4,4],pointRadius:0}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{boxWidth:9,font:{size:9}}}},scales:{r:{grid:{color:Cl.border},min:0,max:100,ticks:{display:false},pointLabels:{font:{size:9}}}}}});}
+}
+let geoInit=false;
+function initGeoMap(){if(geoInit)return;geoInit=true;setTimeout(()=>{const map=L.map('geomap',{center:[28,45],zoom:3,minZoom:2,maxZoom:7,attributionControl:false});L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19}).addTo(map);[{lat:32,lng:53,col:'#e08452',r:12,lbl:'Iran (conditional ceasefire)',info:'2-week ceasefire announced. Negotiations Apr 10 Islamabad. Hormuz still 6 vessels/day. South Pars struck Sat. IRGC chief killed.'},{lat:26.5,lng:56.3,col:'#e05252',r:14,lbl:'Strait of Hormuz - STILL CLOSED',info:'CRITICAL. Still 6 vessels/day (was 40+). Ceasefire does NOT mean open. Physical reopening is the only real resolution signal.'},{lat:31.5,lng:34.5,col:'#e08452',r:9,lbl:'Israel/Gaza',info:'Ongoing. Geopolitical tension contributor.'},{lat:15,lng:43,col:'#e08452',r:9,lbl:'Red Sea / Houthis',info:'Shipping disruption ongoing. Cape of Good Hope rerouting.'},{lat:49,lng:31,col:'#e08452',r:10,lbl:'Ukraine',info:'Extended conflict. EUR structural pressure. JPY safe-haven bid.'},{lat:33.8,lng:73.0,col:'#e8c46a',r:10,lbl:'Islamabad - Apr 10 Talks',info:'CRITICAL DATE: US-Iran negotiations scheduled April 10. Ceasefire durability determined here.'},{lat:-41,lng:174,col:'#4caf82',r:9,lbl:'RBNZ Hawkish Pivot',info:'RBNZ held 2.25% with hawkish commentary. Inflation 4.2% Q2. May/Jul hikes discussed. NZD +1.68% today.'},].forEach(p=>{L.circleMarker([p.lat,p.lng],{radius:p.r,fillColor:p.col,color:p.col,weight:2,opacity:0.9,fillOpacity:0.35}).addTo(map).bindPopup(`<div style="font-family:'IBM Plex Mono',sans-serif;font-size:12px;background:#0f1218;color:#d4d8e2;padding:8px;border-radius:5px;min-width:220px;"><strong style="color:#e8c46a">${p.lbl}</strong><br><span style="font-size:11px;color:#8a93a6">${p.info}</span></div>`);});L.polyline([[26.5,56.3],[24,58],[20,60]],{color:'#e08452',weight:2,dashArray:'6,4',opacity:0.4}).addTo(map);const lg=L.control({position:'bottomright'});lg.onAdd=function(){const d=L.DomUtil.create('div');d.style.cssText='background:#0f1218;border:1px solid #1e2530;padding:10px;border-radius:6px;font-family:IBM Plex Mono,sans-serif;font-size:10px;color:#8a93a6;';d.innerHTML='<div style="color:#c9a84c;margin-bottom:5px">LEGEND</div><div>\uD83D\uDD34 Critical</div><div>\uD83D\uDFE0 High</div><div>\uD83D\uDFE1 Monitor</div><div>\uD83D\uDFE2 Positive</div>';return d;};lg.addTo(map);},300);}
+document.addEventListener('DOMContentLoaded',()=>{buildTicker();buildKPIs();buildFilterRow();buildTable('all');initCharts('overview');});
+</script>
+</body>
+</html>
