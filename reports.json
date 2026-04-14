@@ -1,5 +1,21 @@
 [
  {
+  "date": "2026-04-14",
+  "title": "Weekly Debrief. Trump Reversed Apr 2. Silver -6.75%. DXY Below 100.",
+  "thesis": "Six-day Easter catch-up. Islamabad talks collapsed. Hormuz naval blockade active. COT massive AUD flip from +10634 to -10693. DXY at 6-week low 98.36. Consumer sentiment record low 47.6. Gold -14.7% from Jan ATH $5602.",
+  "bias": {
+    "XAUUSD": "neutral",
+    "EURUSD": "bullish",
+    "AUDUSD": "neutral",
+    "USDCAD": "bullish",
+    "USDJPY": "neutral",
+    "EURGBP": "neutral",
+    "SPX": "bullish"
+  },
+  "highlights": ["Hormuz blockade", "COT AUD flip", "DXY 98.36", "Consumer sentiment 47.6"],
+  "file": "2026-04-14.html"
+},
+ {
   "date": "2026-04-08",
   "title": "Ceasefire 2.0 + RBNZ Pivot. Oil -16%. Gold $4,813. NZD Thesis Revised.",
   "thesis": "Trump 2-week conditional ceasefire triggers risk-on. Oil -16%. Gold +2.3%. RBNZ hawkish hold with 4.2% inflation forecast - NZD short thesis suspended. COT AUD/CAD and EUR/GBP both confirmed. FOMC minutes 2pm EST today.",
