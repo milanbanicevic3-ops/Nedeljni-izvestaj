@@ -1,71 +1,72 @@
 [
- {
-  "date": "2026-04-17",
-  "title": "Weekly Synthesis - COT Regime Flip, USD Bounce, Hormuz Active",
-  "file": "reports/2026-04-17.html",
-  "type": "friday",
-  "tags": [
-    "COT-flip",
-    "AUD-short",
-    "JPY-extreme",
-    "USD-bounce",
-    "Iran-Hormuz",
-    "ECB-Apr30",
-    "BoJ-Apr28"
-  ]
-}
- {
-  "date": "2026-04-14",
-  "title": "Weekly Debrief. Trump Reversed Apr 2. Silver -6.75%. DXY Below 100.",
-  "thesis": "Six-day Easter catch-up. Islamabad talks collapsed. Hormuz naval blockade active. COT massive AUD flip from +10634 to -10693. DXY at 6-week low 98.36. Consumer sentiment record low 47.6. Gold -14.7% from Jan ATH $5602.",
-  "bias": {
-    "XAUUSD": "neutral",
-    "EURUSD": "bullish",
-    "AUDUSD": "neutral",
-    "USDCAD": "bullish",
-    "USDJPY": "neutral",
-    "EURGBP": "neutral",
-    "SPX": "bullish"
+  {
+    "date": "2026-04-17",
+    "title": "Weekly Synthesis. COT Regime Flip. AUD and GBP Net Short. USD Bounce.",
+    "thesis": "AUD flipped to -10,693 net short while price hit 4-year high - classic distribution. GBP flipped to -3,689. JPY shorts deepened to -20,870. USD bounced Friday on oil rebound to $94. De-escalation trade fully priced. BoJ Apr 28 and ECB Apr 30 are the binary events.",
+    "bias": {
+      "XAUUSD": "neutral",
+      "AUDUSD": "bearish",
+      "USDJPY": "bullish",
+      "GBPUSD": "bearish",
+      "USDCAD": "neutral",
+      "EURUSD": "neutral",
+      "SPX": "bullish"
+    },
+    "highlights": ["AUD COT flip", "JPY -20,870", "DXY 98.26", "S-P 500 ATH 7041"],
+    "file": "2026-04-17.html"
   },
-  "highlights": ["Hormuz blockade", "COT AUD flip", "DXY 98.36", "Consumer sentiment 47.6"],
-  "file": "2026-04-14.html"
-},
- {
-  "date": "2026-04-08",
-  "title": "Ceasefire 2.0 + RBNZ Pivot. Oil -16%. Gold $4,813. NZD Thesis Revised.",
-  "thesis": "Trump 2-week conditional ceasefire triggers risk-on. Oil -16%. Gold +2.3%. RBNZ hawkish hold with 4.2% inflation forecast - NZD short thesis suspended. COT AUD/CAD and EUR/GBP both confirmed. FOMC minutes 2pm EST today.",
-  "bias": {
-    "XAUUSD": "bullish",
-    "XAGUSD": "bullish",
-    "EURUSD": "bullish",
-    "AUDUSD": "bullish",
-    "AUDCAD": "bullish",
-    "NZDUSD": "neutral",
-    "EURGBP": "bearish",
-    "SPX": "bullish"
+  {
+    "date": "2026-04-14",
+    "title": "Easter Catch-Up Sunday Debrief. Apr 9-14. Hormuz Blockade Active.",
+    "thesis": "Hormuz naval blockade confirmed Apr 13. Full whipsaw week - ceasefire dissolved, new blockade imposed. RBNZ hawkish pivot suspended NZD bearish thesis. DXY at 6-week low 98.36. EUR/USD pushed to 1.1787.",
+    "bias": {
+      "XAUUSD": "neutral",
+      "EURUSD": "bullish",
+      "USDJPY": "bullish",
+      "AUDUSD": "neutral",
+      "NZDUSD": "neutral",
+      "USDCAD": "bearish",
+      "SPX": "bullish"
+    },
+    "highlights": ["Hormuz blockade Apr 13", "Gold $4,780", "DXY 98.36", "EUR/USD 1.1787"],
+    "file": "2026-04-14.html"
   },
-  "highlights": ["Gold $4,813", "Oil -16%", "EUR/USD 1.17", "RBNZ hawkish"],
-  "file": "2026-04-08.html"
-},
- {
-  "date": "2026-04-05",
-  "title": "Weekly Debrief. Trump Reversed Apr 2. Silver -6.75%. DXY Below 100.",
-  "thesis": "De-escalation lasted 24 hours. Trump vowed intensified strikes Apr 2. Silver crashed -6.75%. Strong NFP 178k but DXY broke below 100 - markets pricing stagflation not Fed hikes. Iran struck South Pars Saturday.",
-  "bias": {
-    "XAUUSD": "neutral",
-    "XAGUSD": "neutral",
-    "AUDNZD": "bullish",
-    "EURGBP": "bullish",
-    "NZDUSD": "bearish",
-    "USDJPY": "neutral",
-    "SPX": "neutral"
+  {
+    "date": "2026-04-08",
+    "title": "Ceasefire 2.0 + RBNZ Pivot. Oil -16%. Gold $4,813. NZD Thesis Revised.",
+    "thesis": "Trump 2-week conditional ceasefire triggers risk-on. Oil -16%. Gold +2.3%. RBNZ hawkish hold with 4.2% inflation forecast - NZD short thesis suspended. COT AUD/CAD and EUR/GBP both confirmed. FOMC minutes 2pm EST today.",
+    "bias": {
+      "XAUUSD": "bullish",
+      "XAGUSD": "bullish",
+      "EURUSD": "bullish",
+      "AUDUSD": "bullish",
+      "AUDCAD": "bullish",
+      "NZDUSD": "neutral",
+      "EURGBP": "bearish",
+      "SPX": "bullish"
+    },
+    "highlights": ["Gold $4,813", "Oil -16%", "EUR/USD 1.17", "RBNZ hawkish"],
+    "file": "2026-04-08.html"
   },
-  "highlights": ["Silver -6.75%", "NFP +178k", "DXY below 100", "South Pars struck"],
-  "file": "2026-04-05.html"
-},
+  {
+    "date": "2026-04-05",
+    "title": "Weekly Debrief. Trump Reversed Apr 2. Silver -6.75%. NFP +178k. DXY Below 100.",
+    "thesis": "De-escalation lasted 24 hours. Trump vowed intensified strikes Apr 2. Silver crashed -6.75%. Strong NFP 178k but DXY broke below 100 - markets pricing stagflation not Fed hikes. Iran struck South Pars Saturday.",
+    "bias": {
+      "XAUUSD": "neutral",
+      "XAGUSD": "neutral",
+      "AUDNZD": "bullish",
+      "EURGBP": "bullish",
+      "NZDUSD": "bearish",
+      "USDJPY": "neutral",
+      "SPX": "neutral"
+    },
+    "highlights": ["Silver -6.75%", "NFP +178k", "DXY below 100", "South Pars struck"],
+    "file": "2026-04-05.html"
+  },
   {
     "date": "2026-04-01",
-    "title": "Iran De-Escalation Signal. S&P +2.91%. Gold $4,720",
+    "title": "Iran De-Escalation Signal. S-P +2.91%. Gold $4,720.",
     "thesis": "Trump confirms US operations end in 2-3 weeks. Biggest equity day since May. Gold at 8-day high on USD weakness. Hormuz still closed - relief rally not regime change.",
     "bias": {
       "XAUUSD": "bullish",
@@ -76,12 +77,12 @@
       "AUDNZD": "bullish",
       "SPX": "bullish"
     },
-    "highlights": ["S&P +2.91%", "Gold $4,720", "USDJPY 158.8", "Hormuz closed"],
+    "highlights": ["S-P +2.91%", "Gold $4,720", "USDJPY 158.8", "Hormuz closed"],
     "file": "2026-04-01.html"
   },
   {
     "date": "2026-03-29",
-    "title": "MRKT System Down. USDJPY 160.25. Gold +2.96%",
+    "title": "MRKT System Down. USDJPY 160.25. Gold +2.96%.",
     "thesis": "Iran conflict oil shock locks Fed into stagflationary hold. Q1 end rebalancing adds noise. AUD weakest major on CPI miss. USDJPY at intervention trigger level.",
     "bias": {
       "XAUUSD": "bullish",
@@ -98,8 +99,8 @@
   },
   {
     "date": "2026-03-28",
-    "title": "Iran Deadline Extension. Gold $4,507. Equities Correction",
-    "thesis": "Geopolitical oil shock triggering stagflationary regime shift. Fed hawkish hold, 52% rate hike odds, S&P 500 breaks 200-DMA. Gold dual-demand bid.",
+    "title": "Iran Deadline Extension. Gold $4,507. Equities Correction.",
+    "thesis": "Geopolitical oil shock triggering stagflationary regime shift. Fed hawkish hold, 52% rate hike odds, S-P 500 breaks 200-DMA. Gold dual-demand bid.",
     "bias": {
       "XAUUSD": "bullish",
       "XAGUSD": "neutral",
