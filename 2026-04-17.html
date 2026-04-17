@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMC Daily Brief — April 17, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0a0c10;--surface:#0f1218;--surface2:#141820;--surface3:#181e28;--border:#1e2530;--border2:#252d3a;--gold:#c9a84c;--gold2:#e8c46a;--red:#e05252;--green:#4caf82;--yellow:#e8c46a;--blue:#5b9bd5;--text:#d4d8e2;--text2:#8a93a6;--text3:#525d6e;--white:#eef0f5;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.4;}
+.header{border-bottom:1px solid var(--border);padding:0 40px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(10,12,16,0.97);backdrop-filter:blur(16px);z-index:100;}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:14px;color:#0a0c10;font-weight:700;}
+.logo-text{font-family:'Playfair Display',serif;font-size:16px;color:var(--white);}
+.logo-sub{font-size:10px;color:var(--text2);font-family:'IBM Plex Mono',monospace;letter-spacing:0.08em;margin-top:1px;}
+.header-right{display:flex;align-items:center;gap:20px;}
+.date-badge{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold);background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);padding:4px 12px;border-radius:3px;}
+.edition-badge{font-size:10px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;}
+.banner{padding:6px 40px;font-size:11px;font-family:'IBM Plex Mono',monospace;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);}
+.banner.alert{background:rgba(224,82,82,0.07);color:var(--red);border-bottom-color:rgba(224,82,82,0.2);}
+.banner.warn{background:rgba(232,196,106,0.07);color:var(--yellow);border-bottom-color:rgba(232,196,106,0.2);}
+.banner.info{background:rgba(76,175,130,0.07);color:var(--green);border-bottom-color:rgba(76,175,130,0.2);}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);padding:0 40px;background:var(--surface);position:sticky;top:60px;z-index:90;overflow-x:auto;}
+.tab{padding:12px 18px;font-size:12px;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.15s;font-family:'IBM Plex Mono',monospace;letter-spacing:0.04em;}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.content{padding:32px 40px;max-width:1200px;margin:0 auto;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:20px;}
+.card-title{font-family:'Playfair Display',serif;font-size:13px;color:var(--gold);letter-spacing:0.04em;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.card-title span{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);font-weight:400;}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:16px 18px;}
+.kpi-label{font-size:10px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;font-family:'IBM Plex Mono',monospace;}
+.kpi-value{font-size:22px;color:var(--white);font-family:'IBM Plex Mono',monospace;font-weight:500;}
+.kpi-sub{font-size:11px;margin-top:4px;font-family:'IBM Plex Mono',monospace;}
+.kpi-sub.up{color:var(--green);}
+.kpi-sub.down{color:var(--red);}
+.kpi-sub.neut{color:var(--text2);}
+.chart-wrap{position:relative;}
+.chart-wrap canvas{max-height:280px;}
+.alert-box{border-radius:6px;padding:16px 20px;margin-bottom:12px;border-left:3px solid;}
+.alert-box.red{background:rgba(224,82,82,0.08);border-color:var(--red);}
+.alert-box.yellow{background:rgba(232,196,106,0.08);border-color:var(--yellow);}
+.alert-box.green{background:rgba(76,175,130,0.08);border-color:var(--green);}
+.alert-box .alert-title{font-family:'Playfair Display',serif;font-size:14px;margin-bottom:8px;}
+.alert-box.red .alert-title{color:var(--red);}
+.alert-box.yellow .alert-title{color:var(--yellow);}
+.alert-box.green .alert-title{color:var(--green);}
+.alert-box p{font-size:12px;color:var(--text2);line-height:1.65;}
+.data-table{width:100%;border-collapse:collapse;font-size:12px;}
+.data-table th{background:var(--surface2);color:var(--text3);font-weight:400;letter-spacing:0.07em;padding:8px 12px;text-align:left;font-size:10px;text-transform:uppercase;border-bottom:1px solid var(--border2);}
+.data-table td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(255,255,255,0.02);}
+.pair-name{color:var(--gold);font-family:'Playfair Display',serif;font-size:13px;}
+.t-bull{color:var(--green);}
+.t-bear{color:var(--red);}
+.t-neut{color:var(--text2);}
+.t-warn{color:var(--yellow);}
+.tag{display:inline-block;font-size:9px;letter-spacing:0.08em;padding:2px 7px;border-radius:2px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;}
+.tag.bull{background:rgba(76,175,130,0.15);color:var(--green);border:1px solid rgba(76,175,130,0.25);}
+.tag.bear{background:rgba(224,82,82,0.15);color:var(--red);border:1px solid rgba(224,82,82,0.25);}
+.tag.neut{background:rgba(130,147,166,0.15);color:var(--text2);border:1px solid rgba(130,147,166,0.2);}
+.tag.warn{background:rgba(232,196,106,0.15);color:var(--yellow);border:1px solid rgba(232,196,106,0.25);}
+.data-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.data-row:last-child{border-bottom:none;}
+.data-row .lbl{color:var(--text2);}
+.data-row .val{font-family:'IBM Plex Mono',monospace;color:var(--text);}
+.data-row .val.beat{color:var(--green);}
+.data-row .val.miss{color:var(--red);}
+.data-row .val.inline{color:var(--yellow);}
+.cot-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0;}
+.cot-item{background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:16px;}
+.cot-item .ci-ccy{font-family:'Playfair Display',serif;font-size:15px;color:var(--gold2);margin-bottom:8px;}
+.cot-item .ci-prev{font-size:11px;color:var(--text3);font-family:'IBM Plex Mono',monospace;}
+.cot-item .ci-curr{font-size:20px;font-family:'IBM Plex Mono',monospace;font-weight:600;margin:4px 0 8px;}
+.cot-item .ci-curr.neg{color:var(--red);}
+.cot-item .ci-curr.warn{color:var(--yellow);}
+.cot-item .ci-note{font-size:11px;color:var(--text2);line-height:1.55;}
+.pair-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:18px;}
+.pc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
+.pc-pair{font-family:'Playfair Display',serif;font-size:17px;color:var(--white);}
+.pc-price{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3);margin-top:3px;}
+.pc-body{font-size:12px;color:var(--text2);line-height:1.65;margin-bottom:12px;}
+.pc-levels{display:flex;gap:16px;padding-top:12px;border-top:1px solid var(--border);}
+.pc-level{display:flex;flex-direction:column;gap:3px;}
+.pc-level .pl-lbl{font-size:10px;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;}
+.pc-level .pl-val{font-size:12px;color:var(--text);font-family:'IBM Plex Mono',monospace;}
+.cal-item{display:flex;gap:16px;padding:12px 0;border-bottom:1px solid var(--border);}
+.cal-item:last-child{border-bottom:none;}
+.cal-date-box{background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:8px 12px;text-align:center;min-width:72px;flex-shrink:0;}
+.cal-date-box .cd-day{font-size:10px;color:var(--text3);letter-spacing:0.06em;font-family:'IBM Plex Mono',monospace;}
+.cal-date-box .cd-dt{font-size:13px;color:var(--gold);font-family:'Playfair Display',serif;}
+.cal-body .cb-event{font-size:13px;color:var(--text);margin-bottom:4px;}
+.cal-body .cb-note{font-size:11px;color:var(--text2);line-height:1.55;}
+.impact{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:2px 7px;border-radius:2px;margin-top:5px;display:inline-block;font-family:'IBM Plex Mono',monospace;}
+.impact.high{background:rgba(224,82,82,0.15);color:var(--red);border:1px solid rgba(224,82,82,0.25);}
+.impact.med{background:rgba(232,196,106,0.15);color:var(--yellow);border:1px solid rgba(232,196,106,0.25);}
+.impact.crit{background:rgba(224,82,82,0.25);color:#ff8080;border:1px solid rgba(224,82,82,0.5);}
+#geomap{height:340px;border-radius:4px;}
+.leaflet-container{background:#0a0c14;}
+.sec-label{font-size:10px;color:var(--text3);letter-spacing:0.14em;text-transform:uppercase;margin:24px 0 14px;display:flex;align-items:center;gap:10px;}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.cb-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.cb-row:last-child{border-bottom:none;}
+.cb-bank{width:52px;font-family:'IBM Plex Mono',monospace;color:var(--gold);font-size:11px;flex-shrink:0;}
+.cb-rate{width:52px;font-family:'IBM Plex Mono',monospace;color:var(--text2);font-size:11px;}
+.cb-note-text{font-size:11px;color:var(--text2);}
+.con-table{width:100%;border-collapse:collapse;font-size:12px;}
+.con-table th{background:var(--surface2);color:var(--text3);font-weight:400;letter-spacing:0.07em;padding:8px 12px;text-align:left;font-size:10px;text-transform:uppercase;border-bottom:1px solid var(--border2);}
+.con-table td{padding:8px 12px;border-bottom:1px solid var(--border);font-size:11px;vertical-align:top;}
+.con-table tr:last-child td{border-bottom:none;}
+footer{background:var(--surface);border-top:1px solid var(--border);padding:14px 40px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">
+    <div class="logo-mark">O</div>
+    <div>
+      <div class="logo-text">OMC Daily Brief</div>
+      <div class="logo-sub">FX - Macro - Geopolitical Intelligence</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="edition-badge">Friday - Weekly Synthesis</span>
+    <span class="date-badge">April 17, 2026</span>
+  </div>
+</div>
+<div class="banner alert">&#9654; CRITICAL: Hormuz naval blockade active - Iran imposing transit tolls on tankers. Weekend US-Iran talks delayed. Oil rebounded to $94.69 Friday.</div>
+<div class="banner warn">&#9654; COT REGIME FLIP: AUD flipped net short -10,693. GBP flipped net short -3,689. JPY shorts deepened to -20,870. Price action has not caught up to positioning yet.</div>
+<div class="banner info">&#9654; S-P 500 new ATH 7,041 - 11th gain in 12 sessions. NASDAQ record. Equities fully priced for de-escalation.</div>
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('overview')">Weekly Overview</div>
+  <div class="tab" onclick="switchTab('macro')">Macro Regime</div>
+  <div class="tab" onclick="switchTab('cot')">COT Positioning</div>
+  <div class="tab" onclick="switchTab('fx')">FX Setups</div>
+  <div class="tab" onclick="switchTab('metals')">Metals</div>
+  <div class="tab" onclick="switchTab('geo')">Geopolitical Map</div>
+  <div class="tab" onclick="switchTab('calendar')">Forward Calendar</div>
+</div>
+<div class="content">
+
+<!-- OVERVIEW -->
+<div class="tab-panel active" id="tab-overview">
+  <div class="grid-4">
+    <div class="kpi"><div class="kpi-label">DXY</div><div class="kpi-value">98.26</div><div class="kpi-sub neut">6-week low - mild Friday bounce</div></div>
+    <div class="kpi"><div class="kpi-label">EUR/USD</div><div class="kpi-value">1.1775</div><div class="kpi-sub down">9-day rally stalls Friday</div></div>
+    <div class="kpi"><div class="kpi-label">Gold XAU</div><div class="kpi-value">4,780</div><div class="kpi-sub down">DXY bounce + $4,850 resistance</div></div>
+    <div class="kpi"><div class="kpi-label">S-P 500</div><div class="kpi-value">7,041</div><div class="kpi-sub up">New ATH - 11 of 12 sessions green</div></div>
+  </div>
+  <div class="grid-4">
+    <div class="kpi"><div class="kpi-label">USD/JPY</div><div class="kpi-value">159.36</div><div class="kpi-sub neut">COT extreme - BoJ Apr 28 risk</div></div>
+    <div class="kpi"><div class="kpi-label">AUD/USD</div><div class="kpi-value">0.7164</div><div class="kpi-sub down">COT flip - distribution at 4-yr high</div></div>
+    <div class="kpi"><div class="kpi-label">USD/CAD</div><div class="kpi-value">1.3683</div><div class="kpi-sub down">4-day decline - oil + USD weak</div></div>
+    <div class="kpi"><div class="kpi-label">WTI Oil</div><div class="kpi-value">94.69</div><div class="kpi-sub up">+3.72% Friday - Hormuz premium</div></div>
+  </div>
+  <div class="sec-label">Weekly Performance - Apr 15 to 17</div>
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title">FX and Metals - Percent Change This Week <span>Small moves - consolidation after prior 2-week risk-on run</span></div>
+    <div class="chart-wrap"><canvas id="perfChart"></canvas></div>
+  </div>
+  <div class="sec-label">Key Data This Week</div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Economic Releases</div>
+      <div class="data-row"><span class="lbl">US PPI Apr 14</span><span class="val miss">0.5% vs 1.2% exp</span></div>
+      <div class="data-row"><span class="lbl">US PPI Core</span><span class="val miss">0.1% vs 0.6% exp</span></div>
+      <div class="data-row"><span class="lbl">UK GDP MoM Apr 16</span><span class="val beat">+0.5% vs 0.1% exp</span></div>
+      <div class="data-row"><span class="lbl">UK Manufacturing</span><span class="val miss">-0.1% MoM miss</span></div>
+      <div class="data-row"><span class="lbl">AUS Employment Apr 16</span><span class="val inline">+17.9k vs 20k exp</span></div>
+      <div class="data-row"><span class="lbl">AUS Unemployment</span><span class="val beat">4.3% steady</span></div>
+      <div class="data-row"><span class="lbl">China Q1 GDP</span><span class="val beat">5.0% vs 4.8% exp</span></div>
+      <div class="data-row"><span class="lbl">US Jobless Claims</span><span class="val beat">207k vs 215k exp</span></div>
+      <div class="data-row"><span class="lbl">US Industrial Prod.</span><span class="val miss">-0.5% vs +0.1% exp</span></div>
+      <div class="data-row"><span class="lbl">Eurozone CPI</span><span class="val miss">2.6% from 1.9% prior</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Week Assessment</div>
+      <div class="alert-box yellow">
+        <div class="alert-title">Regime: Maturing Risk-On</div>
+        <p>De-escalation trade fully priced. USD weakness extended to 8 consecutive sessions before Friday bounce. The Friday reversal - oil +3.72%, DXY +0.2% - is the first sign the narrative is shifting. Equities at ATH while FX momentum stalls is a divergence that historically precedes consolidation, not expansion.</p>
+      </div>
+      <div class="alert-box red">
+        <div class="alert-title">Primary Risk: Hormuz Not Resolved</div>
+        <p>Iran imposing transit tolls and maintaining partial blockade at 6 vessels per day versus prior 40+. Weekend talks delayed by at least 48 hours. Peace deal timeline now quoted at 3 to 6 months by regional leaders. The short-USD trade was built on a faster resolution path.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MACRO -->
+<div class="tab-panel" id="tab-macro">
+  <div class="sec-label">Central Bank Matrix</div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Rate and Policy Stance</div>
+      <div class="cb-row"><span class="cb-bank">Fed</span><span class="cb-rate">3.50-3.75%</span><span class="cb-note-text">Hold - data dependent, energy inflation watch</span></div>
+      <div class="cb-row"><span class="cb-bank">ECB</span><span class="cb-rate">2.00%</span><span class="cb-note-text">81% odds Apr 30 hike - CPI 2.6% reinforces</span></div>
+      <div class="cb-row"><span class="cb-bank">BoJ</span><span class="cb-rate">0.75%</span><span class="cb-note-text">Hold - Apr 28 meeting, only 5bps priced, Ueda vague</span></div>
+      <div class="cb-row"><span class="cb-bank">BoE</span><span class="cb-rate">3.75%</span><span class="cb-note-text">Hold - Bailey no rush, Apr 30 meeting</span></div>
+      <div class="cb-row"><span class="cb-bank">RBA</span><span class="cb-rate">4.10%</span><span class="cb-note-text">Hawkish - inflation 5.9% exp, May hike priced</span></div>
+      <div class="cb-row"><span class="cb-bank">RBNZ</span><span class="cb-rate">2.25%</span><span class="cb-note-text">Hold Apr 8 - inflation warnings, hike by July</span></div>
+      <div class="cb-row"><span class="cb-bank">SNB</span><span class="cb-rate">0.00%</span><span class="cb-note-text">Hold - CHF safe-haven unwinding</span></div>
+      <div class="cb-row"><span class="cb-bank">BoC</span><span class="cb-rate">2.25%</span><span class="cb-note-text">Hold Apr 29 - mildly dovish, oil-linked</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Macro Regime - April 17</div>
+      <div class="alert-box yellow">
+        <div class="alert-title">Transition: Risk-On to Consolidation</div>
+        <p>The market moved through three phases in two weeks: expansion (USD selling, carry re-engagement) - crowding (positions saturated) - current transition (Friday DXY bounce, oil rebound, momentum stalling). This is not a reversal yet - it is position saturation. The next directional leg requires a catalyst. BoJ Apr 28 and ECB Apr 30 are those catalysts.</p>
+      </div>
+      <div class="alert-box red">
+        <div class="alert-title">JPY: Most Dangerous Trade in the Complex</div>
+        <p>Net shorts doubled to -20,870 in a single week. Finance Minister Katayama escalated G7 intervention rhetoric to high sense of urgency. BoJ Governor Ueda gave no normalization signal. If Ueda hints at April hike on Apr 28, short covering will be violent across all JPY crosses.</p>
+      </div>
+    </div>
+  </div>
+  <div class="sec-label">Multi-Signal Consensus Matrix</div>
+  <div class="card">
+    <div class="card-title">Where Signals Agreed and Where They Diverged</div>
+    <table class="con-table">
+      <thead><tr><th>Instrument</th><th>Consensus</th><th>Key Divergence Noted</th><th>Resolution</th></tr></thead>
+      <tbody>
+        <tr><td class="pair-name">EUR/USD</td><td class="t-neut">Divided - bearish lean</td><td style="font-size:11px;color:var(--text2);">Conflicting directional reads. One signal showed DXY at 105 - flagged as stale model data and discarded. Live DXY confirmed at 98.00 range.</td><td><span class="tag neut">Range 1.1700-1.1820</span><br><span style="font-size:10px;color:var(--text3);">ECB Apr 30 resolves</span></td></tr>
+        <tr><td class="pair-name">AUD/USD</td><td class="t-bear">Bearish</td><td style="font-size:11px;color:var(--text2);">Some signals stayed bullish on risk-on momentum. COT net short flip overrides price-based signals at institutional distribution levels.</td><td><span class="tag bear">Sell bias</span><br><span style="font-size:10px;color:var(--text3);">COT flip confirmed</span></td></tr>
+        <tr><td class="pair-name">USD/JPY</td><td class="t-bull">Bullish - with caution</td><td style="font-size:11px;color:var(--text2);">Trend signals bullish. COT signals crowded extreme. Both correct simultaneously - trend intact but squeeze risk builds daily toward BoJ.</td><td><span class="tag warn">Caution</span><br><span style="font-size:10px;color:var(--text3);">Binary at BoJ Apr 28</span></td></tr>
+        <tr><td class="pair-name">USD/CAD</td><td class="t-neut">Divided</td><td style="font-size:11px;color:var(--text2);">COT buy signal active. Price in 4-day decline. Oil Friday rebound +3.72% supports CAD. Seasonal analysis bearish USD/CAD in April.</td><td><span class="tag warn">No entry yet</span><br><span style="font-size:10px;color:var(--text3);">Wait for confirmation</span></td></tr>
+        <tr><td class="pair-name">Macro Regime</td><td class="t-neut">Maturing risk-on</td><td style="font-size:11px;color:var(--text2);">Friday oil rebound and USD bounce resolved the question. Maturing, not expanding. Trend exhaustion framing proved most accurate for this week.</td><td><span class="tag neut">Consolidation</span><br><span style="font-size:10px;color:var(--text3);">No new catalyst yet</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- COT -->
+<div class="tab-panel" id="tab-cot">
+  <div class="alert-box red" style="margin-bottom:20px;">
+    <div class="alert-title">COT Regime Flip - Week of April 13 to 17</div>
+    <p>Three major positioning shifts in a single week. The critical observation: both AUD and GBP flipped to net short while price was near multi-year highs. This is institutional distribution - selling into retail momentum. Price has not caught up to positioning yet. This sets up the reversal framework for the next 1 to 3 weeks.</p>
+  </div>
+  <div class="cot-grid">
+    <div class="cot-item">
+      <div class="ci-ccy">AUD</div>
+      <div class="ci-prev">Prior week: +10,634</div>
+      <div class="ci-curr neg">-10,693</div>
+      <div class="ci-note">Full flip in one week. Price hit 4-year high at 0.7198 during the same period. Institutions sold into the rally. AUD/USD SELL is the primary signal this week.</div>
+      <div style="margin-top:8px;"><span class="tag bear">Sell Signal</span></div>
+    </div>
+    <div class="cot-item">
+      <div class="ci-ccy">GBP</div>
+      <div class="ci-prev">Prior week: +5,757</div>
+      <div class="ci-curr neg">-3,689</div>
+      <div class="ci-note">Moderate flip. GBP/USD at 2-month highs when positioning turned. BoE uncertainty Apr 30 adds to distribution setup. UK GDP beat was not enough to hold longs.</div>
+      <div style="margin-top:8px;"><span class="tag bear">Distribution</span></div>
+    </div>
+    <div class="cot-item">
+      <div class="ci-ccy">JPY</div>
+      <div class="ci-prev">Prior week: -10,066</div>
+      <div class="ci-curr warn">-20,870</div>
+      <div class="ci-note">Shorts doubled in one week - the most dangerous extreme in the complex. Japan Finance Minister escalating intervention rhetoric at G7. BoJ Apr 28 is the squeeze trigger.</div>
+      <div style="margin-top:8px;"><span class="tag warn">Extreme - Squeeze Risk</span></div>
+    </div>
+  </div>
+  <div class="sec-label">Net Speculative Positions</div>
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title">COT Net Positions - April 17, 2026 <span>Positive = net long. Negative = net short.</span></div>
+    <div class="chart-wrap"><canvas id="cotChart"></canvas></div>
+  </div>
+  <div class="sec-label">Derived Signals</div>
+  <div class="card">
+    <div class="card-title">Trade Signals from COT Data</div>
+    <table class="data-table">
+      <thead><tr><th>Signal</th><th>Basis</th><th>Risk Factor</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="pair-name t-bull">USD/JPY Buy</td><td style="font-size:11px;color:var(--text2);">JPY net short deepening. Yield divergence intact. BoJ pricing only 5bps April.</td><td style="font-size:11px;color:var(--yellow);">Extreme crowding. Intervention. BoJ surprise.</td><td style="font-size:11px;color:var(--text2);">Active - caution above 160.00</td></tr>
+        <tr><td class="pair-name t-bear">AUD/USD Sell</td><td style="font-size:11px;color:var(--text2);">Full flip to net short during 4-yr high. Textbook distribution. Employment miss confirms.</td><td style="font-size:11px;color:var(--yellow);">Risk-on extension. China demand surprise.</td><td style="font-size:11px;color:var(--text2);">Active - key level 0.7150</td></tr>
+        <tr><td class="pair-name t-bull">USD/CAD Buy</td><td style="font-size:11px;color:var(--text2);">COT signal active. Oil rebound Friday. Rate differential 150bps favors USD.</td><td style="font-size:11px;color:var(--yellow);">Price in 4-day downtrend. Bearish April seasonality.</td><td style="font-size:11px;color:var(--text2);">Pending - wait for 1.3750 daily close</td></tr>
+        <tr><td class="pair-name t-neut">GBP/USD Watch</td><td style="font-size:11px;color:var(--text2);">GBP COT flip. CCI overbought. Stoch RSI 94.6. Structural break held at 200-DMA.</td><td style="font-size:11px;color:var(--yellow);">BoE Apr 30 could re-ignite longs on hike signal.</td><td style="font-size:11px;color:var(--text2);">Monitor - BoE Apr 30 binary</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- FX -->
+<div class="tab-panel" id="tab-fx">
+  <div class="sec-label">Priority Setups - Week Ahead</div>
+  <div class="grid-2">
+    <div class="pair-card">
+      <div class="pc-header"><div><div class="pc-pair">USD/JPY</div><div class="pc-price">159.36 - Upside 159.50 / Downside 158.50</div></div><span class="tag bull">COT Buy</span></div>
+      <div class="pc-body">COT net short at -20,870, doubled in one week. Despite this extreme, the trend remains intact. USD yield advantage over JGB is real and BoJ is pricing only 5bps for April. The critical tension: trend is up, but the squeeze setup grows daily. Finance Minister Katayama told G7 finance ministers Japan is watching FX with high sense of urgency. Any normalization signal from Ueda on Apr 28 triggers a violent short unwind across all JPY crosses. Trade the trend with tight stops. Do not add at 160.00 - that is the intervention ceiling.</div>
+      <div class="pc-levels">
+        <div class="pc-level"><div class="pl-lbl">Support</div><div class="pl-val">157.49</div></div>
+        <div class="pc-level"><div class="pl-lbl">Resistance</div><div class="pl-val">160.00</div></div>
+        <div class="pc-level"><div class="pl-lbl">Binary Event</div><div class="pl-val">BoJ Apr 28</div></div>
+        <div class="pc-level"><div class="pl-lbl">COT</div><div class="pl-val t-warn">-20,870</div></div>
+      </div>
+    </div>
+    <div class="pair-card">
+      <div class="pc-header"><div><div class="pc-pair">AUD/USD</div><div class="pc-price">0.7164 - Upside 0.7178 / Downside 0.7152</div></div><span class="tag bear">COT Sell</span></div>
+      <div class="pc-body">The COT flip is the week's primary story. Price reached a 4-year high at 0.7198 while institutional positioning flipped to net short at -10,693. This is textbook distribution - institutions sold into retail momentum. The Friday pullback has begun. Supporting the bearish thesis: employment missed at 17.9k vs 20k, US-Iran peace timeline extended to months removing the risk-on catalyst, and DXY bounced Friday. A daily close below 0.7150 opens 0.7120 and then 0.7000 on a measured move.</div>
+      <div class="pc-levels">
+        <div class="pc-level"><div class="pl-lbl">Key Support</div><div class="pl-val">0.7150</div></div>
+        <div class="pc-level"><div class="pl-lbl">Target</div><div class="pl-val">0.7000</div></div>
+        <div class="pc-level"><div class="pl-lbl">Invalidation</div><div class="pl-val">0.7200</div></div>
+        <div class="pc-level"><div class="pl-lbl">COT</div><div class="pl-val t-bear">-10,693</div></div>
+      </div>
+    </div>
+    <div class="pair-card">
+      <div class="pc-header"><div><div class="pc-pair">EUR/USD</div><div class="pc-price">1.1775 - Range 1.1700 to 1.1820</div></div><span class="tag neut">ECB Pending</span></div>
+      <div class="pc-body">Nine consecutive gains followed by Friday pullback from 1.1817. CCI entered overbought territory with bearish divergence forming. The structural USD weakness story is intact but saturated. ECB Apr 30 at 81% hike probability is the next clean directional driver. Eurozone CPI rising to 2.6% from 1.9% reinforces that case. Until Apr 30, expect range trade between 1.1700 and 1.1820. Friday USD bounce put 1.1706 support in play.</div>
+      <div class="pc-levels">
+        <div class="pc-level"><div class="pl-lbl">Support</div><div class="pl-val">1.1706</div></div>
+        <div class="pc-level"><div class="pl-lbl">Resistance</div><div class="pl-val">1.1825</div></div>
+        <div class="pc-level"><div class="pl-lbl">Catalyst</div><div class="pl-val">ECB Apr 30</div></div>
+        <div class="pc-level"><div class="pl-lbl">Bias</div><div class="pl-val t-neut">Neutral</div></div>
+      </div>
+    </div>
+    <div class="pair-card">
+      <div class="pc-header"><div><div class="pc-pair">GBP/JPY</div><div class="pc-price">215.42 - Target 216.00 / Risk 212.80</div></div><span class="tag warn">Trend - Caution</span></div>
+      <div class="pc-body">17-year high. BoE hawkish bias combined with extreme JPY weakness created the cleanest carry trade in the complex. Hit 215.91 during an 8-day consecutive rally. The caution: GBP COT flipped to net short this week, and the intervention ceiling at 216.00 is a structural cap. Any BoJ normalization signal Apr 28 hits this pair the hardest - both the carry leg (JPY short covering) and the GBP leg (COT distribution) work against the position simultaneously. Reduce size before Apr 28.</div>
+      <div class="pc-levels">
+        <div class="pc-level"><div class="pl-lbl">Support</div><div class="pl-val">212.80</div></div>
+        <div class="pc-level"><div class="pl-lbl">Resistance</div><div class="pl-val">216.00</div></div>
+        <div class="pc-level"><div class="pl-lbl">Binary</div><div class="pl-val">BoJ Apr 28</div></div>
+        <div class="pc-level"><div class="pl-lbl">COT GBP</div><div class="pl-val t-bear">Flipped short</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="sec-label">Full Weekly Bias Table</div>
+  <div class="card">
+    <table class="data-table">
+      <thead><tr><th>Pair</th><th>Bias</th><th>Key Level</th><th>COT Flag</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="pair-name">EUR/USD</td><td class="t-neut">Neutral</td><td>1.1700</td><td>-</td><td style="font-size:11px;color:var(--text2);">Range until ECB Apr 30</td></tr>
+        <tr><td class="pair-name">GBP/USD</td><td class="t-bear">Bearish</td><td>1.3500</td><td class="t-warn">Flipped short</td><td style="font-size:11px;color:var(--text2);">Distribution at highs</td></tr>
+        <tr><td class="pair-name">USD/JPY</td><td class="t-bull">Bullish</td><td>158.50</td><td class="t-warn">-20,870 extreme</td><td style="font-size:11px;color:var(--text2);">Trend intact - BoJ binary Apr 28</td></tr>
+        <tr><td class="pair-name">USD/CHF</td><td class="t-bear">Bearish</td><td>0.7800</td><td>-</td><td style="font-size:11px;color:var(--text2);">Below EMA50, bearish channel</td></tr>
+        <tr><td class="pair-name">USD/CAD</td><td class="t-neut">Neutral</td><td>1.3680</td><td class="t-bull">Buy signal</td><td style="font-size:11px;color:var(--text2);">COT buy vs price downtrend - wait</td></tr>
+        <tr><td class="pair-name">AUD/USD</td><td class="t-bear">Bearish</td><td>0.7150</td><td class="t-bear">Flipped -10,693</td><td style="font-size:11px;color:var(--text2);">Primary sell signal</td></tr>
+        <tr><td class="pair-name">NZD/USD</td><td class="t-bear">Bearish</td><td>0.5900</td><td>Net short</td><td style="font-size:11px;color:var(--text2);">Below 0.5900, Hormuz USD bid</td></tr>
+        <tr><td class="pair-name">EUR/GBP</td><td class="t-neut">Neutral</td><td>0.8700</td><td>-</td><td style="font-size:11px;color:var(--text2);">Both currencies under pressure</td></tr>
+        <tr><td class="pair-name">EUR/JPY</td><td class="t-bull">Bullish</td><td>187.00</td><td class="t-warn">JPY extreme</td><td style="font-size:11px;color:var(--text2);">ATH 187.83 - BoJ squeeze risk</td></tr>
+        <tr><td class="pair-name">GBP/JPY</td><td class="t-bull">Bullish</td><td>215.00</td><td class="t-warn">Double risk</td><td style="font-size:11px;color:var(--text2);">17-yr high - reduce before Apr 28</td></tr>
+        <tr><td class="pair-name">AUD/JPY</td><td class="t-bull">Bullish</td><td>113.50</td><td class="t-warn">Both crowded</td><td style="font-size:11px;color:var(--text2);">30-yr high 114.30 - two-sided risk</td></tr>
+        <tr><td class="pair-name">AUD/CAD</td><td class="t-bear">Bearish</td><td>0.9800</td><td>-</td><td style="font-size:11px;color:var(--text2);">CAD oil-supported, AUD COT flip</td></tr>
+        <tr><td class="pair-name">CAD/JPY</td><td class="t-bull">Bullish</td><td>115.50</td><td>-</td><td style="font-size:11px;color:var(--text2);">Oil + JPY weakness = carry setup</td></tr>
+        <tr><td class="pair-name">EUR/AUD</td><td class="t-bull">Bullish</td><td>1.6400</td><td>-</td><td style="font-size:11px;color:var(--text2);">AUD COT flip supports EUR/AUD recovery</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- METALS -->
+<div class="tab-panel" id="tab-metals">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Gold - XAU/USD</div>
+      <div class="kpi" style="margin-bottom:14px;"><div class="kpi-label">Current Price</div><div class="kpi-value">$4,780</div><div class="kpi-sub down">-0.71% week / -14.7% from Jan ATH $5,602</div></div>
+      <div class="data-row"><span class="lbl">Week high</span><span class="val">$4,823 Apr 16</span></div>
+      <div class="data-row"><span class="lbl">Key resistance</span><span class="val">$4,850 Fib 161.8%</span></div>
+      <div class="data-row"><span class="lbl">Key support</span><span class="val">$4,750 50-day MA</span></div>
+      <div class="data-row"><span class="lbl">RSI</span><span class="val">51.08 - balanced</span></div>
+      <div style="margin-top:14px;padding:12px;background:var(--surface2);border-radius:4px;font-size:12px;color:var(--text2);line-height:1.65;">Gold is caught between two forces: USD bounce Friday adding downward pressure versus persistent Hormuz geopolitical bid. The $4,850 level is a significant confluence of Fibonacci extension and historical supply. A sustained break above requires either DXY resuming its decline or a Hormuz escalation. Structural bid from central bank buying in emerging markets remains intact.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Silver - XAG/USD</div>
+      <div class="kpi" style="margin-bottom:14px;"><div class="kpi-label">Current Price</div><div class="kpi-value">$78.49</div><div class="kpi-sub up">Holding above $77.96 breakout level</div></div>
+      <div class="data-row"><span class="lbl">Week high</span><span class="val">$80.87 4-week high</span></div>
+      <div class="data-row"><span class="lbl">Breakout level</span><span class="val">$77.96 now support</span></div>
+      <div class="data-row"><span class="lbl">Resistance</span><span class="val">$81 to $84 zone</span></div>
+      <div class="data-row"><span class="lbl">RSI H4</span><span class="val">~57 mild positive</span></div>
+      <div style="margin-top:14px;padding:12px;background:var(--surface2);border-radius:4px;font-size:12px;color:var(--text2);line-height:1.65;">Silver retesting $77.96 breakout zone after rejection at $80.87. Bull flag structure on H4. Holding above 200-EMA at $77.01 keeps the bullish structure intact. Reclaim $79 puts $81 to $84 in play. Lose $77.96 on a daily close and $74.57 is the next target. US-Iran weekend talks are the key catalyst.</div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:20px;">
+    <div class="card-title">Gold - Week Progression Apr 15 to 17</div>
+    <div class="chart-wrap"><canvas id="goldChart"></canvas></div>
+  </div>
+</div>
+
+<!-- GEO -->
+<div class="tab-panel" id="tab-geo">
+  <div class="alert-box red" style="margin-bottom:16px;">
+    <div class="alert-title">Hormuz Status: Active Disruption - Iran Toll System Imposed</div>
+    <p>Iran reduced tanker traffic to approximately 6 vessels per day, down from 40+ pre-conflict. Iran imposed formal transit tolls on remaining traffic. US-Iran second-round talks delayed to weekend or early next week. Regional and European leaders now quoting 3 to 6 months for any permanent resolution. This is not de-escalating - it is being managed.</p>
+  </div>
+  <div id="geomap"></div>
+  <div style="margin-top:10px;display:flex;gap:20px;font-size:11px;font-family:'IBM Plex Mono',monospace;flex-wrap:wrap;">
+    <span style="color:var(--red);">&#9632; Active disruption</span>
+    <span style="color:var(--yellow);">&#9632; Diplomatic activity</span>
+    <span style="color:var(--green);">&#9632; Ceasefire confirmed</span>
+    <span style="color:var(--blue);">&#9632; Central bank meeting</span>
+  </div>
+</div>
+
+<!-- CALENDAR -->
+<div class="tab-panel" id="tab-calendar">
+  <div class="sec-label">Forward Calendar - Apr 21 to Apr 30</div>
+  <div class="card">
+    <div class="cal-item">
+      <div class="cal-date-box"><div class="cd-day">MON</div><div class="cd-dt">21 Apr</div></div>
+      <div class="cal-body">
+        <div class="cb-event">US-Iran talks weekend outcome</div>
+        <div class="cb-note">Potential gap open Monday. Peace progress = USD down, risk-on extension. Breakdown = oil spike, DXY bid, JPY safe-haven. Prepare both scenarios over weekend.</div>
+        <span class="impact crit">BINARY - ALL MARKETS</span>
+      </div>
+    </div>
+    <div class="cal-item">
+      <div class="cal-date-box"><div class="cd-day">TUE</div><div class="cd-dt">22 Apr</div></div>
+      <div class="cal-body">
+        <div class="cb-event">New Zealand CPI Q1 2026</div>
+        <div class="cb-note">RBNZ warned of looming inflation pressure. Market pricing 77bps hikes by year-end. Hot print triggers NZD spike. Relevant for NZD/USD, AUD/NZD, NZD/JPY.</div>
+        <span class="impact high">HIGH - NZD PAIRS</span>
+      </div>
+    </div>
+    <div class="cal-item">
+      <div class="cal-date-box"><div class="cd-day">WK</div><div class="cd-dt">21-25</div></div>
+      <div class="cal-body">
+        <div class="cb-event">IMF / World Bank Spring Meetings - Ongoing</div>
+        <div class="cb-note">Central bank governor speeches throughout the week. Global growth forecast revisions, policy commentary. Lagarde and Ueda speeches particularly relevant ahead of their April 30 and April 28 meetings.</div>
+        <span class="impact med">MEDIUM - BROAD</span>
+      </div>
+    </div>
+    <div class="cal-item">
+      <div class="cal-date-box"><div class="cd-day">MON</div><div class="cd-dt">28 Apr</div></div>
+      <div class="cal-body">
+        <div class="cb-event">BoJ Rate Decision - Tokyo</div>
+        <div class="cb-note">THE event for JPY pairs. Market pricing only 5bps. Ueda gave zero normalization signals this week. JPY net short at -20,870 - the most extreme in months. If Ueda signals any normalization intent, JPY short covering will be violent. USD/JPY, GBP/JPY, AUD/JPY, EUR/JPY all at risk of 200 to 400 pip reversals. Reduce JPY cross exposure before this meeting.</div>
+        <span class="impact crit">CRITICAL - ALL JPY PAIRS</span>
+      </div>
+    </div>
+    <div class="cal-item">
+      <div class="cal-date-box"><div class="cd-day">TUE</div><div class="cd-dt">29 Apr</div></div>
+      <div class="cal-body">
+        <div class="cb-event">BoC Rate Decision - Ottawa</div>
+        <div class="cb-note">Mildly dovish. Oil-linked currency. COT buy signal for USD/CAD active but price action disagrees. This meeting resolves the divergence. A dovish surprise re-engages USD/CAD upside.</div>
+        <span class="impact med">MEDIUM - CAD PAIRS</span>
+      </div>
+    </div>
+    <div class="cal-item">
+      <div class="cal-date-box"><div class="cd-day">WED</div><div class="cd-dt">30 Apr</div></div>
+      <div class="cal-body">
+        <div class="cb-event">ECB Rate Decision + BoE Meeting - Same Day</div>
+        <div class="cb-note">ECB at 81% odds of hike. Eurozone CPI 2.6% confirms the case. EUR/USD direction resolves here - a hike reopens 1.1900+. BoE: Bailey signaled no rush but UK inflation sticky. Both meetings same day creates maximum EUR and GBP volatility. EUR/GBP may see significant intraday movement depending on relative outcomes.</div>
+        <span class="impact crit">CRITICAL - EUR AND GBP</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>
+  <span>OMC Daily Brief - April 17, 2026 - Week 16 - Friday Synthesis</span>
+  <span>Internal Use Only</span>
+</footer>
+<script>
+const Cl={gold:'#c9a84c',gold2:'#e8c46a',red:'#e05252',green:'#4caf82',yellow:'#e8c46a',blue:'#5b9bd5',text:'#d4d8e2',text2:'#8a93a6',border:'#1e2530',border2:'#252d3a'};
+function switchTab(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  const tabs=['overview','macro','cot','fx','metals','geo','calendar'];
+  document.querySelectorAll('.tab')[tabs.indexOf(id)].classList.add('active');
+  if(id==='geo')initMap();
+  if(id==='cot')initCotChart();
+  if(id==='metals')initGoldChart();
+}
+const perfCtx=document.getElementById('perfChart').getContext('2d');
+const pd=[{p:'EUR/USD',v:-0.10},{p:'GBP/USD',v:-0.35},{p:'USD/JPY',v:+0.21},{p:'AUD/USD',v:+0.35},{p:'USD/CAD',v:-0.61},{p:'NZD/USD',v:-0.10},{p:'GBP/JPY',v:+0.12},{p:'XAU/USD',v:-0.71}];
+new Chart(perfCtx,{type:'bar',data:{labels:pd.map(d=>d.p),datasets:[{label:'Weekly %',data:pd.map(d=>d.v),backgroundColor:pd.map(d=>d.v>=0?'rgba(76,175,130,0.55)':'rgba(224,82,82,0.55)'),borderColor:pd.map(d=>d.v>=0?'rgba(76,175,130,0.9)':'rgba(224,82,82,0.9)'),borderWidth:1,borderRadius:3,borderSkipped:false}]},options:{maintainAspectRatio:true,plugins:{legend:{display:false},tooltip:{backgroundColor:Cl.border,borderColor:Cl.gold,borderWidth:1,titleColor:Cl.gold,bodyColor:Cl.text,callbacks:{label:c=>' '+(c.parsed.y>0?'+':'')+c.parsed.y.toFixed(2)+'%'}}},scales:{x:{grid:{color:Cl.border},ticks:{color:Cl.text2,font:{family:'IBM Plex Mono',size:11}}},y:{grid:{color:Cl.border},ticks:{color:Cl.text2,font:{family:'IBM Plex Mono',size:10},callback:v=>v+'%'}}}}});
+let cotInited=false;
+function initCotChart(){
+  if(cotInited)return;cotInited=true;
+  const ctx=document.getElementById('cotChart').getContext('2d');
+  const labels=['USD','EUR','GBP','JPY','AUD','CAD','CHF','NZD'];
+  const vals=[5511,-7541,-3689,-20870,-10693,2000,-3000,-5000];
+  new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:'Net Contracts',data:vals,backgroundColor:vals.map(v=>v>0?'rgba(76,175,130,0.55)':'rgba(224,82,82,0.55)'),borderColor:vals.map(v=>v>0?'rgba(76,175,130,0.9)':'rgba(224,82,82,0.9)'),borderWidth:1,borderRadius:3,borderSkipped:false}]},options:{maintainAspectRatio:true,plugins:{legend:{display:false},tooltip:{backgroundColor:Cl.border,borderColor:Cl.gold,borderWidth:1,titleColor:Cl.gold,bodyColor:Cl.text,callbacks:{label:c=>' '+(c.parsed.y>0?'+':'')+c.parsed.y.toLocaleString()+' contracts'}}},scales:{x:{grid:{color:Cl.border},ticks:{color:Cl.text2,font:{family:'IBM Plex Mono',size:11}}},y:{grid:{color:Cl.border},ticks:{color:Cl.text2,font:{family:'IBM Plex Mono',size:10}}}}}});
+}
+let goldInited=false;
+function initGoldChart(){
+  if(goldInited)return;goldInited=true;
+  const ctx=document.getElementById('goldChart').getContext('2d');
+  new Chart(ctx,{type:'line',data:{labels:['Apr 15 Open','Apr 15 Close','Apr 16 High','Apr 16 Close','Apr 17 Open','Apr 17 Close'],datasets:[{label:'XAU/USD',data:[4841.85,4814.48,4833.50,4822.72,4794.83,4780.20],borderColor:Cl.gold,backgroundColor:'rgba(201,168,76,0.08)',tension:0.35,fill:true,pointBackgroundColor:Cl.gold,pointRadius:4}]},options:{maintainAspectRatio:true,plugins:{legend:{display:false},tooltip:{backgroundColor:Cl.border,borderColor:Cl.gold,borderWidth:1,titleColor:Cl.gold,bodyColor:Cl.text,callbacks:{label:c=>' $'+c.parsed.y.toLocaleString()}}},scales:{x:{grid:{color:Cl.border},ticks:{color:Cl.text2,font:{family:'IBM Plex Mono',size:10}}},y:{grid:{color:Cl.border},ticks:{color:Cl.text2,font:{family:'IBM Plex Mono',size:10},callback:v=>'$'+v.toLocaleString()},min:4750}}}});
+}
+let mapInited=false;
+function initMap(){
+  if(mapInited)return;mapInited=true;
+  setTimeout(()=>{
+    const map=L.map('geomap',{center:[28,52],zoom:3,attributionControl:false});
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);
+    const nodes=[
+      {lat:26.6,lng:56.5,col:Cl.red,r:14,lbl:'Strait of Hormuz - Active Disruption',info:'~6 vessels/day (was 40+). Iran imposing transit tolls. Core risk to oil supply and global inflation.'},
+      {lat:35.69,lng:51.39,col:Cl.red,r:10,lbl:'Tehran - Iran',info:'US-Iran second-round talks delayed. Regional leaders quoting 3-6 month resolution timeline. War premium not gone.'},
+      {lat:33.68,lng:73.05,col:Cl.yellow,r:9,lbl:'Islamabad - Talks Venue',info:'Pakistan facilitating US-Iran negotiations. Weekend talks delayed. Outcome drives Monday gap open direction.'},
+      {lat:33.1,lng:35.5,col:Cl.green,r:8,lbl:'Israel-Lebanon Border',info:'Ceasefire confirmed by Netanyahu. 10-day window. Reduces one tail risk but Hormuz remains primary threat.'},
+      {lat:35.69,lng:139.69,col:Cl.blue,r:9,lbl:'Tokyo - BoJ Apr 28',info:'BoJ meeting April 28. Only 5bps hike priced. JPY net short at -20,870 extreme. Ueda signal = violent squeeze.'},
+      {lat:50.11,lng:8.68,col:Cl.blue,r:9,lbl:'Frankfurt - ECB Apr 30',info:'ECB meeting April 30. 81% hike probability. Eurozone CPI 2.6% confirms hawkish case. EUR/USD direction resolves here.'},
+      {lat:51.5,lng:-0.12,col:Cl.blue,r:8,lbl:'London - BoE Apr 30',info:'BoE meeting April 30, same day as ECB. Bailey signaled no rush. UK CPI sticky. Data-dependent.'},
+      {lat:45.42,lng:-75.69,col:Cl.blue,r:8,lbl:'Ottawa - BoC Apr 29',info:'BoC meeting April 29. Mildly dovish. USD/CAD COT vs price divergence resolves here.'}
+    ];
+    nodes.forEach(n=>{
+      L.circleMarker([n.lat,n.lng],{radius:n.r,fillColor:n.col,color:n.col,weight:2,opacity:0.9,fillOpacity:0.35}).addTo(map).bindPopup(`<div style="background:#0f1218;color:#d4d8e2;border:1px solid #c9a84c;padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:11px;min-width:220px;border-radius:4px;line-height:1.6;"><strong style="color:#c9a84c;">${n.lbl}</strong><br><br>${n.info}</div>`,{maxWidth:260});
+    });
+  },200);
+}
+</script>
+</body>
+</html>
