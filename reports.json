@@ -1,5 +1,21 @@
 [
   {
+  "date": "2026-04-19",
+  "title": "Sunday Debrief. EUR CFTC Flip +33,559. JPY Squeeze. Hormuz Whipsaw.",
+  "thesis": "EUR flipped to net long +33,559 - largest repositioning of the year. JPY covering from -20,870 to +10,534. USD basket -18,555 net short. Hormuz opened Friday then closed Saturday. Top signals: EUR/CAD buy, EUR/NZD buy, CAD/JPY sell, NZD/JPY sell.",
+  "bias": {
+    "EURUSD": "bullish",
+    "EURCAD": "bullish",
+    "EURNZD": "bullish",
+    "CADJPY": "bearish",
+    "NZDJPY": "bearish",
+    "XAUUSD": "bullish",
+    "SPX": "bullish"
+  },
+  "highlights": ["EUR CFTC +33,559", "JPY squeeze +10,534", "Oil -10%", "Hormuz whipsaw"],
+  "file": "2026-04-19.html"
+},
+  {
     "date": "2026-04-17",
     "title": "Weekly Synthesis. COT Regime Flip. AUD and GBP Net Short. USD Bounce.",
     "thesis": "AUD flipped to -10,693 net short while price hit 4-year high - classic distribution. GBP flipped to -3,689. JPY shorts deepened to -20,870. USD bounced Friday on oil rebound to $94. De-escalation trade fully priced. BoJ Apr 28 and ECB Apr 30 are the binary events.",
