@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMC Daily Brief — April 20, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0a0c10;--surface:#0f1218;--surface2:#141820;--border:#1e2530;--border2:#252d3a;--gold:#c9a84c;--gold2:#e8c46a;--red:#e05252;--green:#4caf82;--yellow:#e8c46a;--blue:#5b9bd5;--text:#d4d8e2;--text2:#8a93a6;--text3:#525d6e;--white:#eef0f5;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.4;}
+.header{border-bottom:1px solid var(--border);padding:0 40px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(10,12,16,0.97);backdrop-filter:blur(16px);z-index:100;}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-mark{width:32px;height:32px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:14px;color:#0a0c10;font-weight:700;}
+.logo-text{font-family:'Playfair Display',serif;font-size:16px;color:var(--white);}
+.logo-sub{font-size:10px;color:var(--text2);font-family:'IBM Plex Mono',monospace;letter-spacing:0.08em;margin-top:1px;}
+.header-right{display:flex;align-items:center;gap:20px;}
+.date-badge{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold);background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);padding:4px 12px;border-radius:3px;}
+.edition-badge{font-size:10px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;}
+.banner{padding:6px 40px;font-size:11px;font-family:'IBM Plex Mono',monospace;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);}
+.banner.alert{background:rgba(224,82,82,0.07);color:var(--red);border-bottom-color:rgba(224,82,82,0.2);}
+.banner.warn{background:rgba(232,196,106,0.07);color:var(--yellow);border-bottom-color:rgba(232,196,106,0.2);}
+.banner.info{background:rgba(76,175,130,0.07);color:var(--green);border-bottom-color:rgba(76,175,130,0.2);}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);padding:0 40px;background:var(--surface);position:sticky;top:60px;z-index:90;overflow-x:auto;}
+.tab{padding:12px 18px;font-size:12px;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.15s;font-family:'IBM Plex Mono',monospace;letter-spacing:0.04em;}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.content{padding:32px 40px;max-width:1200px;margin:0 auto;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:20px;}
+.card-title{font-family:'Playfair Display',serif;font-size:13px;color:var(--gold);letter-spacing:0.04em;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.card-title span{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);font-weight:400;}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:16px 18px;}
+.kpi-label{font-size:10px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;font-family:'IBM Plex Mono',monospace;}
+.kpi-value{font-size:22px;color:var(--white);font-family:'IBM Plex Mono',monospace;font-weight:500;}
+.kpi-sub{font-size:11px;margin-top:4px;font-family:'IBM Plex Mono',monospace;}
+.kpi-sub.up{color:var(--green);}
+.kpi-sub.down{color:var(--red);}
+.kpi-sub.neut{color:var(--text2);}
+.chart-wrap canvas{max-height:280px;}
+.alert-box{border-radius:6px;padding:16px 20px;margin-bottom:12px;border-left:3px solid;}
+.alert-box.red{background:rgba(224,82,82,0.08);border-color:var(--red);}
+.alert-box.yellow{background:rgba(232,196,106,0.08);border-color:var(--yellow);}
+.alert-box.green{background:rgba(76,175,130,0.08);border-color:var(--green);}
+.alert-box .alert-title{font-family:'Playfair Display',serif;font-size:14px;margin-bottom:8px;}
+.alert-box.red .alert-title{color:var(--red);}
+.alert-box.yellow .alert-title{color:var(--yellow);}
+.alert-box.green .alert-title{color:var(--green);}
+.alert-box p{font-size:12px;color:var(--text2);line-height:1.65;}
+.data-table{width:100%;border-collapse:collapse;font-size:12px;}
+.data-table th{background:var(--surface2);color:var(--text3);font-weight:400;letter-spacing:0.07em;padding:8px 12px;text-align:left;font-size:10px;text-transform:uppercase;border-bottom:1px solid var(--border2);}
+.data-table td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tr:hover td{background:rgba(255,255,255,0.02);}
+.pair-name{color:var(--gold);font-family:'Playfair Display',serif;font-size:13px;}
+.t-bull{color:var(--green);}
+.t-bear{color:var(--red);}
+.t-neut{color:var(--text2);}
+.t-warn{color:var(--yellow);}
+.tag{display:inline-block;font-size:9px;letter-spacing:0.08em;padding:2px 7px;border-radius:2px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;}
+.tag.bull{background:rgba(76,175,130,0.15);color:var(--green);border:1px solid rgba(76,175,130,0.25);}
+.tag.bear{background:rgba(224,82,82,0.15);color:var(--red);border:1px solid rgba(224,82,82,0.25);}
+.tag.neut{background:rgba(130,147,166,0.15);color:var(--text2);border:1px solid rgba(130,147,166,0.2);}
+.tag.warn{background:rgba(232,196,106,0.15);color:var(--yellow);border:1px solid rgba(232,196,106,0.25);}
+.data-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.data-row:last-child{border-bottom:none;}
+.data-row .lbl{color:var(--text2);}
+.data-row .val{font-family:'IBM Plex Mono',monospace;color:var(--text);}
+.data-row .val.beat{color:var(--green);}
+.data-row .val.miss{color:var(--red);}
+.data-row .val.inline{color:var(--yellow);}
+.pair-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:18px;}
+.pc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
+.pc-pair{font-family:'Playfair Display',serif;font-size:17px;color:var(--white);}
+.pc-price{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3);margin-top:3px;}
+.pc-body{font-size:12px;color:var(--text2);line-height:1.65;margin-bottom:12px;}
+.pc-levels{display:flex;gap:16px;padding-top:12px;border-top:1px solid var(--border);flex-wrap:wrap;}
+.pc-level .pl-lbl{font-size:10px;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;}
+.pc-level .pl-val{font-size:12px;color:var(--text);font-family:'IBM Plex Mono',monospace;}
+.cal-item{display:flex;gap:16px;padding:12px 0;border-bottom:1px solid var(--border);}
+.cal-item:last-child{border-bottom:none;}
+.cal-date-box{background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:8px 12px;text-align:center;min-width:72px;flex-shrink:0;}
+.cal-date-box .cd-day{font-size:10px;color:var(--text3);letter-spacing:0.06em;font-family:'IBM Plex Mono',monospace;}
+.cal-date-box .cd-dt{font-size:13px;color:var(--gold);font-family:'Playfair Display',serif;}
+.cal-body .cb-event{font-size:13px;color:var(--text);margin-bottom:4px;}
+.cal-body .cb-note{font-size:11px;color:var(--text2);line-height:1.55;}
+.impact{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:2px 7px;border-radius:2px;margin-top:5px;display:inline-block;font-family:'IBM Plex Mono',monospace;}
+.impact.high{background:rgba(224,82,82,0.15);color:var(--red);border:1px solid rgba(224,82,82,0.25);}
+.impact.med{background:rgba(232,196,106,0.15);color:var(--yellow);border:1px solid rgba(232,196,106,0.25);}
+.impact.crit{background:rgba(224,82,82,0.25);color:#ff8080;border:1px solid rgba(224,82,82,0.5);}
+#geomap{height:320px;border-radius:4px;}
+.leaflet-container{background:#0a0c14;}
+.sec-label{font-size:10px;color:var(--text3);letter-spacing:0.14em;text-transform:uppercase;margin:24px 0 14px;display:flex;align-items:center;gap:10px;}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.cb-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.cb-row:last-child{border-bottom:none;}
+.cb-bank{width:52px;font-family:'IBM Plex Mono',monospace;color:var(--gold);font-size:11px;flex-shrink:0;}
+.cb-rate{width:60px;font-family:'IBM Plex Mono',monospace;color:var(--text2);font-size:11px;}
+.cb-note-text{font-size:11px;color:var(--text2);}
+.discrepancy-box{background:rgba(232,196,106,0.06);border:1px solid rgba(232,196,106,0.3);border-radius:6px;padding:16px 20px;margin-bottom:16px;}
+.discrepancy-box h4{font-family:'Playfair Display',serif;font-size:13px;color:var(--yellow);margin-bottom:10px;}
+.discrepancy-box table{width:100%;border-collapse:collapse;font-size:11px;}
+.discrepancy-box td{padding:5px 10px;border-bottom:1px solid rgba(232,196,106,0.1);}
+.discrepancy-box tr:last-child td{border-bottom:none;}
+.discrepancy-box .dc-label{color:var(--text3);width:120px;}
+.discrepancy-box .dc-wrong{color:var(--red);font-family:'IBM Plex Mono',monospace;}
+.discrepancy-box .dc-right{color:var(--green);font-family:'IBM Plex Mono',monospace;}
+footer{background:var(--surface);border-top:1px solid var(--border);padding:14px 40px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--text3);font-family:'IBM Plex Mono',monospace;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <div class="logo-mark">O</div>
+    <div>
+      <div class="logo-text">OMC Daily Brief</div>
+      <div class="logo-sub">FX - Macro - Geopolitical Intelligence</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="edition-badge">Monday - Daily Brief</span>
+    <span class="date-badge">April 20, 2026</span>
+  </div>
+</div>
+
+<div class="banner alert">&#9654; HORMUZ: Iran re-closed Saturday, fired on tankers, seized US Navy vessel seized in Gulf of Oman. Iran refuses resumed talks. Oil rebounded to $87-100 range.</div>
+<div class="banner warn">&#9654; RISK-OFF OPEN: EUR/USD gapped to 1.1729, GBP/USD to 1.3500, AUD/USD -0.25% to 0.7148. Gold -0.76% to $4,795. DXY at one-week high ~98.25.</div>
+<div class="banner info">&#9654; TODAY: Canada CPI 12:30 GMT - critical for COT Signal #1 (EUR/CAD) and Signal #3 (CAD/JPY) entry timing. No other major releases.</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('snapshot')">Market Snapshot</div>
+  <div class="tab" onclick="switchTab('signals')">COT Signals</div>
+  <div class="tab" onclick="switchTab('fx')">FX Analysis</div>
+  <div class="tab" onclick="switchTab('macro')">Macro and CBs</div>
+  <div class="tab" onclick="switchTab('metals')">Metals</div>
+  <div class="tab" onclick="switchTab('geo')">Geopolitical Map</div>
+  <div class="tab" onclick="switchTab('calendar')">Week Calendar</div>
+</div>
+
+<div class="content">
+
+<!-- SNAPSHOT -->
+<div class="tab-panel active" id="tab-snapshot">
+
+  <div class="discrepancy-box">
+    <h4>Price Discrepancy Note - One Source Flagged Again</h4>
+    <table>
+      <tr><td class="dc-label">DXY (wrong)</td><td class="dc-wrong">101.50-102.00</td><td style="font-size:11px;color:var(--text2);">Stale model data. Same recurring error as prior weeks.</td></tr>
+      <tr><td class="dc-label">DXY (live - correct)</td><td class="dc-right">~98.25</td><td style="font-size:11px;color:var(--text2);">Confirmed by MRKT and Grok live feeds. Used for all analysis below.</td></tr>
+      <tr><td class="dc-label">Calendar (wrong)</td><td class="dc-wrong">ECB Thu, GDP Wed, PCE Fri</td><td style="font-size:11px;color:var(--text2);">Events from a different week. ECB is April 30, not this Thursday.</td></tr>
+      <tr><td class="dc-label">Calendar (correct)</td><td class="dc-right">See Week Calendar tab</td><td style="font-size:11px;color:var(--text2);">Verified: CAD CPI today, US Retail Sales Tue, GBP CPI Wed, Flash PMIs Thu.</td></tr>
+    </table>
+  </div>
+
+  <div class="grid-4">
+    <div class="kpi"><div class="kpi-label">EUR/USD</div><div class="kpi-value">1.1763</div><div class="kpi-sub down">Gap open 1.1729 - Iran refuses talks</div></div>
+    <div class="kpi"><div class="kpi-label">GBP/USD</div><div class="kpi-value">1.3500</div><div class="kpi-sub down">Risk-off gap + UK retail sales miss</div></div>
+    <div class="kpi"><div class="kpi-label">USD/JPY</div><div class="kpi-value">159.04</div><div class="kpi-sub up">BoJ Ueda dovish G20 - hike odds 15%</div></div>
+    <div class="kpi"><div class="kpi-label">AUD/USD</div><div class="kpi-value">0.7148</div><div class="kpi-sub down">Low 0.7120 - Hormuz risk-off</div></div>
+  </div>
+  <div class="grid-4">
+    <div class="kpi"><div class="kpi-label">USD/CAD</div><div class="kpi-value">1.3692</div><div class="kpi-sub up">Recovering - CPI at 12:30 GMT</div></div>
+    <div class="kpi"><div class="kpi-label">Gold XAU</div><div class="kpi-value">4,795</div><div class="kpi-sub down">-0.76% - DXY bid caps safe-haven</div></div>
+    <div class="kpi"><div class="kpi-label">Silver XAG</div><div class="kpi-value">79.13</div><div class="kpi-sub down">-2.09% - sharp risk-off selloff</div></div>
+    <div class="kpi"><div class="kpi-label">WTI Oil</div><div class="kpi-value">~87-94</div><div class="kpi-sub up">+5-6% at Asia open - Hormuz re-closed</div></div>
+  </div>
+
+  <div class="sec-label">Risk-Off Morning Assessment</div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">What Happened Overnight</div>
+      <div class="data-row"><span class="lbl">Iran status</span><span class="val miss">Hormuz re-closed. Fired on tankers.</span></div>
+      <div class="data-row"><span class="lbl">US Navy</span><span class="val miss">Seized Iranian cargo vessel Gulf of Oman</span></div>
+      <div class="data-row"><span class="lbl">Iran response</span><span class="val miss">Refused resumed talks (IRNA)</span></div>
+      <div class="data-row"><span class="lbl">BoJ Governor Ueda</span><span class="val miss">Dovish G20 remarks - April hike odds 15%</span></div>
+      <div class="data-row"><span class="lbl">UK Retail Sales</span><span class="val miss">Missed expectations - consumer weakness</span></div>
+      <div class="data-row"><span class="lbl">PBOC LPR</span><span class="val inline">Held 1yr at 3.00%, 5yr at 3.50%</span></div>
+      <div class="data-row"><span class="lbl">NZ Trade Balance</span><span class="val beat">NZD 698M surplus vs prior deficit</span></div>
+      <div class="data-row"><span class="lbl">EUR/USD gap open</span><span class="val miss">1.1729 (from 1.1765 Friday close)</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Regime Assessment - Monday</div>
+      <div class="alert-box red">
+        <div class="alert-title">Risk-Off - Geopolitical Re-Escalation</div>
+        <p>The Hormuz whipsaw that began Friday has resolved to the downside. Iran refused talks, fired on tankers, and the US seized an Iranian vessel. This is not ambiguous. The de-escalation narrative from the prior two weeks is paused. USD safe-haven bid is back. Commodity currencies (AUD, NZD, CAD) are under pressure. The question is whether this is a fresh escalation or a negotiating position.</p>
+      </div>
+      <div class="alert-box yellow">
+        <div class="alert-title">COT Signals Remain Valid - Entries Delayed</div>
+        <p>The four COT signals from the Sunday brief (EUR/CAD buy, EUR/NZD buy, CAD/JPY sell, NZD/JPY sell) remain structurally correct. The risk-off morning creates better entry levels for the EUR-long signals. EUR/CAD pulling back toward 1.6100 is an improvement from the COT perspective - the setup is maturing into entry range.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-label">Intraday Price Chart - Key Pairs</div>
+  <div class="card">
+    <div class="card-title">Monday Open Price Action - Gap Down Pairs</div>
+    <div class="chart-wrap"><canvas id="snapChart"></canvas></div>
+  </div>
+</div>
+
+<!-- COT SIGNALS -->
+<div class="tab-panel" id="tab-signals">
+  <div class="alert-box green" style="margin-bottom:20px;">
+    <div class="alert-title">COT Signals Update - April 20</div>
+    <p>The four signals from Sunday remain active. Monday risk-off open has improved entry prices on the EUR-buy signals. CAD CPI at 12:30 GMT today is the first catalyst for signal #1 and #3. A soft CPI print confirms the BoC dovish path and accelerates CAD weakness - optimal for EUR/CAD and CAD/JPY entries. A hot print gives a brief CAD bounce and better entry.</p>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="pair-card">
+      <div class="pc-header"><div><div class="pc-pair">EUR/CAD</div><div class="pc-price">1.6105 - COT Signal #1</div></div><span class="tag bull">BUY</span></div>
+      <div class="pc-body">Risk-off morning pulled EUR/CAD slightly lower to ~1.6105. This is near the entry zone. EUR still has structural COT support (+33,559 net long) and CAD remains the heaviest institutional short (-22,624). The setup has not changed - it has improved. BoJ Ueda's dovish G20 remarks (hike odds 15%) are not directly relevant here but confirm the broad risk environment. Today's Canadian CPI at 12:30 GMT is the timing trigger: soft print = entry signal, hot print = better entry tomorrow. Do not chase above 1.6200 today.</div>
+      <div class="pc-levels">
+        <div class="pc-level"><div class="pl-lbl">Entry Zone</div><div class="pl-val">1.6080-1.6200</div></div>
+        <div class="pc-level"><div class="pl-lbl">Target</div><div class="pl-val">1.6400+</div></div>
+        <div class="pc-level"><div class="pl-lbl">Stop</div><div class="pl-val">Below 1.5980</div></div>
+        <div class="pc-level"><div class="pl-lbl">Catalyst</div><div class="pl-val">CAD CPI today / ECB Apr 30</div></div>
+      </div>
+    </div>
+    <div class="pair-card">
+      <div class="pc-header"><div><div class="pc-pair">EUR/NZD</div><div class="pc-price">2.0030 - COT Signal #2</div></div><span class="tag bull">BUY</span></div>
+      <div class="pc-body">EUR/NZD holding above 2.0000 despite the risk-off open. NZD briefly got support from the trade surplus (698M vs prior deficit) but is losing ground. Risk-off is incrementally NZD negative. The NZ CPI is now confirmed for Tuesday April 22 (Grok) - this is the timing catalyst. A hot print gives a brief NZD spike and better entry. A miss triggers immediate EUR/NZD upside. The 2.0000 level holding on a risk-off day is structurally positive for the setup. Confirmed entry zone is current levels to slightly below on any NZD bounce.</div>
+      <div class="pc-levels">
+        <div class="pc-level"><div class="pl-lbl">Key Level</div><div class="pl-val">2.0000</div></div>
+        <div class="pc-level"><div class="pl-lbl">Target</div><div class="pl-val">2.0400+</div></div>
+        <div class="pc-level"><div class="pl-lbl">Stop</div><div class="pl-val">Below 1.9880</div></div>
+        <div class="pc-level"><div class="pl-lbl">Catalyst</div><div class="pl-val">NZ CPI Tue Apr 22 / ECB Apr 30</div></div>
+      </div>
+    </div>
+    <div class="pair-card">
+      <div class="pc-header"><div><div class="pc-pair">CAD/JPY</div><div class="pc-price">116.08 - COT Signal #3</div></div><span class="tag bear">SELL</span></div>
+      <div class="pc-body">CAD/JPY is actually moving higher today (116.08) despite the COT sell signal. This is explained by Ueda's dovish G20 remarks collapsing BoJ hike odds to 15%, which pushed USD/JPY back to 159. The JPY net long (+10,534 COT) is being temporarily overridden by BoJ rhetoric. This is not a signal failure - it is a better entry. Ueda has delayed the squeeze, not cancelled it. The BoJ meeting is April 28. The CAD CPI today and BoC April 29 remain as CAD catalysts. The sell signal on CAD/JPY is intact but entry is improved above 116.00. Patience required.</div>
+      <div class="pc-levels">
+        <div class="pc-level"><div class="pl-lbl">Current</div><div class="pl-val">116.08</div></div>
+        <div class="pc-level"><div class="pl-lbl">Target</div><div class="pl-val">113.00</div></div>
+        <div class="pc-level"><div class="pl-lbl">Stop</div><div class="pl-val">Above 117.20</div></div>
+        <div class="pc-level"><div class="pl-lbl">Catalyst</div><div class="pl-val">BoJ Apr 28 / BoC Apr 29</div></div>
+      </div>
+    </div>
+    <div class="pair-card">
+      <div class="pc-header"><div><div class="pc-pair">NZD/JPY</div><div class="pc-price">93.33 - COT Signal #4</div></div><span class="tag bear">SELL</span></div>
+      <div class="pc-body">NZD/JPY is showing marginal gains today (93.33) for the same reason as CAD/JPY - Ueda's dovish remarks reduced JPY buying pressure. NZD also got brief support from the trade surplus. But the COT signal remains: NZD net short -6,201, JPY net long +10,534. The structural case (NZD weak, JPY covering) is unaffected by a single dovish Ueda press comment. NZ CPI Tuesday is the key timing catalyst - RBNZ pricing 77bps of hikes this year. If CPI disappoints the hike narrative, NZD/JPY falls hard and fast. Entry zone is current levels to 94.00 on any bounce.</div>
+      <div class="pc-levels">
+        <div class="pc-level"><div class="pl-lbl">Current</div><div class="pl-val">93.33</div></div>
+        <div class="pc-level"><div class="pl-lbl">Target</div><div class="pl-val">90.00</div></div>
+        <div class="pc-level"><div class="pl-lbl">Stop</div><div class="pl-val">Above 94.50</div></div>
+        <div class="pc-level"><div class="pl-lbl">Catalyst</div><div class="pl-val">NZ CPI Tue / BoJ Apr 28</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-label">COT Position Reference</div>
+  <div class="card">
+    <div class="card-title">Current Net Speculative Positions (Week ending Apr 19) <span>No new COT data until Friday release</span></div>
+    <div class="chart-wrap"><canvas id="cotChart"></canvas></div>
+  </div>
+</div>
+
+<!-- FX ANALYSIS -->
+<div class="tab-panel" id="tab-fx">
+  <div class="sec-label">Pair-by-Pair Analysis - April 20</div>
+
+  <div class="grid-2">
+    <div class="pair-card">
+      <div class="pc-header"><div><div class="pc-pair">EUR/USD</div><div class="pc-price">1.1763 - Gap open 1.1729</div></div><span class="tag warn">Bullish Bias - Risk-Off Pause</span></div>
+      <div class="pc-body">EUR/USD gapped to 1.1729 on the Iran escalation but has recovered to 1.1763. The gap-fill is constructive - it shows EUR buyers are defending the structural long position (COT +33,559). The risk-off USD bid is competing with the structural EUR repositioning. ECB rate hike bets (Apr 30 at 81% odds) provide a floor. The key near-term level to hold is 1.1700 - a close below there challenges the COT signal. Above 1.1780 and the prior Friday close is reclaimed, resuming bullish momentum toward 1.1850.</div>
+      <div class="pc-levels">
+        <div class="pc-level"><div class="pl-lbl">Support</div><div class="pl-val">1.1700</div></div>
+        <div class="pc-level"><div class="pl-lbl">Resistance</div><div class="pl-val">1.1849 (Friday high)</div></div>
+        <div class="pc-level"><div class="pl-lbl">Upside target</div><div class="pl-val">1.1785</div></div>
+        <div class="pc-level"><div class="pl-lbl">Downside target</div><div class="pl-val">1.1688</div></div>
+      </div>
+    </div>
+    <div class="pair-card">
+      <div class="pc-header"><div><div class="pc-pair">GBP/USD</div><div class="pc-price">1.3500 - Double headwind</div></div><span class="tag bear">Bearish</span></div>
+      <div class="pc-body">GBP has two problems today: global risk-off (Iran escalation) and domestic data (UK retail sales missed). The gap to 1.3500 from 1.3600 two-month high is a significant reversal. COT positioning for GBP remains light (+1,630) - not enough to defend against the combination of geopolitical risk and domestic weakness. BoE April 30 meeting is the next major catalyst. UK political pressure on PM Starmer adds a third headwind. The 1.3500 level is critical support - a close below opens 1.3444 (100-day MA).</div>
+      <div class="pc-levels">
+        <div class="pc-level"><div class="pl-lbl">Support</div><div class="pl-val">1.3444 (100-day MA)</div></div>
+        <div class="pc-level"><div class="pl-lbl">Resistance</div><div class="pl-val">1.3570</div></div>
+        <div class="pc-level"><div class="pl-lbl">Upside target</div><div class="pl-val">1.3570</div></div>
+        <div class="pc-level"><div class="pl-lbl">Downside target</div><div class="pl-val">1.3460</div></div>
+      </div>
+    </div>
+    <div class="pair-card">
+      <div class="pc-header"><div><div class="pc-pair">USD/JPY</div><div class="pc-price">159.04 - Ueda reversed the squeeze</div></div><span class="tag warn">Bullish - Temporarily</span></div>
+      <div class="pc-body">USD/JPY rebounded from Friday's 157.60 low back to 159.00. The driver: BoJ Governor Ueda at G20 made explicitly dovish remarks, stating no urgency for hikes and citing the war's negative supply shock. April hike odds collapsed from 30% to 15%. This has temporarily reversed the JPY short covering that drove the COT flip. However, the COT still shows JPY net long (+10,534) - the institutional position has changed even if the rhetoric has not. The BoJ April 28 meeting remains the binary. Ueda can reverse this dovish tone in one sentence. Trading USD/JPY long here requires accepting that you are now on the wrong side of the COT with an 8-day fuse.</div>
+      <div class="pc-levels">
+        <div class="pc-level"><div class="pl-lbl">Support</div><div class="pl-val">157.49</div></div>
+        <div class="pc-level"><div class="pl-lbl">Resistance</div><div class="pl-val">160.00</div></div>
+        <div class="pc-level"><div class="pl-lbl">Upside target</div><div class="pl-val">159.17</div></div>
+        <div class="pc-level"><div class="pl-lbl">BoJ binary</div><div class="pl-val">April 28</div></div>
+      </div>
+    </div>
+    <div class="pair-card">
+      <div class="pc-header"><div><div class="pc-pair">AUD/USD</div><div class="pc-price">0.7148 - Low 0.7120</div></div><span class="tag warn">Watch - COT Still Short</span></div>
+      <div class="pc-body">AUD gapped lower on Hormuz re-closure and hit 0.7120 at Asia open before recovering to 0.7148. The bounce from 0.7120 is being driven by RBA hike pricing (75% odds May hike) and technical EMA50 support. COT still shows AUD net short at -5,738 (down from -10,693) - the distribution is partially unwinding but not complete. The 0.7120 level is the key - three times it has been tested and held this week. A break below opens 0.7000. The risk-off environment today is not constructive for AUD longs. MRKT targets 0.7156 upside and 0.7055 downside today.</div>
+      <div class="pc-levels">
+        <div class="pc-level"><div class="pl-lbl">Key support</div><div class="pl-val">0.7120</div></div>
+        <div class="pc-level"><div class="pl-lbl">Resistance</div><div class="pl-val">0.7186 (Sunday high)</div></div>
+        <div class="pc-level"><div class="pl-lbl">Upside target</div><div class="pl-val">0.7156</div></div>
+        <div class="pc-level"><div class="pl-lbl">Downside target</div><div class="pl-val">0.7055</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-label">Full Daily Bias Table</div>
+  <div class="card">
+    <table class="data-table">
+      <thead><tr><th>Pair</th><th>Bias</th><th>Upside</th><th>Downside</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="pair-name">EUR/USD</td><td class="t-bull">Bullish lean</td><td>1.1785</td><td>1.1688</td><td style="font-size:11px;color:var(--text2);">Gap recovery - 1.1700 support must hold</td></tr>
+        <tr><td class="pair-name">GBP/USD</td><td class="t-bear">Bearish</td><td>1.3570</td><td>1.3460</td><td style="font-size:11px;color:var(--text2);">Risk-off + UK retail miss double headwind</td></tr>
+        <tr><td class="pair-name">USD/JPY</td><td class="t-bull">Bullish (temporary)</td><td>159.17</td><td>158.59</td><td style="font-size:11px;color:var(--text2);">Ueda dovish - hike odds 15% - BoJ Apr 28</td></tr>
+        <tr><td class="pair-name">USD/CHF</td><td class="t-neut">Neutral</td><td>0.7830</td><td>0.7790</td><td style="font-size:11px;color:var(--text2);">92% long positioning - crowded</td></tr>
+        <tr><td class="pair-name">USD/CAD</td><td class="t-neut">Watch CPI</td><td>1.3720</td><td>1.3670</td><td style="font-size:11px;color:var(--text2);">CAD CPI 12:30 GMT - resolves direction</td></tr>
+        <tr><td class="pair-name">AUD/USD</td><td class="t-neut">Watch</td><td>1.7156</td><td>0.7055</td><td style="font-size:11px;color:var(--text2);">0.7120 support tested 3 times - key level</td></tr>
+        <tr><td class="pair-name">NZD/USD</td><td class="t-bear">Bearish</td><td>0.5895</td><td>0.5846</td><td style="font-size:11px;color:var(--text2);">Risk-off + CPI Tue binary</td></tr>
+        <tr><td class="pair-name">EUR/GBP</td><td class="t-bull">Bullish</td><td>0.8721</td><td>0.8696</td><td style="font-size:11px;color:var(--text2);">UK PM Starmer political pressure on GBP</td></tr>
+        <tr><td class="pair-name">EUR/JPY</td><td class="t-bull">Bullish</td><td>187.30</td><td>186.60</td><td style="font-size:11px;color:var(--text2);">Ueda dovish + oil pressures JPY as importer</td></tr>
+        <tr><td class="pair-name">EUR/CAD</td><td class="t-bull">Bullish</td><td>1.6137</td><td>1.6086</td><td style="font-size:11px;color:var(--text2);">COT Signal #1 - entry zone</td></tr>
+        <tr><td class="pair-name">EUR/NZD</td><td class="t-bull">Bullish</td><td>2.0048</td><td>1.9972</td><td style="font-size:11px;color:var(--text2);">COT Signal #2 - holding 2.0000</td></tr>
+        <tr><td class="pair-name">GBP/JPY</td><td class="t-neut">Neutral</td><td>215.10</td><td>213.80</td><td style="font-size:11px;color:var(--text2);">GBP weakness vs Ueda-delayed JPY bid</td></tr>
+        <tr><td class="pair-name">CAD/JPY</td><td class="t-bear">Bearish (pending)</td><td>116.20</td><td>115.40</td><td style="font-size:11px;color:var(--text2);">COT Signal #3 - entry improving above 116</td></tr>
+        <tr><td class="pair-name">NZD/JPY</td><td class="t-bear">Bearish (pending)</td><td>93.79</td><td>93.07</td><td style="font-size:11px;color:var(--text2);">COT Signal #4 - NZ CPI timing catalyst</td></tr>
+        <tr><td class="pair-name">AUD/CAD</td><td class="t-bear">Bearish</td><td>0.9840</td><td>0.9770</td><td style="font-size:11px;color:var(--text2);">AUD risk-off hit + CAD oil bounce</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MACRO -->
+<div class="tab-panel" id="tab-macro">
+  <div class="sec-label">Central Bank Snapshot</div>
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title">Current Rates and Monday Developments</div>
+    <div class="cb-row"><span class="cb-bank">Fed</span><span class="cb-rate">3.50-3.75%</span><span class="cb-note-text">Hold. Market now pricing 50% cut odds year-end. Oil rebound today complicates easing path.</span></div>
+    <div class="cb-row"><span class="cb-bank">ECB</span><span class="cb-rate">2.00%</span><span class="cb-note-text">81% Apr 30 hike. Lagarde noted economy slipping below baseline. EUR/CAD and EUR/NZD COT signals hinge on Apr 30 delivery.</span></div>
+    <div class="cb-row"><span class="cb-bank">BoJ</span><span class="cb-rate">0.75%</span><span class="cb-note-text">CRITICAL UPDATE: Ueda G20 remarks today explicitly dovish. April hike odds collapsed to 15%. Delayed squeeze, not cancelled. Apr 28 binary.</span></div>
+    <div class="cb-row"><span class="cb-bank">BoE</span><span class="cb-rate">3.75%</span><span class="cb-note-text">Apr 30 meeting. UK retail sales miss today adds to uncertainty. GBP under dual pressure.</span></div>
+    <div class="cb-row"><span class="cb-bank">RBA</span><span class="cb-rate">4.10%</span><span class="cb-note-text">75% May hike priced. AUD fundamental support intact despite risk-off today.</span></div>
+    <div class="cb-row"><span class="cb-bank">RBNZ</span><span class="cb-rate">2.25%</span><span class="cb-note-text">NZ CPI Tuesday is the test. 77bps hikes priced year-end. NZD weakness persists on risk-off.</span></div>
+    <div class="cb-row"><span class="cb-bank">BoC</span><span class="cb-rate">2.25%</span><span class="cb-note-text">CAD CPI today at 12:30 GMT. Mildly dovish. Apr 29 meeting. CAD institutional short -22,624.</span></div>
+    <div class="cb-row"><span class="cb-bank">SNB</span><span class="cb-rate">0.00%</span><span class="cb-note-text">CHF net short in COT. Safe-haven demand partially returned today on Hormuz re-closure.</span></div>
+  </div>
+
+  <div class="sec-label">Signal Consensus - Monday</div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Agreed Across All Signals</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.7;">
+        <p style="margin-bottom:8px;"><span class="t-bull">&#9654;</span> EUR structural strength confirmed - COT +33,559, ECB Apr 30 hike pending</p>
+        <p style="margin-bottom:8px;"><span class="t-bull">&#9654;</span> USD/JPY trend direction bullish - Ueda dovish confirms today</p>
+        <p style="margin-bottom:8px;"><span class="t-bear">&#9654;</span> AUD under pressure - risk-off + COT still net short</p>
+        <p style="margin-bottom:8px;"><span class="t-bear">&#9654;</span> GBP weak today - retail miss + geopolitical risk-off</p>
+        <p style="margin-bottom:8px;"><span class="t-bull">&#9654;</span> Gold and silver bullish longer-term despite today's DXY pressure</p>
+        <p><span class="t-bull">&#9654;</span> Equities (SPX, Dow, NASDAQ) - still bullish medium-term despite gap down</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Diverged - One Signal Discarded</div>
+      <div class="alert-box yellow" style="margin:0;">
+        <div class="alert-title">DXY and Calendar: Recurring Discrepancy</div>
+        <p>One signal showed DXY at 101.50-102.00 and an incorrect event calendar (ECB this Thursday, GDP this Wednesday, Core PCE this Friday). All three are wrong. Live data confirms DXY at ~98.25. Correct calendar: CAD CPI today, US Retail Sales Tuesday, GBP CPI Wednesday, Flash PMIs Thursday, UK Retail Sales Friday. The calendar discrepancy is particularly dangerous for trading decisions - always use the verified calendar in the Week Calendar tab.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- METALS -->
+<div class="tab-panel" id="tab-metals">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Gold - XAU/USD</div>
+      <div class="kpi" style="margin-bottom:14px;"><div class="kpi-label">Monday Price</div><div class="kpi-value">$4,795</div><div class="kpi-sub down">-0.76% - DXY safe-haven bid competing</div></div>
+      <div class="data-row"><span class="lbl">MRKT upside target</span><span class="val">$4,846.50</span></div>
+      <div class="data-row"><span class="lbl">MRKT downside target</span><span class="val">$4,773.40</span></div>
+      <div class="data-row"><span class="lbl">200-period EMA H4</span><span class="val">$4,785 (critical support)</span></div>
+      <div class="data-row"><span class="lbl">Scenario A (Hormuz stays closed)</span><span class="val beat">Oil +5%, gold recovers to $4,850</span></div>
+      <div class="data-row"><span class="lbl">Scenario B (Talks resume)</span><span class="val miss">Oil -5%, DXY up, gold to $4,730</span></div>
+      <div style="margin-top:12px;padding:12px;background:var(--surface2);border-radius:4px;font-size:12px;color:var(--text2);line-height:1.65;">Gold is caught between two safe-haven forces working in opposite directions: the geopolitical premium from Hormuz re-closure (bullish) versus the USD safe-haven bid from the same event (bearish for gold). This explains the -0.76% on a day when Hormuz is closed - the USD is winning the safe-haven race today. The $4,785 EMA support level is the key decision point. If it holds through NY session, the dip is a bear trap. If it fails, $4,680 is the next target.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Silver - XAG/USD</div>
+      <div class="kpi" style="margin-bottom:14px;"><div class="kpi-label">Monday Price</div><div class="kpi-value">$79.13</div><div class="kpi-sub down">-2.09% - sharp risk-off selloff</div></div>
+      <div class="data-row"><span class="lbl">MRKT upside target</span><span class="val">$80.80</span></div>
+      <div class="data-row"><span class="lbl">MRKT downside target</span><span class="val">$78.20</span></div>
+      <div class="data-row"><span class="lbl">Key support</span><span class="val">$79.00</span></div>
+      <div class="data-row"><span class="lbl">Polymarket (daily down)</span><span class="val miss">79% odds bearish today</span></div>
+      <div class="data-row"><span class="lbl">Breakout level to hold</span><span class="val">$77.96</span></div>
+      <div style="margin-top:12px;padding:12px;background:var(--surface2);border-radius:4px;font-size:12px;color:var(--text2);line-height:1.65;">Silver fell harder than gold (-2.09% vs -0.76%) which is typical in a risk-off environment - silver has more industrial beta than gold. The 6-year supply deficit provides fundamental support but is irrelevant intraday. The $77.96 breakout level is the structural line - a daily close below it invalidates the bullish setup and targets $74.57. Key test today is whether $79.00 holds. Polymarket at 79% bearish odds reflects strong near-term downside conviction.</div>
+    </div>
+  </div>
+</div>
+
+<!-- GEO -->
+<div class="tab-panel" id="tab-geo">
+  <div class="alert-box red" style="margin-bottom:16px;">
+    <div class="alert-title">Hormuz Status: Re-closed, Iran Firing on Tankers, Talks Refused</div>
+    <p>The situation deteriorated overnight. Iran fired on tankers attempting transit Saturday. US Navy seized an Iranian cargo vessel in the Gulf of Oman Monday. Iran's state media (IRNA) confirmed Iran refused resumed talks citing unrealistic US expectations. Oil rebounded 5-6% at Asian open. This is a full re-escalation of the geopolitical premium that drove the original risk-off regime from April 13. Markets are pricing this as a temporary setback to negotiations, not a permanent breakdown - hence equities remain elevated. But FX risk-off is clear.</p>
+  </div>
+  <div id="geomap"></div>
+  <div style="margin-top:10px;display:flex;gap:20px;font-size:11px;font-family:'IBM Plex Mono',monospace;flex-wrap:wrap;">
+    <span style="color:var(--red);">&#9632; Active / escalating</span>
+    <span style="color:var(--yellow);">&#9632; Volatile / uncertain</span>
+    <span style="color:var(--green);">&#9632; Stable</span>
+    <span style="color:var(--blue);">&#9632; Central bank event</span>
+  </div>
+</div>
+
+<!-- CALENDAR -->
+<div class="tab-panel" id="tab-calendar">
+  <div class="sec-label">Verified Event Calendar - April 20 to 25</div>
+  <div class="card">
+    <div class="cal-item">
+      <div class="cal-date-box"><div class="cd-day">TODAY</div><div class="cd-dt">20 Apr</div></div>
+      <div class="cal-body">
+        <div class="cb-event">Canada CPI - March (12:30 GMT)</div>
+        <div class="cb-note">Expected 1.1% MoM (vs 0.5% prior). Critical for COT Signal #1 (EUR/CAD buy) and Signal #3 (CAD/JPY sell) entry timing. Soft print = CAD weakens = enter EUR/CAD now. Hot print = CAD spike = better entry tomorrow. Either way, the signal direction is unchanged. Also watch USD/CAD reaction - COT buy signal active for USD/CAD.</div>
+        <span class="impact crit">CRITICAL - COT Signals #1 and #3</span>
+      </div>
+    </div>
+    <div class="cal-item">
+      <div class="cal-date-box"><div class="cd-day">TUE</div><div class="cd-dt">21 Apr</div></div>
+      <div class="cal-body">
+        <div class="cb-event">US Retail Sales (12:30 GMT) + GBP Unemployment Rate (09:00 GMT)</div>
+        <div class="cb-note">US Retail Sales: consumer health check. Weak print = Fed cut pricing + USD pressure. Strong = USD support, complicates EUR/USD rally. GBP Unemployment: weak data adds to GBP pressure already from retail sales miss today. JPY Trade Balance also at 02:50 GMT - relevant for BoJ narrative.</div>
+        <span class="impact high">HIGH - USD, GBP</span>
+      </div>
+    </div>
+    <div class="cal-item">
+      <div class="cal-date-box"><div class="cd-day">TUE</div><div class="cd-dt">21 Apr</div></div>
+      <div class="cal-body">
+        <div class="cb-event">NZ CPI Q1 2026 (confirmed Tuesday per Grok)</div>
+        <div class="cb-note">COT Signal #2 (EUR/NZD buy) and Signal #4 (NZD/JPY sell) timing catalyst. RBNZ pricing 77bps hikes year-end. Hot print = NZD spike = better EUR/NZD entry. Miss = immediate EUR/NZD upside. Direction is EUR/NZD up either way - this determines timing.</div>
+        <span class="impact crit">CRITICAL - COT Signals #2 and #4</span>
+      </div>
+    </div>
+    <div class="cal-item">
+      <div class="cal-date-box"><div class="cd-day">WED</div><div class="cd-dt">22 Apr</div></div>
+      <div class="cal-body">
+        <div class="cb-event">GBP CPI (07:00 GMT) + US Crude Oil Inventories (14:30 GMT)</div>
+        <div class="cb-note">GBP CPI: sticky inflation could revive BoE hike bets and support GBP vs Friday's weakness. If hot, EUR/GBP comes under pressure. Crude inventories: Hormuz context makes this data more volatile than usual. Build = bearish oil, CAD negative. Draw = bullish oil, CAD positive.</div>
+        <span class="impact high">HIGH - GBP, CAD</span>
+      </div>
+    </div>
+    <div class="cal-item">
+      <div class="cal-date-box"><div class="cd-day">THU</div><div class="cd-dt">23 Apr</div></div>
+      <div class="cal-body">
+        <div class="cb-event">Flash PMIs - EUR, GBP, USD (06:00-14:30 GMT) + US Jobless Claims (12:30 GMT)</div>
+        <div class="cb-note">Eurozone Flash PMI at 09:00 GMT is the major macro read. Recession signal risk - weak print temporarily caps EUR rally and improves EUR/CAD and EUR/NZD entry. Strong PMI accelerates ECB hike pricing. US Claims secondary. This is the mid-week macro checkpoint before the central bank cascade beginning April 28.</div>
+        <span class="impact high">HIGH - EUR, USD</span>
+      </div>
+    </div>
+    <div class="cal-item">
+      <div class="cal-date-box"><div class="cd-day">FRI</div><div class="cd-dt">24 Apr</div></div>
+      <div class="cal-body">
+        <div class="cb-event">Japan CPI / Tokyo CPI (23:30 GMT) + GBP Retail Sales (07:00 GMT) + USD Durable Goods (12:30 GMT)</div>
+        <div class="cb-note">Japan CPI is critical BoJ narrative input ahead of April 28 meeting. Hot print = BoJ hike odds recover = JPY buying resumes = COT Signals #3 and #4 accelerate. UK Retail Sales follow-up after today's miss. Durable Goods secondary USD data.</div>
+        <span class="impact high">HIGH - JPY, GBP</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>
+  <span>OMC Daily Brief - April 20, 2026 - Monday Daily Brief</span>
+  <span>Internal Use Only</span>
+</footer>
+
+<script>
+const Cl={gold:'#c9a84c',gold2:'#e8c46a',red:'#e05252',green:'#4caf82',yellow:'#e8c46a',blue:'#5b9bd5',text:'#d4d8e2',text2:'#8a93a6',border:'#1e2530'};
+function switchTab(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  const tabs=['snapshot','signals','fx','macro','metals','geo','calendar'];
+  document.querySelectorAll('.tab')[tabs.indexOf(id)].classList.add('active');
+  if(id==='geo')initMap();
+  if(id==='signals')initCotChart();
+}
+
+// SNAPSHOT CHART
+const sCtx=document.getElementById('snapChart').getContext('2d');
+new Chart(sCtx,{type:'bar',data:{
+  labels:['EUR/USD','GBP/USD','AUD/USD','NZD/USD','USD/JPY','Gold','Silver','Oil'],
+  datasets:[{
+    label:'% Change Monday Open',
+    data:[-0.08,-0.08,-0.25,-0.13,+0.28,-0.76,-2.09,+5.60],
+    backgroundColor:[-0.08,-0.08,-0.25,-0.13,+0.28,-0.76,-2.09,+5.60].map(v=>v>=0?'rgba(76,175,130,0.55)':'rgba(224,82,82,0.55)'),
+    borderColor:[-0.08,-0.08,-0.25,-0.13,+0.28,-0.76,-2.09,+5.60].map(v=>v>=0?'rgba(76,175,130,0.9)':'rgba(224,82,82,0.9)'),
+    borderWidth:1,borderRadius:3,borderSkipped:false
+  }]
+},options:{maintainAspectRatio:true,plugins:{legend:{display:false},tooltip:{backgroundColor:Cl.border,borderColor:Cl.gold,borderWidth:1,titleColor:Cl.gold,bodyColor:Cl.text,callbacks:{label:c=>' '+(c.parsed.y>0?'+':'')+c.parsed.y.toFixed(2)+'%'}}},scales:{x:{grid:{color:Cl.border},ticks:{color:Cl.text2,font:{family:'IBM Plex Mono',size:11}}},y:{grid:{color:Cl.border},ticks:{color:Cl.text2,font:{family:'IBM Plex Mono',size:10},callback:v=>v+'%'}}}}});
+
+// COT CHART
+let cotInited=false;
+function initCotChart(){
+  if(cotInited)return;cotInited=true;
+  const ctx=document.getElementById('cotChart').getContext('2d');
+  const labels=['EUR','GBP','USD','JPY','AUD','CAD','NZD','CHF'];
+  const vals=[33559,1630,-18555,10534,-5738,-22624,-6201,-3403];
+  new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:'Net Contracts',data:vals,backgroundColor:vals.map(v=>v>0?'rgba(76,175,130,0.55)':'rgba(224,82,82,0.55)'),borderColor:vals.map(v=>v>0?'rgba(76,175,130,0.9)':'rgba(224,82,82,0.9)'),borderWidth:1,borderRadius:3,borderSkipped:false}]},options:{maintainAspectRatio:true,plugins:{legend:{display:false},tooltip:{backgroundColor:Cl.border,borderColor:Cl.gold,borderWidth:1,titleColor:Cl.gold,bodyColor:Cl.text,callbacks:{label:c=>' '+(c.parsed.y>0?'+':'')+c.parsed.y.toLocaleString()+' contracts'}}},scales:{x:{grid:{color:Cl.border},ticks:{color:Cl.text2,font:{family:'IBM Plex Mono',size:11}}},y:{grid:{color:Cl.border},ticks:{color:Cl.text2,font:{family:'IBM Plex Mono',size:10}}}}}});
+}
+
+// MAP
+let mapInited=false;
+function initMap(){
+  if(mapInited)return;mapInited=true;
+  setTimeout(()=>{
+    const map=L.map('geomap',{center:[30,50],zoom:3,attributionControl:false});
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);
+    const nodes=[
+      {lat:26.6,lng:56.5,col:Cl.red,r:16,lbl:'Strait of Hormuz - RE-CLOSED',info:'Iran re-closed Saturday and fired on tankers. Full escalation. Oil +5-6% at Asia open Monday. Binary for all commodity FX.'},
+      {lat:22.0,lng:59.5,col:Cl.red,r:10,lbl:'Gulf of Oman - US Navy Seizure',info:'US Navy seized Iranian cargo vessel Monday. Iran cited unrealistic US expectations, refused resumed talks (IRNA).'},
+      {lat:35.69,lng:51.39,col:Cl.red,r:10,lbl:'Tehran - Iran',info:'Iran refused talks. Full blockade position resumed. Weekend ceasefire window has expired without resolution.'},
+      {lat:33.68,lng:73.05,col:Cl.yellow,r:8,lbl:'Islamabad - Talks Stalled',info:'Pakistan-facilitated talks not resumed. Iran conditions remain: US must meet stated terms before any Hormuz access. No timeline given.'},
+      {lat:33.1,lng:35.5,col:Cl.green,r:7,lbl:'Israel-Lebanon',info:'Ceasefire still holding. Not the primary risk this week.'},
+      {lat:35.69,lng:139.69,col:Cl.blue,r:10,lbl:'Tokyo - BoJ Apr 28',info:'CRITICAL UPDATE: Ueda G20 remarks today explicitly dovish. April hike odds 15% (was 30%). Delayed squeeze, not cancelled. Apr 28 binary.'},
+      {lat:50.11,lng:8.68,col:Cl.blue,r:9,lbl:'Frankfurt - ECB Apr 30',info:'81% hike probability. EUR/CAD and EUR/NZD COT signals hinge on ECB delivery. EUR structural long +33,559.'},
+      {lat:51.5,lng:-0.12,col:Cl.blue,r:8,lbl:'London - BoE Apr 30',info:'UK retail sales missed today. PM Starmer political pressure. BoE Apr 30 same day as ECB.'},
+      {lat:45.42,lng:-75.69,col:Cl.blue,r:9,lbl:'Ottawa - CAD CPI Today',info:'Canada CPI at 12:30 GMT today. COT Signal #1 (EUR/CAD) and #3 (CAD/JPY) timing catalyst. CAD institutional short -22,624.'}
+    ];
+    nodes.forEach(n=>{
+      L.circleMarker([n.lat,n.lng],{radius:n.r,fillColor:n.col,color:n.col,weight:2,opacity:0.9,fillOpacity:0.35}).addTo(map).bindPopup(`<div style="background:#0f1218;color:#d4d8e2;border:1px solid #c9a84c;padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:11px;min-width:220px;border-radius:4px;line-height:1.6;"><strong style="color:#c9a84c;">${n.lbl}</strong><br><br>${n.info}</div>`,{maxWidth:280});
+    });
+  },200);
+}
+</script>
+</body>
+</html>
