@@ -1,5 +1,21 @@
 [
   {
+  "date": "2026-04-20",
+  "title": "Monday Brief. Hormuz Re-closed. Iran Refuses Talks. Ueda Dovish G20.",
+  "thesis": "Hormuz re-closed Saturday, Iran fired on tankers, US seized Iranian vessel Monday. Risk-off gap open. Ueda G20 dovish remarks collapsed BoJ April hike odds to 15%. CAD CPI 12:30 GMT is COT Signal timing trigger. EUR/CAD and EUR/NZD COT signals improving on risk-off dip.",
+  "bias": {
+    "EURUSD": "bullish",
+    "EURCAD": "bullish",
+    "EURNZD": "bullish",
+    "CADJPY": "bearish",
+    "NZDJPY": "bearish",
+    "XAUUSD": "neutral",
+    "GBPUSD": "bearish"
+  },
+  "highlights": ["Hormuz re-closed", "Iran refuses talks", "Ueda dovish 15% hike", "CAD CPI today"],
+  "file": "2026-04-20.html"
+},
+  {
   "date": "2026-04-19",
   "title": "Sunday Debrief. EUR CFTC Flip +33,559. JPY Squeeze. Hormuz Whipsaw.",
   "thesis": "EUR flipped to net long +33,559 - largest repositioning of the year. JPY covering from -20,870 to +10,534. USD basket -18,555 net short. Hormuz opened Friday then closed Saturday. Top signals: EUR/CAD buy, EUR/NZD buy, CAD/JPY sell, NZD/JPY sell.",
