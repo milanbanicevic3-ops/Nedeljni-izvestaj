@@ -1,5 +1,21 @@
 [
   {
+  "date": "2026-04-22",
+  "title": "Midweek Brief. UK CPI 3.3% Beat. ZEW Miss. COT Signals Reassessed.",
+  "thesis": "UK CPI 3.3% y/y beat BoE hike near-certain Apr 30. Germany ZEW -17.2 miss improves EUR/CAD entry. NZ CPI 3.1% y/y complicated EUR/NZD and NZD/JPY signals - paused not cancelled. Flash PMIs Thursday are the macro checkpoint.",
+  "bias": {
+    "GBPUSD": "bullish",
+    "EURCAD": "bullish",
+    "GBPNZD": "bullish",
+    "NZDUSD": "bullish",
+    "EURUSD": "neutral",
+    "CADJPY": "bearish",
+    "XAUUSD": "bullish"
+  },
+  "highlights": ["UK CPI 3.3% beat", "ZEW -17.2 miss", "NZ CPI 3.1% y/y", "BoE hike Apr 30"],
+  "file": "2026-04-22.html"
+},
+  {
   "date": "2026-04-20",
   "title": "Monday Brief. Hormuz Re-closed. Iran Refuses Talks. Ueda Dovish G20.",
   "thesis": "Hormuz re-closed Saturday, Iran fired on tankers, US seized Iranian vessel Monday. Risk-off gap open. Ueda G20 dovish remarks collapsed BoJ April hike odds to 15%. CAD CPI 12:30 GMT is COT Signal timing trigger. EUR/CAD and EUR/NZD COT signals improving on risk-off dip.",
