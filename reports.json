@@ -1,5 +1,20 @@
 [
   {
+  "date": "2026-04-24",
+  "title": "Weekly Synthesis. EUR Corrects 1.5%. Gold -2.5%. DXY Recovers. PMI Miss.",
+  "thesis": "EUR/USD fell from 1.1849 high to 1.1665 on ZEW miss, PMI contraction, and USD safe-haven bid. Gold corrected to $4,688. Oil +10% on Hormuz uncertainty. Central bank cascade Apr 28-30 resolves all four COT signals - BoJ, BoC, ECB, BoE in 72 hours.",
+  "bias": {
+    "EURCAD": "bullish",
+    "CADJPY": "bearish",
+    "GBPNZD": "bullish",
+    "USDJPY": "bullish",
+    "EURUSD": "bearish",
+    "XAUUSD": "bearish"
+  },
+  "highlights": ["EUR/USD -1.5%", "Gold -2.5%", "PMI miss", "BoJ-BoC-ECB-BoE next week"],
+  "file": "2026-04-24.html"
+},
+  {
   "date": "2026-04-22",
   "title": "Midweek Brief. UK CPI 3.3% Beat. ZEW Miss. COT Signals Reassessed.",
   "thesis": "UK CPI 3.3% y/y beat BoE hike near-certain Apr 30. Germany ZEW -17.2 miss improves EUR/CAD entry. NZ CPI 3.1% y/y complicated EUR/NZD and NZD/JPY signals - paused not cancelled. Flash PMIs Thursday are the macro checkpoint.",
