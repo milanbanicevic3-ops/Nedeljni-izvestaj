@@ -1,5 +1,20 @@
 [
   {
+  "date": "2026-04-26",
+  "title": "Sunday Debrief. JPY -94,460 Extreme. CFTC COT Data. ADX Momentum Gauge.",
+  "thesis": "JPY net short at 19-year extreme -94,460. AUD confirmed net long +64,817 from CFTC raw data. EUR COT +41,324. CAD -58,834. Five central bank decisions in 72 hours - BoJ Apr 28, BoC Apr 29, FOMC Apr 29, ECB + BoE Apr 30. EUR/CAD BUY is top signal. Gold weekly ADX 46.1 - Very Strong.",
+  "bias": {
+    "EURCAD": "bullish",
+    "EURNZD": "bullish",
+    "GBPNZD": "bullish",
+    "AUDUSD": "bullish",
+    "GBPUSD": "bullish",
+    "XAUUSD": "bullish"
+  },
+  "highlights": ["JPY -94,460 extreme", "AUD +64,817 confirmed", "5 CBs in 72hrs", "Gold ADX 46.1"],
+  "file": "2026-04-26.html"
+},
+  {
   "date": "2026-04-24",
   "title": "Weekly Synthesis. EUR Corrects 1.5%. Gold -2.5%. DXY Recovers. PMI Miss.",
   "thesis": "EUR/USD fell from 1.1849 high to 1.1665 on ZEW miss, PMI contraction, and USD safe-haven bid. Gold corrected to $4,688. Oil +10% on Hormuz uncertainty. Central bank cascade Apr 28-30 resolves all four COT signals - BoJ, BoC, ECB, BoE in 72 hours.",
