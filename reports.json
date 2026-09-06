@@ -1,5 +1,33 @@
 [
   {
+  "date": "2026-09-06",
+  "file": "2026-09-06.html",
+  "title": "Sunday Session Brief - September 6, 2026. NFP Delivers a Clean, Two-Sided Shock - US +162k vs Canada -41.7k. Long USD/CAD Becomes the Week's Sharpest Idea. Week Ahead: ECB Thursday, US CPI Friday.",
+  "thesis": "Friday's US employment report reinforced rather than broke the hawkish regime this desk had tracked across the prior two sessions, delivering a clean and unambiguous surprise: US nonfarm payrolls rose 162,000 against a consensus near 56,000, unemployment held at 4.1 percent, and wage growth registered 3.1 percent year over year, pushing implied September Federal Reserve hike odds to roughly 62 to 65 percent from approximately 55 percent before the release. The identical release delivered an equally sharp shock in the opposite direction for Canada, where employment fell 41,700 against a consensus gain near 15,000 and wage growth cooled to 2 percent year over year, a genuine labor-market contraction rather than a soft miss. This clean divergence between US labor strength and Canadian labor weakness produced this session's single most consistently repeated, highest-conviction trading idea across source material: long USD/CAD, representing a complete reversal from the short-USD/CAD bias that had dominated most of August. Gold fell sharply on the jobs shock, closing near 4,328.89 dollars and breaking back below both its 200-day moving average and the 4,400 dollar level; Commitment of Traders data with a report date of September 1, predating Friday's move entirely, already showed speculative gold net-long positioning pulling back by roughly 15,200 contracts, the first weekly decline after an extended build, indicating the market had begun de-risking before the actual catalyst arrived rather than experiencing an isolated crowded-long liquidation. The same Commitment of Traders data flagged Japanese yen positioning as the week's most significant single reading: net-short yen positioning widened by nearly 29,000 contracts in a single week, the largest deterioration across the entire tracked currency set, sitting beneath a currency that has already triggered two confirmed rounds of central bank intervention this cycle, with Japan's total confirmed intervention spending standing at approximately 15.4 trillion yen; USD/JPY closed Friday near 156.520, with the 160.000 level continuing to function as an explicit, intervention-defended avoid zone across multiple sources. A new Week Ahead structure was built around two independent, calendar-dated catalysts for the coming week rather than a single event: a European Central Bank rate decision on Thursday, September 10, where a 25 basis point hike represents the market's working assumption but could not be independently verified within one source's own retrieved data this week and was therefore presented as consensus positioning rather than confirmed fact; and US Consumer Price Index data on Friday, September 11, explicitly named by source material as the primary risk to the current week's firmer-dollar regime and the genuine resolution point for the broader macro setup. Three scenarios were constructed: a CPI Confirms the September Hike scenario extending the current regime, tied to a hot CPI print and a confirmed ECB hike; a CPI Reversal scenario, explicitly the named regime-shift case, tied to a materially softer CPI print, with USD/CAD flagged as the one pair likely to show a smaller, more muted reaction than the rest of the bias table given Canada's own labor-specific drag; and an ECB Surprise or Middle East Escalation scenario tied to a genuine surprise in Thursday's decision relative to its unverified consensus assumption, or a fresh escalation or confirmed de-escalation in the ongoing and still-unresolved Strait of Hormuz situation. The trading book remained flat with zero active positions, with the strength of the USD/CAD divergence case presented in full detail specifically because it represented the clearest setup identified in recent weeks, not despite that clarity, with Friday's CPI identified as a genuine, near-term test of the thesis that did not need to be pre-empted by opening a position before the data arrived.",
+  "bias": {
+    "USDCAD": "bullish",
+    "GBPUSD": "bearish",
+    "NZDUSD": "bearish",
+    "USDJPY": "neutral",
+    "EURUSD": "bearish",
+    "AUDUSD": "bullish",
+    "USDCHF": "neutral",
+    "XAUUSD": "bearish",
+    "XAGUSD": "bearish"
+  },
+  "highlights": [
+    "NFP delivers a clean, two-sided shock: US payrolls +162k (vs +56k expected), Canada -41,700 (vs +15k expected) - a genuine labor-market contraction",
+    "Long USD/CAD emerges as the week's single most consistently repeated, highest-conviction idea - a complete reversal from August's dominant short-USD/CAD bias",
+    "Sept Fed hike odds rise to ~62-65% from ~55% pre-NFP; FOMC meets Sep 15-16, after this week's CPI and ECB decision both land",
+    "Gold breaks below its 200-DMA and $4,400 on the jobs shock; COT data (predating the move) already showed speculative longs pulling back first",
+    "COT flags the week's most important read: JPY net shorts widened by ~29,000 contracts in one week - the largest single-currency deterioration in the dataset, sitting under a currency already hit by two intervention rounds",
+    "New Week Ahead 3-scenario block: CPI Confirms the Hike, CPI Reversal (the named regime-shift case), and ECB Surprise or Middle East Escalation",
+    "Data-quality note: the market's 25bp ECB hike assumption for Thursday could not be independently verified this week - flagged as consensus, not confirmed fact",
+    "Source accuracy confirmed clean again this week - every individual COT currency figure matched the raw CFTC file",
+    "Book stays flat; USD/CAD's divergence case presented in full because it's the clearest setup in weeks, not opened ahead of Friday's CPI test"
+  ]
+},
+  {
   "date": "2026-09-04",
   "file": "2026-09-04.html",
   "title": "Friday Brief - September 4, 2026. US NFP Day - The Decisive Print. Yen Surges on Fresh Intervention and Hawkish BoJ Signals, USD/JPY Falls From Above 160 to ~156. Fed Hike Odds Cool as Williams Pushes Back.",
